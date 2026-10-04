@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>myDocument — Kho tài liệu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070d1f;--panel:rgba(255,255,255,.06);--line:rgba(255,255,255,.14);--ink:#eaf2ff;--mut:#9fb3d6;--acc:#35e0d1;--gold:#ffc857;--coral:#ff6b81;--vio:#9b8cff}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:'Montserrat','Segoe UI',system-ui,sans-serif}
+body{background:radial-gradient(1100px 700px at 10% -10%,#17336a 0%,transparent 60%),radial-gradient(900px 700px at 100% 100%,#0d3c4d 0%,transparent 60%),var(--bg);background-attachment:fixed}
+.wrap{max-width:1240px;margin:0 auto;padding:40px 24px 80px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+h1{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-.01em}
+h1 b{color:var(--acc)}
+.sub{color:var(--mut);font-weight:500;margin-top:6px;font-size:15px}
+.dem{color:var(--mut);font-size:14px;font-weight:600}
+.tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:26px}
+.tim{flex:1 1 280px;display:flex;align-items:center;gap:10px;height:46px;padding:0 16px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--mut)}
+.tim svg{width:18px;height:18px;flex:none}
+.tim input{all:unset;flex:1;min-width:0;color:var(--ink);font-size:15px;font-weight:500}
+.tim input::placeholder{color:var(--mut)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{height:46px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:700 14px 'Montserrat',sans-serif;cursor:pointer;transition:.15s}
+.chip:hover{background:rgba(255,255,255,.12)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#04101f}
+select.chip{appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);background-position:calc(100% - 18px) 20px,calc(100% - 13px) 20px;background-size:5px 5px;background-repeat:no-repeat}
+select.chip option{background:#0d1733;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.card{display:flex;flex-direction:column;border-radius:22px;background:var(--panel);border:1px solid var(--line);overflow:hidden;transition:.18s}
+.card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.3);box-shadow:0 14px 44px rgba(0,0,0,.4)}
+.thumb{position:relative;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;cursor:pointer}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb svg.ic{width:64px;height:64px;color:rgba(255,255,255,.92);filter:drop-shadow(0 4px 14px rgba(0,0,0,.35));position:relative}
+.thumb .play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(4,8,22,.45);opacity:0;transition:.18s}
+.thumb:hover .play{opacity:1}
+.thumb .play span{padding:10px 20px;border-radius:999px;background:var(--acc);color:#04101f;font-weight:800;font-size:14px}
+.tag{position:absolute;left:12px;top:12px;padding:5px 12px;border-radius:999px;background:rgba(4,8,22,.7);backdrop-filter:blur(6px);font-size:12px;font-weight:700;letter-spacing:.04em}
+.dur{position:absolute;right:12px;bottom:12px;padding:4px 10px;border-radius:8px;background:rgba(4,8,22,.78);font-size:12px;font-weight:700}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.ten{font-size:18px;font-weight:800;line-height:1.25}
+.vi{font-size:14px;color:var(--gold);font-weight:600}
+.mt{font-size:13.5px;line-height:1.5;color:var(--mut);font-weight:500}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.meta i{font-style:normal;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--mut)}
+.act{display:flex;gap:8px;margin-top:auto;padding-top:10px;flex-wrap:wrap}
+.btn{flex:1 1 auto;height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);font:700 13px 'Montserrat',sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:.15s;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.12)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#04101f}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.ok{background:#2bd48a;border-color:#2bd48a;color:#04101f}
+.trong{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mut);font-weight:600;line-height:1.7}
+.trong code{background:rgba(255,255,255,.1);padding:2px 8px;border-radius:6px;font-size:13px;color:var(--ink)}
+/* xem thử trong khung nhúng */
+#modal{position:fixed;inset:0;z-index:50;background:rgba(2,5,14,.86);display:none;place-items:center;padding:24px}
+#modal.on{display:grid}
+.mbox{width:min(1100px,100%);display:flex;flex-direction:column;gap:12px}
+.mbar{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.mbar b{font-size:16px}
+.mbar .btn{flex:none}
+.frame{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 20px 80px rgba(0,0,0,.6)}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mlog{font-size:12px;color:var(--mut);font-weight:600;min-height:18px;font-variant-numeric:tabular-nums}
+@media (max-width:560px){.wrap{padding:24px 14px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1><b>my</b>Document</h1>
+      <p class="sub">Kho tài liệu HTML của Andrew Classes — video, slide, nội dung tương tác</p>
+    </div>
+    <div class="dem" id="dem"></div>
+  </header>
+
+  <div class="tools">
+    <label class="tim">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Tìm theo tên, chủ đề, mã…" autocomplete="off">
+    </label>
+    <div class="chips" id="chips"></div>
+    <select class="chip" id="nhom" title="Nhóm nội dung"><option value="">Mọi nhóm</option></select>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<div id="modal">
+  <div class="mbox">
+    <div class="mbar"><b id="mten"></b><button class="btn" id="mdong">✕ Đóng</button></div>
+    <div class="frame"><iframe id="mif" allow="fullscreen; autoplay" allowfullscreen></iframe></div>
+    <div class="mlog" id="mlog">Khung này đúng như khi nhúng vào trang bài (?nhung=1).</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const $=(q,r=document)=>r.querySelector(q);
+const ICON={
+  video:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>',
+  slide:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>',
+  'tuong-tac':'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5v11l3-2.5 2.2 5 2-.9-2.2-5H17z"/><path d="M4 8V5.5A1.5 1.5 0 0 1 5.500 4H7M4 12v2M20 9V6"/></svg>',
+  'bai-doc':'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>'
+};
+const GRAD={video:'linear-gradient(135deg,#1c3f87,#6a2fb8 60%,#c2335f)',slide:'linear-gradient(135deg,#0f5a73,#2b7fd6)',
+  'tuong-tac':'linear-gradient(135deg,#2c7a52,#1aa6a0 60%,#2b7fd6)','bai-doc':'linear-gradient(135deg,#6a4a14,#b9852d)'};
+let D=null,loai='',nhom='',q='';
+
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const abs=rel=>D.goc.replace(/\/$/,'')+'/'+rel;
+const tenLoai=m=>(D.loai.find(l=>l.ma===m)||{ten:m}).ten;
+const embed=it=>`<div style="position:relative;padding-top:56.25%"><iframe src="${abs(it.nhung_url)}" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="fullscreen; autoplay" allowfullscreen loading="lazy"></iframe></div>`;
+
+function ve(){
+  const ks=q.trim().toLowerCase();
+  const ds=D.tai_lieu.filter(it=>(!loai||it.loai===loai)&&(!nhom||it.nhom===nhom)&&
+    (!ks||[it.id,it.ten,it.ten_vi,it.mo_ta,it.mon,(it.chu_de||[]).join(' ')].join(' ').toLowerCase().includes(ks)));
+  $('#dem').textContent=ds.length+' / '+D.tai_lieu.length+' tài liệu';
+  $('#grid').innerHTML=ds.length?ds.map(it=>`
+    <article class="card" data-id="${esc(it.id)}">
+      <div class="thumb" data-a="xem" style="background:${GRAD[it.loai]||GRAD.video}">
+        ${it.poster?`<img src="${esc(it.poster)}" alt="" loading="lazy">`:''}${it.poster?'':ICON[it.loai]||''}
+        <span class="tag">${esc(tenLoai(it.loai)).toUpperCase()}</span>
+        ${it.thoi_luong_giay?`<span class="dur">${fmt(it.thoi_luong_giay)}</span>`:''}
+        <div class="play"><span>▶ Xem thử</span></div>
+      </div>
+      <div class="body">
+        <div class="ten">${esc(it.ten)}</div>
+        ${it.ten_vi?`<div class="vi">${esc(it.ten_vi)}</div>`:''}
+        ${it.mo_ta?`<div class="mt">${esc(it.mo_ta)}</div>`:''}
+        <div class="meta">${[it.mon,it.nhom,it.ngon_ngu&&it.ngon_ngu.toUpperCase(),it.co_giong_doc&&'Có giọng đọc',it.phien_ban&&'v'+it.phien_ban].filter(Boolean).map(x=>`<i>${esc(x)}</i>`).join('')}</div>
+        <div class="act">
+          <a class="btn pri" href="${esc(it.url)}" target="_blank" rel="noopener">Mở</a>
+          <button class="btn" data-a="link">Sao chép link</button>
+          <button class="btn" data-a="nhung">Mã nhúng</button>
+        </div>
+      </div>
+    </article>`).join('')
+  :`<div class="trong">Không có tài liệu nào khớp.<br>Thêm tài liệu mới: <code>node tools/tao.js &lt;loai&gt; &lt;nhom&gt; &lt;ma&gt; "Tên"</code> rồi <code>node tools/build-catalog.js</code></div>`;
+}
+function ban(){
+  $('#chips').innerHTML=[['','Tất cả'],...D.loai.map(l=>[l.ma,l.ten])].map(([m,t])=>`<button class="chip${loai===m?' on':''}" data-l="${m}">${esc(t)}</button>`).join('');
+  $('#nhom').innerHTML='<option value="">Mọi nhóm</option>'+D.nhom.map(n=>`<option value="${esc(n)}"${nhom===n?' selected':''}>${esc(n)}</option>`).join('');
+}
+function chep(btn,text,nhan){
+  const xong=()=>{const o=btn.textContent;btn.textContent='✓ Đã chép';btn.classList.add('ok');setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok')},1500)};
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(xong,()=>alert(nhan+':\n'+text));
+  else{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();try{document.execCommand('copy');xong()}catch(e){alert(nhan+':\n'+text)}t.remove()}
+}
+function xem(it){
+  $('#mten').textContent=it.ten;$('#mif').src=it.nhung_url;$('#modal').classList.add('on');$('#mlog').textContent='Khung này đúng như khi nhúng vào trang bài (?nhung=1).';
+}
+function dong(){$('#modal').classList.remove('on');$('#mif').src='about:blank'}
+
+$('#grid').addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const it=D.tai_lieu.find(x=>x.id===b.closest('.card').dataset.id);
+  if(b.dataset.a==='xem')xem(it);
+  else if(b.dataset.a==='link')chep(b,abs(it.url),'Link');
+  else if(b.dataset.a==='nhung')chep(b,embed(it),'Mã nhúng');
+});
+$('#chips').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;loai=b.dataset.l;ban();ve()});
+$('#nhom').addEventListener('change',e=>{nhom=e.target.value;ve()});
+$('#q').addEventListener('input',e=>{q=e.target.value;ve()});
+$('#mdong').onclick=dong;
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')dong()});
+addEventListener('keydown',e=>{if(e.key==='Escape')dong()});
+/* nghe sự kiện của tài liệu nhúng — chứng minh đường tích hợp hoạt động */
+addEventListener('message',e=>{
+  const m=e.data;if(!m||m.nguon!=='myDocument'||!$('#modal').classList.contains('on'))return;
+  const l=$('#mlog');
+  if(m.su_kien==='progress')l.textContent=`progress · ${m.t}s / ${m.tong}s (${m.pct}%)`;
+  else if(m.su_kien==='chapter')l.textContent=`chapter · ${m.chuong} — ${m.ten}`;
+  else l.textContent=m.su_kien+(m.t!=null?' · '+m.t+'s':'');
+});
+
+fetch('documents.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(j=>{D=j;ban();ve()})
+.catch(()=>{$('#grid').innerHTML='<div class="trong">Không đọc được <code>documents.json</code>.<br>Nếu đang mở file trực tiếp từ ổ đĩa: trình duyệt chặn — hãy mở qua máy chủ (vd <code>npx serve</code>) hoặc qua địa chỉ thật.<br>Nếu chưa có file: chạy <code>node tools/build-catalog.js</code>.</div>'});
+</script>
+</body>
+</html>

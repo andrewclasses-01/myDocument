@@ -1,0 +1,10 @@
+{
+  "he_thong": 1,
+  "goc": "https://document.andrewclasses.com/",
+  "loai": [
+    { "ma": "video",     "ten": "Video hoạt hình",        "mo_ta": "Video hoạt hình HTML (có lồng tiếng, phụ đề, thanh tua)" },
+    { "ma": "slide",     "ten": "Slide",                  "mo_ta": "Bộ slide HTML trình chiếu / tự xem" },
+    { "ma": "tuong-tac", "ten": "Nội dung tương tác",     "mo_ta": "Mô phỏng, trò chơi nhỏ, bài thực hành HTML" },
+    { "ma": "bai-doc",   "ten": "Bài đọc / tài liệu",     "mo_ta": "Bài đọc, bảng tóm tắt, tài liệu tra cứu HTML" }
+  ]
+}

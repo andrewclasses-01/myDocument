@@ -1,0 +1,23 @@
+{
+  "ma": "bones-muscles",
+  "loai": "video",
+  "ten": "Why are bones hard and muscles soft?",
+  "ten_vi": "Vì sao xương cứng còn cơ mềm?",
+  "mo_ta": "Video hoạt hình 14 cảnh: tế bào → mô → ba loại cơ → sợi cơ vân → cơ co/giãn → tế bào xương và canxi → xương và cơ phối hợp. Có lồng tiếng và phụ đề.",
+  "mon": "Science",
+  "chu_de": ["cell", "tissue", "muscle", "bone", "human body"],
+  "ngon_ngu": "en",
+  "thoi_luong_giay": 277,
+  "co_giong_doc": true,
+  "ngay_tao": "2026-10-04",
+  "phien_ban": "1.1.0",
+  "tep_chinh": "index.html",
+  "poster": null,
+  "ti_le": "16:9",
+  "tuy_chon_nhung": {
+    "t": "bắt đầu từ giây thứ N (vd ?t=60)",
+    "cc": "0 = tắt phụ đề lúc đầu",
+    "voice": "0 = tắt lồng tiếng lúc đầu",
+    "toc": "tốc độ phát: 0.75 | 1 | 1.25 | 1.5"
+  }
+}

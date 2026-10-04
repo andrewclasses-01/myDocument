@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="mydocument:id" content="video/khoa-hoc/bones-muscles">
+<title>Why Are Bones Hard and Muscles Soft?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#eaf2ff;--muted:#9fb3d6;--accent:#35e0d1;--coral:#ff6b81;--bone:#f6e7bf;--gold:#ffc857;--violet:#9b8cff;--teal:#35e0d1}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#03060f;color:var(--ink);font-family:'Montserrat','Segoe UI',system-ui,sans-serif;overflow:hidden}
+#wrap{position:fixed;inset:0;display:grid;place-items:center;background:#03060f}
+#player{position:relative;width:min(100vw,calc(100vh * 16 / 9));aspect-ratio:16/9;background:#070d1f;overflow:hidden;user-select:none;-webkit-user-select:none;box-shadow:0 20px 80px rgba(0,0,0,.6)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden}
+
+/* ---------- background ---------- */
+#bg{position:absolute;inset:0;background:
+  radial-gradient(1200px 800px at 12% 8%,#17336a 0%,transparent 60%),
+  radial-gradient(1100px 900px at 92% 96%,#0d3c4d 0%,transparent 60%),
+  linear-gradient(160deg,#0a1331,#070b1c 60%,#0a1428)}
+.orb{position:absolute;border-radius:50%;filter:blur(110px);opacity:.30;background:var(--accent);animation:drift 24s ease-in-out infinite alternate;transition:background 1s}
+.orb.o1{width:700px;height:700px;left:-160px;top:-180px}
+.orb.o2{width:620px;height:620px;right:-120px;bottom:-200px;background:#6a5cff;animation-duration:30s}
+.orb.o3{width:420px;height:420px;left:900px;top:300px;opacity:.14;animation-duration:36s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(120px,-90px) scale(1.25)}}
+#dots{position:absolute;inset:0;background-image:radial-gradient(rgba(150,190,255,.13) 1.6px,transparent 1.8px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 25%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 25%,transparent 78%)}
+.spark{position:absolute;border-radius:50%;background:rgba(190,225,255,.55);animation:rise linear infinite}
+@keyframes rise{from{transform:translateY(0);opacity:0}15%{opacity:.8}to{transform:translateY(-1200px);opacity:0}}
+#stage.paused .orb,#stage.paused .spark{animation-play-state:paused}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(2,5,15,.55) 100%);pointer-events:none}
+
+/* ---------- scenes ---------- */
+.scene{position:absolute;inset:0;opacity:0;pointer-events:none}
+.scene svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+svg [data-fx]{transform-box:fill-box;transform-origin:center}
+svg text{font-family:'Montserrat','Segoe UI',system-ui,sans-serif}
+.card{fill:rgba(255,255,255,.065);stroke:rgba(255,255,255,.17);stroke-width:2}
+.hl{fill:none;stroke:var(--accent);stroke-width:5}
+
+/* ---------- header ---------- */
+#head{position:absolute;left:100px;top:58px;pointer-events:none}
+#head .k{font-size:22px;letter-spacing:.3em;font-weight:700;color:var(--accent)}
+#head .t{font-size:56px;font-weight:800;line-height:1.1;margin-top:8px;text-shadow:0 4px 24px rgba(0,0,0,.4)}
+#head.in .k{animation:hin .8s cubic-bezier(.2,.8,.2,1) both}
+#head.in .t{animation:hin .8s .12s cubic-bezier(.2,.8,.2,1) both}
+@keyframes hin{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+#brand{position:absolute;right:100px;top:74px;font-size:18px;letter-spacing:.32em;font-weight:700;color:rgba(159,179,214,.7);text-align:right}
+#brand b{color:var(--accent)}
+
+/* ---------- captions ---------- */
+#capwrap{position:absolute;left:0;right:0;bottom:0;height:280px;background:linear-gradient(to top,rgba(4,8,22,.94),rgba(4,8,22,.6) 58%,transparent);display:flex;align-items:flex-end;justify-content:center;padding:0 140px 62px;pointer-events:none}
+#cap{font-size:42px;line-height:1.28;font-weight:600;text-align:center;max-width:1640px;text-shadow:0 2px 14px rgba(0,0,0,.7)}
+#cap .w{color:rgba(234,242,255,.38);transition:color .3s}
+#cap .w.on{color:#fff}
+#cap .w.k{color:rgba(255,200,87,.4)}
+#cap .w.k.on{color:var(--gold)}
+#stage.nocc #capwrap{display:none}
+
+/* ---------- controls (real pixels) ---------- */
+#ctrl{position:absolute;left:0;right:0;bottom:0;padding:38px 16px 10px;background:linear-gradient(transparent,rgba(3,6,15,.9));display:flex;flex-direction:column;gap:4px;transition:opacity .35s;z-index:6}
+#player.idle.playing #ctrl{opacity:0;pointer-events:none}
+#player.idle.playing{cursor:none}
+#bar{display:flex;gap:3px;height:18px;align-items:center;cursor:pointer;position:relative;touch-action:none}
+.seg{flex:1 1 0;height:5px;background:rgba(255,255,255,.2);border-radius:3px;position:relative;overflow:hidden;transition:height .12s}
+#bar:hover .seg,#bar.drag .seg{height:9px}
+.seg i{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--accent)}
+#row{display:flex;align-items:center;gap:4px}
+button.ib{background:none;border:0;color:#eaf2ff;width:40px;height:40px;border-radius:10px;cursor:pointer;display:grid;place-items:center}
+button.ib:hover{background:rgba(255,255,255,.15)}
+button.ib.off{opacity:.4}
+button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+button.ib svg .f{fill:currentColor;stroke:none}
+#time{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:#cfe0ff;margin:0 8px 0 6px;white-space:nowrap}
+#chap{font-size:14px;color:#9fb3d6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+#spd{font:700 13px 'Montserrat','Segoe UI',sans-serif;color:#eaf2ff;background:rgba(255,255,255,.12);border:0;border-radius:8px;padding:7px 10px;cursor:pointer;margin-right:4px}
+#spd:hover{background:rgba(255,255,255,.22)}
+#tip{position:absolute;bottom:56px;transform:translateX(-50%);background:rgba(10,18,40,.96);border:1px solid rgba(255,255,255,.16);padding:6px 11px;border-radius:8px;font-size:13px;font-weight:600;display:none;white-space:nowrap;z-index:7;pointer-events:none}
+
+/* ---------- poster / end ---------- */
+.ovl{position:absolute;inset:0;z-index:5;display:grid;place-items:center;cursor:pointer;background:radial-gradient(circle at 50% 50%,rgba(5,9,24,.1),rgba(5,9,24,.75))}
+.ovl.hide{display:none}
+.ovl .box{display:grid;justify-items:center;gap:2.2cqw;margin-top:0}
+.bigplay{width:min(11vw,19vh);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#35e0d1,#4aa8ff);box-shadow:0 0 0 0 rgba(53,224,209,.6),0 12px 50px rgba(53,224,209,.45);animation:ring 2.2s infinite;color:#04101f}
+.bigplay svg{width:42%;height:42%}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(53,224,209,.55),0 12px 50px rgba(53,224,209,.45)}70%{box-shadow:0 0 0 min(3vw,5vh) rgba(53,224,209,0),0 12px 50px rgba(53,224,209,.45)}100%{box-shadow:0 0 0 0 rgba(53,224,209,0),0 12px 50px rgba(53,224,209,.45)}}
+.ovl .lab{font-weight:800;font-size:min(1.9vw,3.4vh);letter-spacing:.04em;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.ovl .sub{font-weight:600;font-size:min(1.2vw,2.1vh);color:#b6c8ea;text-align:center;line-height:1.5;max-width:70%}
+#player{container-type:inline-size}
+#poster{place-items:end end;padding:0 7% 9% 0}
+#poster .box{margin-bottom:0;justify-items:center;text-align:center}
+#poster .bigplay{width:min(7.5vw,13vh)}
+#poster .sub{display:none}
+@media (max-width:700px){#chap{display:none}#brand{display:none}}
+/* ?nhung=1 — nằm trong khung iframe của trang khác */
+html.nhung #brand{display:none}
+html.nhung #player{box-shadow:none}
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="player" class="idle">
+  <div id="stage" class="paused">
+    <div id="bg"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div id="dots"></div><div id="sparks"></div></div>
+    <div id="scenes"></div>
+    <div id="vig"></div>
+    <div id="head"><div class="k"></div><div class="t"></div></div>
+    <div id="brand"><b>LIFE SCIENCE</b> &nbsp;·&nbsp; THE HUMAN BODY</div>
+    <div id="capwrap"><div id="cap"></div></div>
+  </div>
+
+  <div id="poster" class="ovl">
+    <div class="box">
+      <div class="bigplay"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.2v15.6a1 1 0 0 0 1.5.9l13-7.8a1 1 0 0 0 0-1.7l-13-7.8A1 1 0 0 0 7 4.2z"/></svg></div>
+      <div class="lab">PLAY WITH VOICE-OVER</div>
+      <div class="sub">English narration uses your browser's built-in voice · Space = play/pause · ← → = skip 5 s · F = full screen</div>
+    </div>
+  </div>
+  <div id="endcard" class="ovl hide">
+    <div class="box">
+      <div class="bigplay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></div>
+      <div class="lab">WATCH AGAIN</div>
+    </div>
+  </div>
+
+  <div id="tip"></div>
+  <div id="ctrl">
+    <div id="bar"></div>
+    <div id="row">
+      <button class="ib" id="bPlay" title="Play / Pause (Space)"></button>
+      <button class="ib" id="bBack" title="Back 5 s (←)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      <span id="time">0:00 / 0:00</span>
+      <span id="chap"></span>
+      <button id="spd" title="Speed">1×</button>
+      <button class="ib" id="bCC" title="Captions (C)"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 10.2a2.2 2.2 0 1 0 0 3.6M16.5 10.2a2.2 2.2 0 1 0 0 3.6"/></svg></button>
+      <button class="ib" id="bVoice" title="Voice-over (M)"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="ib" id="bFull" title="Full screen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- shared SVG definitions -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gBone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8e4"/><stop offset="1" stop-color="#e2c88c"/></linearGradient>
+  <linearGradient id="gMus" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a98"/><stop offset=".55" stop-color="#e8355c"/><stop offset="1" stop-color="#a8183d"/></linearGradient>
+  <radialGradient id="gCell" cx=".4" cy=".35" r=".85"><stop offset="0" stop-color="#a6f6ec" stop-opacity=".8"/><stop offset=".65" stop-color="#2bb5c4" stop-opacity=".55"/><stop offset="1" stop-color="#1b7fa8" stop-opacity=".7"/></radialGradient>
+  <radialGradient id="gNuc" cx=".38" cy=".33" r=".85"><stop offset="0" stop-color="#d3c9ff"/><stop offset="1" stop-color="#5a44d4"/></radialGradient>
+  <radialGradient id="gRBC" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#ff8a9a"/><stop offset="1" stop-color="#d3304f"/></radialGradient>
+  <radialGradient id="gHalo"><stop offset="0" stop-color="#ff6b81" stop-opacity=".30"/><stop offset=".55" stop-color="#6a5cff" stop-opacity=".16"/><stop offset="1" stop-color="#6a5cff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="gLens" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#1f3a6b"/><stop offset="1" stop-color="#0a1632"/></radialGradient>
+  <linearGradient id="gTG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff0c4"/><stop offset="1" stop-color="#ffb347"/></linearGradient>
+  <linearGradient id="gTC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffb3be"/><stop offset="1" stop-color="#ff4d6d"/></linearGradient>
+  <linearGradient id="gShine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="gMetal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5d6f9a"/><stop offset=".5" stop-color="#27345a"/><stop offset="1" stop-color="#6d7fab"/></linearGradient>
+  <pattern id="pStri" width="22" height="10" patternUnits="userSpaceOnUse"><rect width="8" height="10" fill="rgba(255,255,255,.17)"/></pattern>
+  <pattern id="pCells" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="10" fill="rgba(110,235,222,.85)"/><circle cx="13" cy="13" r="3.5" fill="rgba(60,40,160,.9)"/></pattern>
+  <pattern id="pRope" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(32)"><rect width="14" height="40" fill="rgba(255,255,255,.16)"/></pattern>
+  <filter id="fGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <clipPath id="cLens"><circle cx="620" cy="520" r="316"/></clipPath>
+</defs></svg>
+
+<script src="../../../_chung/nhung.js"></script>
+<script>
+'use strict';
+/* =====================================================================
+   Why are bones hard and muscles soft?  —  animated science explainer
+   Timeline engine: every animation is a paused Web-Animation whose
+   currentTime is driven by one master clock => play, pause, seek, speed.
+   ===================================================================== */
+const MD=window.MyDocument||{nhung:false,q:new URLSearchParams(location.search),emit(){},onLenh(){}};
+const $=(q,r=document)=>r.querySelector(q);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const sm=x=>{x=clamp(x,0,1);return x*x*(3-2*x)};
+const seg=(t,a,b)=>sm((t-a)/(b-a));
+const mk=seed=>{let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
+const f1=n=>Math.round(n*10)/10;
+const PI2=Math.PI*2;
+
+/* ---------- drawing helpers (return SVG strings) ---------- */
+const G=(x,y,inner,fx='',sc=1,rot=0)=>`<g transform="translate(${x} ${y})${sc!==1?` scale(${sc})`:''}${rot?` rotate(${rot})`:''}"><g data-fx="${fx}">${inner}</g></g>`;
+const TX=(x,y,s,size=32,fill='#eaf2ff',o={})=>`<text${o.id?` id="${o.id}"`:''} x="${x}" y="${y}" font-size="${size}" fill="${fill}" text-anchor="${o.a||'middle'}" font-weight="${o.w||700}"${o.ls?` letter-spacing="${o.ls}"`:''}${o.fx?` data-fx="${o.fx}"`:''}>${s}</text>`;
+const CARD=(x,y,w,h,inner='',fx='',r=34)=>`<g data-fx="${fx}"><rect class="card" x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}"/>${inner}</g>`;
+const PILL=(x,y,w,h,label,col,fx='',size=30,tc='#06122a')=>`<g data-fx="${fx}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h/2}" fill="${col}"/>${TX(x+w/2,y+h/2+size*.36,label,size,tc,{w:800})}</g>`;
+const LN=(x1,y1,x2,y2,col='rgba(255,255,255,.55)',w=3,fx='',dash='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"${dash?` stroke-dasharray="${dash}"`:''}${fx?` data-fx="${fx}"`:''}/>`;
+const DOT=(x,y,r,col,fx='')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}"${fx?` data-fx="${fx}"`:''}/>`;
+
+function starPath(R,A,n=7,pw=2.4,rot=-90,steps=150){
+  let d='';
+  for(let i=0;i<=steps;i++){
+    const th=i/steps*PI2, c=Math.max(0,Math.cos(n*th)), r=R+A*Math.pow(c,pw);
+    const a=th+rot*Math.PI/180;
+    d+=(i?'L':'M')+f1(r*Math.cos(a))+' '+f1(r*Math.sin(a));
+  }
+  return d+'Z';
+}
+function cellMuscle(w=250,h=50,nuc=true){
+  const r=h/2;
+  return `<rect x="${-w/2}" y="${-r}" width="${w}" height="${h}" rx="${r}" fill="url(#gMus)"/>
+  <rect x="${-w/2}" y="${-r}" width="${w}" height="${h}" rx="${r}" fill="url(#pStri)"/>
+  <rect x="${-w/2+r*.5}" y="${-r+5}" width="${w-r}" height="${h*.2}" rx="${h*.1}" fill="rgba(255,255,255,.3)"/>
+  ${nuc?[-.3,.06,.33].map(k=>`<ellipse cx="${k*w}" cy="${r*.42}" rx="${h*.3}" ry="${h*.17}" fill="#4a2a8f" opacity=".92"/>`).join(''):''}`;
+}
+function boneCell(sc=1){
+  return `<g transform="scale(${sc})"><path d="${starPath(40,40,7,2.4)}" fill="url(#gBone)" stroke="#c9ac6e" stroke-width="5" stroke-linejoin="round"/><circle r="20" fill="url(#gNuc)"/><circle cx="-5" cy="-5" r="5" fill="rgba(255,255,255,.55)"/></g>`;
+}
+function neuron(){
+  const dend=[[-155,-62],[-146,46],[-112,-98],[-104,76],[-170,-8]];
+  return `<g stroke="#c9bfff" stroke-width="7" stroke-linecap="round" fill="none">${dend.map(([x,y])=>`<path d="M-70 0 L${x} ${y}"/>`).join('')}<path d="M-70 0 H150"/><path d="M150 0 l26 -24 M150 0 l30 6 M150 0 l20 30"/></g>
+  <circle cx="-70" cy="0" r="35" fill="#a99bff"/><circle cx="-70" cy="0" r="14" fill="#4b3bc2"/>${[[150,0],[176,-24],[180,6],[170,30]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="8" fill="#e1daff"/>`).join('')}`;
+}
+function rbc(){return `<circle r="64" fill="url(#gRBC)"/><ellipse rx="30" ry="25" fill="#b92646" opacity=".7"/><ellipse cx="-12" cy="-30" rx="26" ry="9" fill="rgba(255,255,255,.28)" transform="rotate(-20)"/>`;}
+function boneShape(len,th){
+  const r=th*.62, hx=len/2;
+  const parts=`<rect x="${-hx}" y="${-th/2}" width="${len}" height="${th}" rx="${th*.2}"/>`+[[-1,-1],[-1,1],[1,-1],[1,1]].map(([sx,sy])=>`<circle cx="${sx*(hx-r*.35)}" cy="${sy*th*.45}" r="${r}"/>`).join('');
+  return `<g fill="#c3a463" stroke="#c3a463" stroke-width="9" stroke-linejoin="round">${parts}</g><g fill="#f6ebcb">${parts}</g><rect x="${-hx+r}" y="${-th/2+4}" width="${len-2*r}" height="${th*.18}" rx="3" fill="rgba(255,255,255,.6)"/>`;
+}
+const cap2=(x1,y1,x2,y2,w,fill='#f6ebcb',ol='#c3a463')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${ol}" stroke-width="${w+10}" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${fill}" stroke-width="${w}" stroke-linecap="round"/><line x1="${x1-w*.2}" y1="${y1}" x2="${x2-w*.2}" y2="${y2}" stroke="rgba(255,255,255,.55)" stroke-width="${w*.2}" stroke-linecap="round"/>`;
+
+const J={sh:[95,-195],el:[150,-60],wr:[185,62],hip:[45,112],kn:[55,215],an:[60,312],head:[0,-292]};
+function silh(attr,wT,wA,wL,hr,headAttr){
+  const L=(a,b,w)=>`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke-width="${w}"/>`;
+  const m=p=>[-p[0],p[1]];
+  return `<g ${attr} stroke-linecap="round" stroke-linejoin="round">${L([0,-200],[0,70],wT)}${L(J.sh,J.el,wA)}${L(J.el,J.wr,wA*.85)}${L(m(J.sh),m(J.el),wA)}${L(m(J.el),m(J.wr),wA*.85)}${L(J.hip,J.kn,wL)}${L(J.kn,J.an,wL*.8)}${L(m(J.hip),m(J.kn),wL)}${L(m(J.kn),m(J.an),wL*.8)}<circle cx="0" cy="${J.head[1]}" r="${hr}" ${headAttr||''}/></g>`;
+}
+function floaters(n,seed,x0,x1,y0,y1){
+  const R=mk(seed);let o='';
+  for(let i=0;i<n;i++){
+    const r=8+R()*30, x=x0+R()*(x1-x0), y=y0+R()*(y1-y0), d=(4+R()*4).toFixed(1), dl=(R()*3).toFixed(1);
+    o+=`<g data-fx="float@${dl}/${d}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="rgba(110,235,222,${(.07+R()*.12).toFixed(2)})" stroke="rgba(170,255,240,.35)" stroke-width="2"/><circle cx="${f1(x+r*.2)}" cy="${f1(y+r*.1)}" r="${f1(r*.3)}" fill="rgba(160,140,255,.35)"/></g>`;
+  }
+  return o;
+}
+
+/* ---------- the arm rig (shoulder = 0,0 ; elbow = 0,300) ---------- */
+const ARM_A=[52,14], ARM_OFF=96, ARM_K=31000;
+function armSVG(id){
+  return `
+  <g id="${id}-fa">${cap2(0,0,0,262,34)}<circle cx="0" cy="300" r="30" fill="#c3a463"/><circle cx="0" cy="300" r="24" fill="#f6ebcb"/></g>
+  ${cap2(0,0,0,300,42)}
+  <circle cx="30" cy="2" r="24" fill="#c3a463"/><circle cx="30" cy="2" r="18" fill="#f6ebcb"/>
+  <circle cx="0" cy="0" r="34" fill="#c3a463"/><circle cx="0" cy="0" r="27" fill="#f6ebcb"/>
+  <circle cx="0" cy="300" r="30" fill="#c3a463"/><circle cx="0" cy="300" r="23" fill="#f6ebcb"/>
+  <g id="${id}-mus">
+    <g stroke="#f3e7c8" stroke-width="11" stroke-linecap="round"><line id="${id}-t1"/><line id="${id}-t2"/></g>
+    <path id="${id}-glow" fill="none" stroke="#ffd36e" stroke-width="12" opacity="0" filter="url(#fGlow)"/>
+    <path id="${id}-belly" fill="url(#gMus)" stroke="#7a102f" stroke-width="4" stroke-linejoin="round"/>
+    <g id="${id}-fib" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="3.2" stroke-linecap="round"><path/><path/><path/><path/><path/></g>
+  </g>
+  <circle id="${id}-aA" r="22" fill="none" stroke="#35e0d1" stroke-width="6" opacity="0"/>
+  <circle id="${id}-aB" r="22" fill="none" stroke="#35e0d1" stroke-width="6" opacity="0"/>`;
+}
+const _arm={};
+function setArm(R,id,phi,o={}){
+  let c=_arm[id];
+  if(!c||c.R!==R){
+    c={R,fa:$('#'+id+'-fa',R),t1:$('#'+id+'-t1',R),t2:$('#'+id+'-t2',R),belly:$('#'+id+'-belly',R),glow:$('#'+id+'-glow',R),
+       fibs:[...R.querySelectorAll('#'+id+'-fib path')],mus:$('#'+id+'-mus',R),aA:$('#'+id+'-aA',R),aB:$('#'+id+'-aB',R)};
+    _arm[id]=c;
+  }
+  const ph=phi*Math.PI/180, co=Math.cos(ph), si=Math.sin(ph);
+  c.fa.setAttribute('transform',`translate(0 300) rotate(${f1(-phi)})`);
+  let A=ARM_A.slice(), B=[14*co+70*si, 300-14*si+70*co];
+  const attached=[A.slice(),B.slice()];
+  const f=o.free||0;
+  if(f){
+    const M=[(A[0]+B[0])/2+f*190,(A[1]+B[1])/2+f*10]; // drift away from the bone
+    A=[A[0]+(M[0]-A[0])*f*1.0,A[1]+(M[1]-A[1])*f*1.0];
+    B=[B[0]+(M[0]-B[0])*f*1.0,B[1]+(M[1]-B[1])*f*1.0];
+  }
+  const dx=B[0]-A[0], dy=B[1]-A[1], len=Math.hypot(dx,dy), ux=dx/len, uy=dy/len, nx=uy, ny=-ux;
+  const th=Math.min(150,ARM_K/len);
+  const P0=[A[0]+ux*len*.14,A[1]+uy*len*.14], P1=[A[0]+ux*len*.86,A[1]+uy*len*.86];
+  const mx=(P0[0]+P1[0])/2, my=(P0[1]+P1[1])/2;
+  const ctl=k=>[f1(mx+nx*(ARM_OFF+k*th)),f1(my+ny*(ARM_OFF+k*th))];
+  const q=(k)=>`M${f1(P0[0])} ${f1(P0[1])} Q${ctl(k).join(' ')} ${f1(P1[0])} ${f1(P1[1])}`;
+  const dBelly=`M${f1(P0[0])} ${f1(P0[1])} Q${ctl(1).join(' ')} ${f1(P1[0])} ${f1(P1[1])} Q${ctl(-1).join(' ')} ${f1(P0[0])} ${f1(P0[1])}Z`;
+  c.belly.setAttribute('d',dBelly); c.glow.setAttribute('d',dBelly);
+  [-.62,-.31,0,.31,.62].forEach((k,i)=>c.fibs[i].setAttribute('d',q(k)));
+  c.t1.setAttribute('x1',f1(A[0]));c.t1.setAttribute('y1',f1(A[1]));c.t1.setAttribute('x2',f1(P0[0]));c.t1.setAttribute('y2',f1(P0[1]));
+  c.t2.setAttribute('x1',f1(P1[0]));c.t2.setAttribute('y1',f1(P1[1]));c.t2.setAttribute('x2',f1(B[0]));c.t2.setAttribute('y2',f1(B[1]));
+  c.glow.setAttribute('opacity',f1(clamp(o.glow!==undefined?o.glow:phi/110,0,1)*.9));
+  c.mus.setAttribute('opacity',o.vis===undefined?1:o.vis);
+  c.aA.setAttribute('cx',attached[0][0]);c.aA.setAttribute('cy',attached[0][1]);c.aB.setAttribute('cx',f1(attached[1][0]));c.aB.setAttribute('cy',f1(attached[1][1]));
+  const ao=o.anchor||0; c.aA.setAttribute('opacity',ao);c.aB.setAttribute('opacity',ao);
+  const ap=[mx+nx*(ARM_OFF+th)/2, my+ny*(ARM_OFF+th)/2];
+  return {len,th,apex:ap,A,B};
+}
+const ARM_LEN0=Math.hypot(ARM_A[0]-14,ARM_A[1]-370), ARM_TH0=ARM_K/ARM_LEN0;
+
+/* ---------- animation presets ---------- */
+const E_OUT='cubic-bezier(.16,.84,.3,1)', E_BACK='cubic-bezier(.34,1.56,.64,1)', E_IO='cubic-bezier(.45,0,.25,1)';
+const V=el=>(el.dataset.v||'0,0').split(',').map(Number);
+const P={
+  fi:{kf:[{opacity:0},{opacity:1}],d:.7,e:'ease-out'},
+  fo:{kf:[{opacity:1},{opacity:0}],d:.6,e:'ease-in',fill:'forwards'},
+  dim:{kf:[{opacity:1},{opacity:.2}],d:.6,fill:'forwards'},
+  undim:{kf:[{opacity:.2},{opacity:1}],d:.6,fill:'forwards'},
+  pop:{kf:[{opacity:0,transform:'scale(.35)'},{opacity:1,transform:'scale(1)'}],d:.7,e:E_BACK},
+  zoom:{kf:[{opacity:0,transform:'scale(.82)'},{opacity:1,transform:'scale(1)'}],d:.9,e:E_OUT},
+  up:{kf:[{opacity:0,transform:'translateY(46px)'},{opacity:1,transform:'translateY(0)'}],d:.8,e:E_OUT},
+  down:{kf:[{opacity:0,transform:'translateY(-46px)'},{opacity:1,transform:'translateY(0)'}],d:.8,e:E_OUT},
+  left:{kf:[{opacity:0,transform:'translateX(-70px)'},{opacity:1,transform:'translateX(0)'}],d:.8,e:E_OUT},
+  right:{kf:[{opacity:0,transform:'translateX(70px)'},{opacity:1,transform:'translateX(0)'}],d:.8,e:E_OUT},
+  grow:{kf:[{transform:'scaleX(0)'},{transform:'scaleX(1)'}],d:1,e:E_IO,o:'0% 50%'},
+  growY:{kf:[{transform:'scaleY(0)'},{transform:'scaleY(1)'}],d:1,e:E_IO,o:'50% 100%'},
+  draw:{kf:[{strokeDashoffset:1},{strokeDashoffset:0}],d:1,e:E_IO,pre:el=>{el.setAttribute('pathLength','1');el.style.strokeDasharray='1 2'}},
+  flash:{kf:[{opacity:0},{opacity:1,offset:.2},{opacity:.25,offset:.5},{opacity:1,offset:.75},{opacity:0}],d:1.8},
+  fly:el=>{const[x,y]=V(el);return{kf:[{opacity:0,transform:`translate(${x}px,${y}px)`},{opacity:1,transform:'translate(0px,0px)'}],d:1,e:E_OUT}},
+  move:el=>{const[x,y]=V(el);return{kf:[{transform:`translate(${x}px,${y}px)`},{transform:'translate(0px,0px)'}],d:1.2,e:E_IO}},
+  slide:el=>{const[x,y]=V(el);return{kf:[{opacity:0,transform:`translate(${x}px,${y}px)`},{opacity:1,offset:.2},{opacity:1,offset:.8},{opacity:0,transform:`translate(${-x}px,${-y}px)`}],d:1.6,e:'ease-in-out'}},
+  bump:el=>{const[x,y]=V(el);return{kf:[{transform:'translate(0px,0px)'},{transform:`translate(${x}px,${y}px)`},{transform:'translate(0px,0px)'}],d:1.5,e:'ease-in-out',loop:1}},
+  float:{kf:[{transform:'translateY(0px)'},{transform:'translateY(-16px)'},{transform:'translateY(0px)'}],d:4,e:'ease-in-out',loop:1},
+  bob:{kf:[{transform:'translateY(0px)'},{transform:'translateY(-12px)'},{transform:'translateY(0px)'}],d:.9,e:'ease-in-out',loop:1},
+  pulse:{kf:[{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],d:2.4,e:'ease-in-out',loop:1},
+  breathe:{kf:[{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],d:3.2,e:'ease-in-out',loop:1},
+  squeeze:{kf:[{transform:'scale(1,1)'},{transform:'scale(.9,1.1)'},{transform:'scale(1,1)'}],d:1.6,e:'ease-in-out',loop:1},
+  beat:{kf:[{transform:'scale(1)'},{transform:'scale(1.15)',offset:.15},{transform:'scale(1)',offset:.3},{transform:'scale(1.09)',offset:.45},{transform:'scale(1)'}],d:1.1,e:'ease-out',loop:1},
+  spin:{kf:[{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}],d:12,e:'linear',loop:1},
+  wob:{kf:[{transform:'rotate(-4deg) translateY(0px)'},{transform:'rotate(4deg) translateY(-6px)'},{transform:'rotate(-4deg) translateY(0px)'}],d:3,e:'ease-in-out',loop:1},
+  ping:{kf:[{opacity:0,transform:'scale(1)'},{opacity:.8,offset:.1},{opacity:0,transform:'scale(1.9)'}],d:1.2,e:'ease-out',loop:1},
+  dashrun:{kf:[{strokeDashoffset:'0px'},{strokeDashoffset:'-40px'}],d:1.1,e:'linear',loop:1},
+};
+
+/* ---------- scenes ---------- */
+const SC=[];
+const WPS=2.2, PAD=.9;
+
+/* 0 — TITLE */
+SC.push({kicker:'',title:'',acc:'#ffc857',tail:3.8,
+ cues:[['**Why are bones hard and muscles soft?**',4.4]],
+ svg:()=>`
+  <g data-fx="fi@0/1.4"><circle cx="1440" cy="500" r="380" fill="url(#gHalo)"/></g>
+  ${floaters(16,'31',1000,1860,120,820)}
+  ${TX(110,330,'A SCIENCE ANIMATION',26,'#35e0d1',{a:'start',ls:7,fx:'fi@.3/.8'})}
+  ${TX(110,450,'Why are',72,'#cfe0ff',{a:'start',w:600,fx:'up@.6/.9'})}
+  ${TX(110,590,'bones hard',144,'url(#gTG)',{a:'start',w:900,fx:'up@1.0/.9'})}
+  ${TX(110,716,'and muscles soft?',104,'url(#gTC)',{a:'start',w:900,fx:'up@1.5/.9'})}
+  ${TX(110,800,'Cells  ·  Tissues  ·  Bones  ·  Muscles',30,'#9fb3d6',{a:'start',w:600,ls:2,fx:'fi@2.6/.9'})}
+  ${G(1330,225,armSVG('a0'),'zoom@.5/1.2',.92)}`,
+ tick:(lt,s)=>{const t=Math.max(0,lt-1.8);setArm(s.el,'a0',lt<1.8?0:55-55*Math.cos(PI2*t/4.8));}
+});
+
+/* 1 — WHAT IS A CELL */
+SC.push({kicker:'CHAPTER 01 · THE BUILDING BLOCK',title:'What is a cell?',acc:'#35e0d1',
+ cues:[
+  'All organisms are made up of **cells**.',
+  'A cell is the **smallest unit** of living matter.',
+  ['Cells **grow**, **reproduce**, use **energy**, and produce **waste**.',5.4]],
+ svg:()=>{
+  const R=mk(11),sp=76,pts=[];
+  for(let r=-5;r<=5;r++)for(let q=-6;q<=6;q++){
+    const x=sp*(q+(r&1?.5:0)),y=sp*.866*r,d=Math.hypot(x,y),a=Math.atan2(y,x);
+    if(d<255+45*Math.sin(3*a+1))pts.push([x,y,d]);
+  }
+  const cells=pts.map(([x,y,d])=>G(960+x,500+y,`<circle r="33" fill="url(#gCell)" stroke="rgba(160,255,240,.8)" stroke-width="3"/><circle cx="${f1(R()*8-4)}" cy="${f1(R()*8-4)}" r="9" fill="url(#gNuc)"/>`,`pop@c0+${(d/300*2.2+R()*.3).toFixed(2)}/.55`)).join('');
+  const big=`<ellipse rx="236" ry="236" fill="url(#gCell)" stroke="rgba(255,200,100,.95)" stroke-width="12"/><circle r="222" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="3"/>
+   <circle cx="-20" cy="-8" r="78" fill="url(#gNuc)" stroke="#e0d9ff" stroke-width="5"/><circle cx="-34" cy="-22" r="24" fill="#3b2aa6"/>
+   ${[[-140,90],[130,100],[110,-120],[-120,-110],[20,150]].map(([x,y],i)=>`<g transform="translate(${x} ${y}) rotate(${i*35})"><ellipse rx="34" ry="16" fill="#ff9d6b" stroke="#ffcf9f" stroke-width="3"/><path d="M-20 0 q6 -10 11 0 t11 0 t11 0 t11 0" fill="none" stroke="#c4562b" stroke-width="3"/></g>`).join('')}
+   ${Array.from({length:26},()=>{const a=R()*PI2,r=100+R()*110;return `<circle cx="${f1(Math.cos(a)*r)}" cy="${f1(Math.sin(a)*r)}" r="4.5" fill="rgba(255,255,255,.6)"/>`}).join('')}`;
+  const badge=(x,y,label,col,icon,at)=>`<g data-fx="pop@${at}/.6">${LN(x+(x<960?360:0),y+48,x<960?1130-410+170:830,520,'rgba(255,255,255,.2)',3,'',' 6 10')}<rect x="${x}" y="${y}" width="360" height="96" rx="48" fill="rgba(255,255,255,.08)" stroke="${col}" stroke-width="3"/><circle cx="${x+48}" cy="${y+48}" r="38" fill="${col}"/><g transform="translate(${x+48} ${y+48})">${icon}</g>${TX(x+112,y+62,label,34,'#fff',{a:'start',w:800})}</g>`;
+  const iGrow=`<g fill="none" stroke="#06122a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="-17" y="-3" width="20" height="20" rx="5"/><path d="M-4 4 L15 -15 M3 -15 H15 V-3"/></g>`;
+  const iRep=`<g fill="none" stroke="#06122a" stroke-width="5"><circle cx="-11" cy="0" r="13"/><circle cx="11" cy="0" r="13"/></g>`;
+  const iEn=`<path d="M6 -22 L-14 3 H-1 L-7 22 L15 -6 H1 Z" fill="#06122a"/>`;
+  const iWa=`<path d="M0 -22 C14 -3 18 5 18 11 A18 18 0 0 1 -18 11 C-18 5 -14 -3 0 -22Z" fill="#06122a"/>`;
+  return `
+  <g data-fx="fo@c1+.2/.9">${cells}</g>
+  ${G(960,500,`<g data-fx="pulse@c1+1.4/3.2 ">${big}</g>`,'zoom@c1+.4/1.0')}
+  <g data-fx="ping@c2+.4/1.4"><circle cx="960" cy="500" r="236" fill="none" stroke="#35e0d1" stroke-width="6"/></g>
+  <g data-fx="fi@c2+1.0/.3 fo@c2+1.9/.6"><g data-fx="ping@c2+1.0/1.2"><circle cx="1140" cy="470" r="100" fill="none" stroke="#ffc857" stroke-width="6"/></g></g>
+  ${G(1180,430,`<circle r="86" fill="url(#gCell)" stroke="rgba(255,200,100,.95)" stroke-width="8"/><circle cx="-6" cy="-4" r="28" fill="url(#gNuc)"/>`,'pop@c2+1.5/.8')}
+  <g data-fx="flash@c2+2.1/1.4"><circle cx="960" cy="500" r="190" fill="rgba(255,225,120,.35)"/></g>
+  <g data-fx="fi@c2+3.0/.4">${[0,1,2,3,4].map(i=>`<circle cx="${900+i*40}" cy="${770}" r="6" fill="#b58b5a" data-fx="fly@c2+${3.0+i*.18}/1.0" data-v="0,-60"/>`).join('')}</g>
+  <g data-fx="pop@c1+1.4/.9">${PILL(610,792,700,64,'CELL = smallest unit of living matter','#35e0d1','',27)}</g>
+  ${badge(110,290,'GROW','#35e0d1',iGrow,'c2+.35')}
+  ${badge(1450,290,'REPRODUCE','#ffc857',iRep,'c2+1.05')}
+  ${badge(110,640,'USE ENERGY','#9b8cff',iEn,'c2+2.0')}
+  ${badge(1450,640,'MAKE WASTE','#ff9d6b',iWa,'c2+3.0')}`;
+ }
+});
+
+/* 2 — THREE PARTS OF A CELL */
+SC.push({kicker:'CHAPTER 02 · CELL STRUCTURE',title:'Three parts of a cell',acc:'#ffc857',
+ cues:[
+  'Nearly all the cells in your body have the same **three parts**.',
+  'The first is the **cell membrane**, which surrounds the cell and acts as a **barrier** between the cell and the outside world.',
+  'Inside the cell, a central **nucleus** controls the cell’s activities.',
+  'Between the membrane and the nucleus is the **cytoplasm**, a jelly-like substance that contains the materials and structures necessary for cells to do their job.'],
+ svg:()=>{
+  const R=mk(5),CX=660,CY=530,RX=340,RY=285;
+  let mem='';
+  for(let i=0;i<84;i++){
+    const a=i/84*PI2,c=Math.cos(a),s=Math.sin(a),ox=(RX)*c,oy=(RY)*s,ix=(RX-26)*c,iy=(RY-26)*s;
+    mem+=`<line x1="${f1(ox)}" y1="${f1(oy)}" x2="${f1(ix)}" y2="${f1(iy)}" stroke="#ff9f1c" stroke-width="3"/><circle cx="${f1(ox*1.012)}" cy="${f1(oy*1.012)}" r="8" fill="#ffc857"/><circle cx="${f1(ix)}" cy="${f1(iy)}" r="8" fill="#ffc857"/>`;
+  }
+  const mito=[[-210,-110,-30],[220,110,25],[-170,150,60],[210,-150,-50],[40,200,10]].map(([x,y,a])=>`<g data-fx="wob@0/${(2.6+R()*1.4).toFixed(1)}"><g transform="translate(${x} ${y}) rotate(${a})"><ellipse rx="50" ry="24" fill="#ff9d6b" stroke="#ffcf9f" stroke-width="3.5"/><path d="M-32 0 q8 -15 16 0 t16 0 t16 0 t16 0" fill="none" stroke="#c4562b" stroke-width="3.5"/></g></g>`).join('');
+  let ribo='';for(let i=0;i<46;i++){const a=R()*PI2,r=.28+R()*.62;const x=Math.cos(a)*(RX-60)*r,y=Math.sin(a)*(RY-60)*r;if(Math.hypot(x+30,y+10)<150)continue;ribo+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(3.5+R()*2.5)}" fill="rgba(255,255,255,${(.45+R()*.4).toFixed(2)})"/>`}
+  const er=`<circle cx="-30" cy="-10" r="140" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="9" stroke-dasharray="34 16" stroke-linecap="round"/><circle cx="-30" cy="-10" r="168" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="8" stroke-dasharray="22 20" stroke-linecap="round"/>`;
+  const nuc=`<circle cx="-30" cy="-10" r="104" fill="url(#gNuc)" stroke="#e0d9ff" stroke-width="6"/><circle cx="-52" cy="-32" r="30" fill="#3b2aa6"/><path d="M-6 -50 q20 10 4 30 t18 28 M-70 20 q24 10 40 -8 t30 14" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="5" stroke-linecap="round"/>`;
+  const row=(y,n,title,desc,col,at)=>`<g data-fx="right@${at}/.8">
+    <rect x="1190" y="${y}" width="640" height="180" rx="32" class="card"/><circle cx="1250" cy="${y+90}" r="36" fill="${col}"/>${TX(1250,y+103,n,38,'#06122a',{w:800})}
+    ${TX(1312,y+74,title,44,'#fff',{a:'start',w:800})}${TX(1312,y+118,desc[0],25,'#b6c8ea',{a:'start',w:500})}${TX(1312,y+148,desc[1],25,'#b6c8ea',{a:'start',w:500})}</g>`;
+  const part=(n,cx,cy,col,at)=>`<g data-fx="pop@${at}/.6"><circle cx="${cx}" cy="${cy}" r="26" fill="${col}"/>${TX(cx,cy+11,n,30,'#06122a',{w:800})}</g>`;
+  return `
+  <g data-fx="zoom@.2/1.1">
+   <g transform="translate(${CX} ${CY})">
+    <ellipse rx="${RX}" ry="${RY}" fill="url(#gCell)"/>
+    <g data-fx="flash@c3+.2/2.4"><ellipse rx="${RX-30}" ry="${RY-30}" fill="rgba(160,255,240,.35)"/></g>
+    ${er}${mito}${ribo}
+    <g data-fx="pulse@c2+.2/2.6">${nuc}</g>
+    <g data-fx="spin@c2+.2/14"><circle cx="-30" cy="-10" r="128" fill="none" stroke="rgba(224,217,255,.0)"/><circle cx="-30" cy="-10" r="126" fill="none" stroke="#c9bfff" stroke-width="3" stroke-dasharray="4 14" opacity=".9"/></g>
+    <g>${mem}</g>
+    <g data-fx="flash@c1+.4/2.6"><ellipse rx="${RX+4}" ry="${RY+4}" fill="none" stroke="#ffe08a" stroke-width="20" filter="url(#fGlow)"/></g>
+   </g>
+  </g>
+  ${[0,1,2,3,4].map(i=>{const a=(-.55+i*.2)*Math.PI;const ox=CX+(RX+95)*Math.cos(a+3.14), oy=CY+(RY+60)*Math.sin(a+3.14);return `<g data-fx="fi@c1+.3/.2 fo@c1+4.5/.5"><g data-fx="bump@c1+${i*.25}/1.4" data-v="${f1(Math.cos(a+3.14)*-60)},${f1(Math.sin(a+3.14)*-50)}"><circle cx="${f1(ox)}" cy="${f1(oy)}" r="13" fill="#ff9d6b" stroke="#fff" stroke-width="2"/></g></g>`}).join('')}
+  ${part('1',CX+RX*.7,CY-RY*.86,'#ffc857','c0+1.4')}${part('2',CX+8,CY-10,'#c9bfff','c0+2.0')}${part('3',CX-200,CY+36,'#7ef0e0','c0+2.6')}
+  ${row(222,'1','Cell membrane',['Surrounds the cell · a barrier','between the cell and the outside'],'#ffc857','c1+.4')}
+  ${row(420,'2','Nucleus',['The control centre · directs','all of the cell’s activities'],'#c9bfff','c2+.3')}
+  ${row(618,'3','Cytoplasm',['Jelly-like · holds the materials','and structures the cell needs'],'#7ef0e0','c3+.5')}
+  ${LN(1190,312,CX+RX*.7+24,CY-RY*.86+8,'#ffc857',3,'draw@c1+.9/.8')}
+  ${LN(1190,510,CX+8+90,CY-10,'#c9bfff',3,'draw@c2+.8/.8')}
+  ${LN(1190,708,CX-200+30,CY+40,'#7ef0e0',3,'draw@c3+1.0/.8')}`;
+ }
+});
+
+/* 3 — SPECIALISED CELLS */
+SC.push({kicker:'CHAPTER 03 · SPECIALISED CELLS',title:'Same parts, different jobs',acc:'#9b8cff',
+ cues:[
+  'Although the cells in your body have similar parts, many of the cells do **specific jobs**.',
+  'In order to do these jobs well, the cells **look and act different** from each other.',
+  ['The cells that make up your **muscles** are shaped differently and behave differently from those that make up your **bones**.',8]],
+ svg:()=>{
+  const items=[
+   {n:'Muscle cell',j:'Contracts to move',art:`<g transform="rotate(-18)">${cellMuscle(250,54)}</g>`,col:'#ff6b81'},
+   {n:'Bone cell',j:'Supports the body',art:boneCell(1.15),col:'#ffc857'},
+   {n:'Nerve cell',j:'Carries signals',art:`<g transform="scale(.9)">${neuron()}</g>`,col:'#9b8cff'},
+   {n:'Red blood cell',j:'Carries oxygen',art:rbc(),col:'#ff8a98'}];
+  const cards=items.map((it,i)=>{
+    const x=100+i*440,y=225,dim=i>1?`dim@c2/.6`:'';
+    return `<g data-fx="${dim}">`+CARD(x,y,400,470,`
+      <g data-fx="wob@c1+${i*.2}/${(2.8+i*.3).toFixed(1)}">${G(x+200,y+190,it.art,'pop@c0+'+(.5+i*.35)+'/.7')}</g>
+      ${TX(x+200,y+372,it.n,34,'#fff',{w:800})}${TX(x+200,y+418,it.j,25,'#b6c8ea',{w:500})}
+      ${i<2?`<rect class="hl" x="${x}" y="${y}" width="400" height="470" rx="34" data-fx="fi@c2+.3/.5" style="stroke:${it.col}"/>`:''}`,'')+`</g>`;
+  }).join('');
+  return `${cards}
+   ${PILL(560,760,800,70,'Many cells  ·  many different jobs','#9b8cff','fi@c0+2/.6 fo@c1/.4',30)}
+   ${PILL(520,760,880,70,'Different jobs  →  different shapes','#35e0d1','fi@c1+.4/.6 fo@c2/.4',30)}
+   ${PILL(520,760,880,70,'Muscle cells  ≠  Bone cells','#ffc857','fi@c2+.8/.6',32)}`;
+ }
+});
+
+/* 4 — CELLS TO TISSUE */
+SC.push({kicker:'CHAPTER 04 · FROM CELLS TO TISSUE',title:'Trillions of cells, working together',acc:'#4aa8ff',
+ cues:[
+  'Human beings are **multicellular** organisms made of **trillions** of cells.',
+  ['Specialized cells in multicellular organisms, such as **bone** or **muscle** cells, **group together** to carry out particular functions, such as **breathing**, **digesting**, and **moving**.',11.4],
+  'When similar cells work together, they form a **tissue**.'],
+ svg:s=>{
+  const R=mk(21);
+  const boneC=[[-150,-80],[0,-100],[150,-80],[-210,30],[-75,25],[75,25],[210,30],[-140,135],[0,150],[140,135]];
+  const bonesCl=boneC.map(([x,y],i)=>G(560+x,470+y,boneCell(.62),`pop@c1+${(2.4+i*.12).toFixed(2)}/.5`)).join('');
+  const musC=[-124,-62,0,62,124].map((y,i)=>G(1340+(i%2?14:-14),470+y,cellMuscle(300,50),`pop@c1+${(2.9+i*.14).toFixed(2)}/.5`)).join('');
+  const lungs=`<g fill="#ff9aa8" stroke="#ffd0d6" stroke-width="5" stroke-linejoin="round"><path d="M-14 -60 C-90 -62 -118 40 -92 96 C-76 128 -18 122 -16 80Z"/><path d="M14 -60 C90 -62 118 40 92 96 C76 128 18 122 16 80Z"/></g><path d="M0 -120 V-30 M0 -30 Q-14 -10 -40 -4 M0 -30 Q14 -10 40 -4" fill="none" stroke="#ffe3e6" stroke-width="9" stroke-linecap="round"/>`;
+  const stomach=`<path d="M-26 -124 C-26 -96 -24 -82 4 -76 C84 -62 134 -8 122 56 C110 114 40 134 -16 108 C-62 86 -80 38 -66 -8 C-56 -40 -44 -50 -44 -80 C-44 -98 -44 -112 -46 -124Z" fill="#ffa86b" stroke="#ffd2a8" stroke-width="5" stroke-linejoin="round"/><path d="M-30 6 C0 -6 30 10 52 6 M-26 46 C8 32 42 54 76 40 M-6 82 C26 72 52 90 84 78" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="8" stroke-linecap="round"/>`;
+  const runner=`<g stroke="#ffc857" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M12 -78 L-8 4"/><path d="M8 -66 L56 -30 L88 -58"/><path d="M8 -66 L-40 -36 L-62 -70"/><path d="M-8 4 L40 40 L22 104"/><path d="M-8 4 L-50 54 L-92 34"/></g><circle cx="24" cy="-112" r="26" fill="#ffc857"/>`;
+  const fn=(x,at,art,label,sub,anim)=>CARD(x,235,500,470,`
+     <circle cx="${x+250}" cy="440" r="165" fill="rgba(74,168,255,.10)"/><g data-fx="${anim}">${G(x+250,440,art,'')}</g>
+     ${TX(x+250,640,label,44,'#fff',{w:800})}${TX(x+250,680,sub,24,'#b6c8ea',{w:500})}`,`pop@${at}/.7`);
+  const gridCells=[];
+  for(let r=0;r<4;r++)for(let c=0;c<6;c++){
+    const gx=(c-2.5)*72,gy=(r-1.5)*72,a=R()*PI2,d=170+R()*190,i=r*6+c;
+    gridCells.push(`<g data-fx="move@c2+${(1.7+i*.03).toFixed(2)}/1.3" data-v="${f1(Math.cos(a)*d)},${f1(Math.sin(a)*d*.7)}">${G(960+gx,500+gy,`<circle r="30" fill="url(#gMus)" stroke="#ffb3be" stroke-width="3"/><ellipse cx="-4" cy="2" rx="9" ry="6" fill="#4a2a8f"/>`,`pop@c2+${(i*.045).toFixed(2)}/.5`)}</g>`);
+  }
+  return `
+  <g data-fx="fo@c1/.7">
+   ${G(540,520,silh('stroke="rgba(53,224,209,.22)" fill="none" filter="url(#fGlow)"',200,60,84,60,'fill="rgba(53,224,209,.22)" stroke="none"')+silh('stroke="url(#pCells)" fill="none"',190,50,74,52,'fill="url(#pCells)" stroke="none"'),'zoom@c0+.2/1.2')}
+   ${TX(1290,462,'≈ 0',230,'#fff',{id:'cnt4',fx:'up@c0+.5/.9',w:900})}
+   ${TX(1290,552,'TRILLION CELLS',60,'#4aa8ff',{fx:'fi@c0+1.2/.8',w:800,ls:3})}
+   ${TX(1290,610,'estimated in one human body',27,'#9fb3d6',{fx:'fi@c0+1.8/.8',w:500})}
+  </g>
+  <g data-fx="fi@c1/.6 fo@c1+6.6/.6">
+   ${bonesCl}${musC}
+   ${TX(560,730,'Bone cells',36,'#ffc857',{fx:'fi@c1+3.4/.6',w:800})}
+   ${TX(1340,730,'Muscle cells',36,'#ff8a98',{fx:'fi@c1+3.6/.6',w:800})}
+   <ellipse cx="560" cy="470" rx="320" ry="215" fill="none" stroke="#ffc857" stroke-width="4" stroke-dasharray="1 2" data-fx="draw@c1+4.8/1.2"/>
+   <ellipse cx="1340" cy="470" rx="230" ry="215" fill="none" stroke="#ff8a98" stroke-width="4" data-fx="draw@c1+5.0/1.2"/>
+  </g>
+  <g data-fx="fo@c2/.6">
+   ${fn(100,'c1+6.9',lungs,'Breathing','lungs','breathe@c1+7.0/3.2')}
+   ${fn(710,'c1+7.8',stomach,'Digesting','stomach','squeeze@c1+7.9/1.6')}
+   ${fn(1320,'c1+8.7',runner,'Moving','muscles + bones','bob@c1+8.8/.9')}
+  </g>
+  ${gridCells.join('')}
+  <g data-fx="fi@c2+3.4/.3"><rect x="724" y="336" width="472" height="328" rx="44" fill="rgba(255,107,129,.08)" stroke="#ff8a98" stroke-width="5" data-fx="draw@c2+3.4/1.4"/></g>
+  ${PILL(780,716,360,72,'TISSUE','#ff6b81','pop@c2+4.1/.6',38,'#fff')}`;
+ },
+ tick:(lt,s)=>{
+  const el=s.q('cnt4'), t=lt-s.cs[0]-.6, n=Math.round(37*(1-Math.pow(1-clamp(t/3.2,0,1),3)));
+  const txt='≈ '+n; if(el.textContent!==txt)el.textContent=txt;
+ }
+});
+
+/* 5 — FOUR TYPES OF TISSUE */
+SC.push({kicker:'CHAPTER 05 · TISSUES',title:'Four types of tissue',acc:'#ffc857',
+ cues:[
+  'The human body contains **four types** of tissue.',
+  '**Muscle cells** form **muscle tissue**, which is responsible for **movement**.',
+  ['**Bone cells** make up part of the body’s **connective tissue**, which also includes **cartilage**, **tendons**, and **ligaments** that help connect muscles and bones.',10.2]],
+ svg:()=>{
+  const R=mk(9);
+  const musIcon=[-72,-36,0,36,72].map((y,i)=>`<g data-fx="squeeze@c1+${i*.15}/1.6" style="transform-origin:center">${G(0,y,cellMuscle(230,32,false),'')}</g>`).join('');
+  const connIcon=`<g transform="rotate(-24)">${boneShape(250,56)}</g>`;
+  const nervIcon=`<g transform="scale(.82)">${neuron()}</g>`;
+  let brick='';for(let r=0;r<5;r++)for(let c=0;c<4;c++){brick+=`<rect x="${-120+c*62+(r%2?31:0)-(r%2?0:0)}" y="${-80+r*34}" width="58" height="30" rx="9" fill="${['#5ee0a0','#47c98c','#7aeab2'][(r+c)%3]}" opacity=".95"/>`}
+  const defs=[
+   {n:'1',t:'MUSCLE',d:'movement',icon:musIcon,col:'#ff6b81'},
+   {n:'2',t:'CONNECTIVE',d:'bone · cartilage · tendons · ligaments',icon:connIcon,col:'#ffc857'},
+   {n:'3',t:'NERVOUS',d:'carries signals',icon:nervIcon,col:'#9b8cff'},
+   {n:'4',t:'EPITHELIAL',d:'covers & lines surfaces',icon:brick,col:'#5ee0a0'}];
+  const cards=defs.map((d,i)=>{
+    const x=80+i*440,y=215;
+    const wrapFx=i===0?'dim@c2/.6':i===1?'dim@c1/.6 undim@c2/.6':'dim@c1/.6';
+    const hlFx=i===0?'fi@c1+.3/.5 fo@c2/.4':i===1?'fi@c2+.3/.5':'';
+    return `<g data-fx="${wrapFx}">`+CARD(x,y,400,440,`
+      <circle cx="${x+48}" cy="${y+52}" r="30" fill="${d.col}"/>${TX(x+48,y+63,d.n,32,'#06122a',{w:800})}
+      ${G(x+200,y+200,d.icon,'')}
+      ${TX(x+200,y+366,d.t,34,'#fff',{w:800,ls:2})}${TX(x+200,y+404,d.d,i===1?20:23,'#b6c8ea',{w:500})}
+      <rect class="hl" x="${x}" y="${y}" width="400" height="440" rx="34" style="stroke:${d.col}" data-fx="${hlFx}"/>`,`pop@c0+${(.4+i*.4).toFixed(2)}/.7`)+`</g>`;
+  }).join('');
+  return cards+
+   `<g data-fx="fi@c2+1.0/.6">
+     ${[['Bone','#f6ebcb',boneShape(60,16)],['Cartilage','#8fd3ff',`<path d="M-26 8 C-26 -22 -2 -22 -2 -2 C-2 14 18 12 22 -10" fill="none" stroke="#8fd3ff" stroke-width="14" stroke-linecap="round"/>`],['Tendons','#ffd9a8',`<path d="M-30 0 H30" stroke="#ffd9a8" stroke-width="9" stroke-linecap="round"/><circle cx="-34" cy="0" r="12" fill="#ff6b81"/><circle cx="34" cy="0" r="12" fill="#f6ebcb"/>`],['Ligaments','#c9bfff',`<circle cx="-30" cy="0" r="12" fill="#f6ebcb"/><circle cx="30" cy="0" r="12" fill="#f6ebcb"/><path d="M-30 -2 Q0 -22 30 -2 M-30 4 Q0 22 30 4" fill="none" stroke="#c9bfff" stroke-width="7" stroke-linecap="round"/>`]]
+      .map(([n,col,ic],i)=>`<g data-fx="up@c2+${(1.0+i*.55).toFixed(2)}/.6"><rect x="${80+i*440}" y="700" width="400" height="92" rx="46" fill="rgba(255,255,255,.07)" stroke="${col}" stroke-width="3"/>${G(80+i*440+80,746,ic,'')}${TX(80+i*440+150,758,n,32,'#fff',{a:'start',w:800})}</g>`).join('')}
+   </g>
+   ${LN(780,655,780,690,'#ffc857',4,'draw@c2+.8/.5')}`;
+ }
+});
+
+/* 6 — THREE TYPES OF MUSCLE */
+SC.push({kicker:'CHAPTER 06 · MUSCLE TISSUE',title:'Three kinds of muscle',acc:'#ff6b81',
+ cues:[
+  'There are **three types** of muscle tissue that make up the muscles in your body.',
+  'One type forms the muscles in your **organs**.',
+  'Another type forms your **heart** muscle.',
+  'The third type forms the muscles that attach to your **skeleton**.'],
+ svg:()=>{
+  const tube=`<path id="tube6" d="M-190 70 C-120 -80 -60 150 10 10 S140 -100 190 -10" fill="none" stroke="#ff9aa8" stroke-width="58" stroke-linecap="round"/>
+   <path d="M-190 70 C-120 -80 -60 150 10 10 S140 -100 190 -10" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="58" stroke-linecap="butt" stroke-dasharray="5 35" data-fx="dashrun@c1/1.1"/>
+   <path d="M-190 70 C-120 -80 -60 150 10 10 S140 -100 190 -10" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="10" stroke-linecap="round" transform="translate(0 -14)"/>`;
+  const heart=`<g data-fx="beat@c2+.2/1.1"><path d="M0 100 C-150 -10 -120 -110 -50 -100 C-18 -96 0 -70 0 -52 C0 -70 18 -96 50 -100 C120 -110 150 -10 0 100Z" fill="url(#gMus)" stroke="#ffb3be" stroke-width="6" stroke-linejoin="round"/><path d="M-70 -62 C-50 -84 -30 -78 -22 -62" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="8" stroke-linecap="round"/></g>
+    <g data-fx="ping@c2+.2/1.1"><path d="M0 100 C-150 -10 -120 -110 -50 -100 C-18 -96 0 -70 0 -52 C0 -70 18 -96 50 -100 C120 -110 150 -10 0 100Z" fill="none" stroke="#ff6b81" stroke-width="5"/></g>`;
+  const card=(x,t,sub,col,art,hlAt,nxt)=>CARD(x,225,520,520,`
+    <rect class="hl" x="${x}" y="225" width="520" height="520" rx="34" style="stroke:${col}" data-fx="fi@${hlAt}+.1/.4${nxt?` fo@${nxt}/.4`:''}"/>
+    ${G(x+260,470,art,'')}
+    ${TX(x+260,650,t,40,'#fff',{w:800})}${TX(x+260,692,sub,25,'#b6c8ea',{w:500})}`,`pop@c0+${hlAt==='c1'?.5:hlAt==='c2'?.9:1.3}/.7`);
+  return `${card(100,'Smooth muscle','in the walls of your organs','#ff9aa8',tube,'c1','c2')}
+   ${card(700,'Cardiac muscle','forms your heart','#ff6b81',heart,'c2','c3')}
+   ${card(1300,'Skeletal muscle','attached to your skeleton','#ffc857',`<g transform="translate(-52 -176) scale(.52)">${armSVG('a6')}</g>`,'c3')}`;
+ },
+ tick:(lt,s)=>{const t=lt-s.cs[3]-.4;setArm(s.el,'a6',t<0?0:55-55*Math.cos(PI2*t/3.6));}
+});
+
+/* 7 — SKELETAL MUSCLE CELLS */
+SC.push({kicker:'CHAPTER 07 · INSIDE SKELETAL MUSCLE',title:'Long, thin cells that bundle up',acc:'#ff6b81',
+ cues:[
+  'This **skeletal muscle** tissue is made up of long, thin cells that look like **threads**.',
+  'Unlike most other cells, skeletal muscle cells have **more than one nucleus**.',
+  'Muscle cells **bundle together** to form long, **rope-like cords** of tissue.'],
+ svg:()=>{
+  const R=mk(3),X0=260,W=1400,ys=[0,1,2,3,4,5,6].map(i=>540+(i-3)*66);
+  const fiber=(y,nuclei)=>`<g><rect x="${X0}" y="${y-27}" width="${W}" height="54" rx="27" fill="url(#gMus)"/><rect x="${X0}" y="${y-27}" width="${W}" height="54" rx="27" fill="url(#pStri)"/><rect x="${X0+30}" y="${y-21}" width="${W-60}" height="10" rx="5" fill="rgba(255,255,255,.28)"/>${nuclei}</g>`;
+  const nucAt=(y,xs)=>xs.map(x=>`<ellipse cx="${x}" cy="${y+10}" rx="24" ry="12" fill="#4a2a8f" stroke="#c9bfff" stroke-width="2"/>`).join('');
+  let others='';
+  ys.forEach((y,i)=>{if(i===3)return;const dir=i<3?-1:1,k=Math.abs(i-3);
+    const xs=Array.from({length:5},(_,j)=>f1(X0+120+j*270+R()*80));
+    others+=`<g data-fx="fly@c2+${(k*.2).toFixed(2)}/1.0" data-v="0,${dir*(240+k*40)}">${fiber(y,nucAt(y,xs))}</g>`});
+  const nxs=[380,640,900,1120,1380,1560];
+  return `
+  <g data-fx="grow@c0+.3/2.8">${fiber(540,'')}</g>
+  ${others}
+  <g data-fx="fo@c1+.3/.5">
+   <g data-fx="fi@c0+2.6/.6">
+    ${LN(X0,466,X0+W,466,'rgba(255,255,255,.6)',3)}${LN(X0,454,X0,478)}${LN(X0+W,454,X0+W,478)}
+    ${PILL(790,440,340,52,'LONG','#ff8a98','',26)}
+    ${LN(1710,513,1710,567,'rgba(255,255,255,.6)',3)}${LN(1698,513,1722,513)}${LN(1698,567,1722,567)}
+    ${TX(1738,550,'THIN',28,'#ffb3be',{a:'start',w:800})}
+   </g>
+  </g>
+  ${nxs.map((x,i)=>`<g data-fx="pop@c1+${(.7+i*.45).toFixed(2)}/.5"><ellipse cx="${x}" cy="550" rx="26" ry="13" fill="#4a2a8f" stroke="#c9bfff" stroke-width="3"/></g>`).join('')}
+  <g data-fx="fi@c1+.5/.5 fo@c2/.5">
+   <path d="M${nxs[0]-40} 596 V610 H${nxs[5]+40} V596" fill="none" stroke="#c9bfff" stroke-width="4" stroke-linecap="round" data-fx="draw@c1+2.8/1.0"/>
+   ${PILL(740,638,440,64,'MANY NUCLEI','#9b8cff','fi@c1+3.3/.5',30)}
+   ${G(330,290,`<circle r="46" fill="url(#gCell)" stroke="rgba(255,200,100,.95)" stroke-width="6"/><circle r="20" fill="url(#gNuc)"/>${TX(90,12,'Most cells: 1 nucleus',28,'#b6c8ea',{a:'start',w:600})}`,'fi@c1+.9/.6')}
+  </g>
+  <rect x="232" y="298" width="1456" height="484" rx="72" fill="none" stroke="#ffc857" stroke-width="6" data-fx="draw@c2+2.0/1.8"/>
+  <rect x="232" y="298" width="1456" height="484" rx="72" fill="url(#pRope)" data-fx="fi@c2+2.6/1.0" opacity=".8"/>
+  ${PILL(560,806,800,60,'A BUNDLE OF CELLS = A ROPE-LIKE CORD','#ffc857','up@c2+2.8/.7',27)}`;
+ }
+});
+
+/* 8 — CONTRACT & RELAX */
+const RX8=640,RY8=215;
+SC.push({kicker:'CHAPTER 08 · HOW MUSCLES MOVE',title:'Contract and relax',acc:'#ff6b81',
+ cues:[
+  'Every time you move, muscle tissue **contracts** and **relaxes**.',
+  ['When you “make a muscle” in your arm by **flexing**, you are actually **contracting** the muscle tissue, making it **shorter and thicker**.',10.9],
+  'When you stop flexing, the muscle tissue **releases**, becoming **longer and thinner**.'],
+ svg:()=>`
+  <g data-fx="fi@0/.8">${G(RX8,RY8,armSVG('a8'),'')}</g>
+  <g id="lbl8" transform="translate(${RX8+100} ${RY8+190})"><g data-fx="fi@c0+1.0/.6">${LN(0,0,52,-46,'rgba(255,255,255,.6)',3)}<rect x="30" y="-104" width="250" height="56" rx="28" fill="#ff6b81"/>${TX(155,-66,'MUSCLE · soft',24,'#fff',{w:800})}</g></g>
+  <g data-fx="fi@c0+1.6/.6">${LN(RX8-24,RY8+120,372,RY8+120,'rgba(255,255,255,.55)',3)}<rect x="130" y="${RY8+92}" width="244" height="56" rx="28" fill="#f6e7bf"/>${TX(252,RY8+130,'BONE · hard',24,'#3a2c0b',{w:800})}</g>
+  ${CARD(1060,225,760,570,`
+    ${TX(1110,300,'THE BICEPS',26,'#9fb3d6',{a:'start',w:700,ls:5})}
+    <rect id="st8bg" x="1110" y="322" width="330" height="62" rx="31" fill="#4aa8ff"/>${TX(1275,364,'READY',28,'#06122a',{id:'st8',w:800,ls:2})}
+    ${TX(1110,462,'LENGTH',22,'#9fb3d6',{a:'start',w:700,ls:3})}${TX(1770,462,'100%',30,'#fff',{id:'lv8',a:'end',w:800})}
+    <rect x="1110" y="476" width="660" height="26" rx="13" fill="rgba(255,255,255,.1)"/><rect id="lf8" x="1110" y="476" width="440" height="26" rx="13" fill="#4aa8ff"/>
+    ${TX(1110,560,'THICKNESS',22,'#9fb3d6',{a:'start',w:700,ls:3})}${TX(1770,560,'100%',30,'#fff',{id:'tv8',a:'end',w:800})}
+    <rect x="1110" y="574" width="660" height="26" rx="13" fill="rgba(255,255,255,.1)"/><rect id="tf8" x="1110" y="574" width="440" height="26" rx="13" fill="#ff6b81"/>
+    ${TX(1440,700,'SHORTER + THICKER',50,'#ff6b81',{w:900,fx:'up@c1+1.8/.7 fo@c2+.6/.4'})}
+    ${TX(1440,700,'LONGER + THINNER',50,'#4aa8ff',{w:900,fx:'up@c2+1.6/.7'})}
+    ${TX(1440,752,'the muscle tissue releases',26,'#9fb3d6',{w:500,fx:'fi@c2+2.2/.6'})}
+    ${TX(1440,752,'the muscle tissue contracts',26,'#9fb3d6',{w:500,fx:'fi@c1+2.4/.6 fo@c2+.6/.4'})}`,'fi@.5/.6')}`,
+ tick:(lt,s)=>{
+  const c0=s.cs[0],c1=s.cs[1],c2=s.cs[2],d0=c1-c0;
+  let phi=0;
+  if(lt<c1)phi=55-55*Math.cos(PI2*clamp((lt-c0)/d0,0,1));
+  else if(lt<c2)phi=110*seg(lt,c1+1.2,c1+3.4);
+  else phi=110*(1-seg(lt,c2+.8,c2+3.4));
+  const r=setArm(s.el,'a8',phi,{glow:lt>=c1&&lt<c2?phi/110:phi/130});
+  const lp=r.len/ARM_LEN0*100,tp=r.th/ARM_TH0*100;
+  s.q('lv8').textContent=Math.round(lp)+'%';s.q('tv8').textContent=Math.round(tp)+'%';
+  s.q('lf8').setAttribute('width',f1(lp*4.4));s.q('tf8').setAttribute('width',f1(tp*4.4));
+  const going=(lt>=c1+1.2&&lt<c1+3.4)?'CONTRACTING':(lt>=c2+.8&&lt<c2+3.4)?'RELAXING':lt<c1?'MOVING':(lt<c2?'CONTRACTED':'RELAXED');
+  const st=s.q('st8');if(st.textContent!==going){st.textContent=going;s.q('st8bg').setAttribute('fill',/CONTRACT/.test(going)?'#ff6b81':'#4aa8ff');}
+  s.q('lbl8').setAttribute('transform',`translate(${f1(RX8+r.apex[0]+36)} ${f1(RY8+r.apex[1]+8)})`);
+ }
+});
+
+/* 9 — BONE CELL UNDER THE MICROSCOPE */
+SC.push({kicker:'CHAPTER 09 · UNDER THE MICROSCOPE',title:'What a bone cell looks like',acc:'#ffc857',
+ cues:[
+  'Under a **microscope**, bone cells look very different from muscle cells.',
+  ['Bone cells are **star-shaped** and contain a **nucleus** and a thin ring of **cytoplasm**.',7]],
+ svg:()=>{
+  const R=mk(14),CX=620,CY=520;
+  let ticks='';for(let i=0;i<48;i++){const a=i/48*PI2,l=i%4===0?22:12;ticks+=LN(f1(CX+Math.cos(a)*300),f1(CY+Math.sin(a)*300),f1(CX+Math.cos(a)*(300-l)),f1(CY+Math.sin(a)*(300-l)),'rgba(255,255,255,.28)',i%4===0?3:2)}
+  const bgCells=Array.from({length:14},()=>{const a=R()*PI2,r=R()*270;return `<circle cx="${f1(CX+Math.cos(a)*r)}" cy="${f1(CY+Math.sin(a)*r)}" r="${f1(26+R()*34)}" fill="rgba(110,160,255,.10)" stroke="rgba(150,190,255,.22)" stroke-width="2"/>`}).join('');
+  const callout=(y,tx,ty,title,sub,col,at)=>`<g data-fx="right@${at}/.7">${LN(1050,y,tx,ty,col,3)}${DOT(tx,ty,8,col)}<rect x="1050" y="${y-48}" width="760" height="96" rx="30" class="card"/>${TX(1090,y-6,title,38,'#fff',{a:'start',w:800})}${TX(1090,y+30,sub,24,'#b6c8ea',{a:'start',w:500})}</g>`;
+  return `
+  <g data-fx="zoom@0.1/1.0">
+   <circle cx="${CX}" cy="${CY}" r="332" fill="rgba(0,0,0,.35)"/>
+   <circle cx="${CX}" cy="${CY}" r="316" fill="url(#gLens)"/>
+   <g clip-path="url(#cLens)">${bgCells}
+     <g data-fx="fi@c0+.5/.8 fo@c0+3.0/.7"><g transform="translate(${CX} ${CY}) rotate(-14)">${cellMuscle(660,96,false)}${[-.3,0,.3].map(k=>`<ellipse cx="${k*660}" cy="40" rx="30" ry="15" fill="#4a2a8f"/>`).join('')}</g></g>
+     <g data-fx="pop@c0+3.3/1.0"><g data-fx="breathe@c1+1/5.0"><g transform="translate(${CX} ${CY})">
+       <path d="${starPath(86,104,7,2.2)}" fill="url(#gBone)" stroke="#c9ac6e" stroke-width="6" stroke-linejoin="round" opacity=".96"/>
+       <circle r="82" fill="none" stroke="#ffc857" stroke-width="16" opacity=".85"/>
+       <circle r="62" fill="url(#gNuc)" stroke="#e0d9ff" stroke-width="5"/><circle cx="-14" cy="-16" r="19" fill="#3b2aa6"/><circle cx="-22" cy="-26" r="6" fill="rgba(255,255,255,.5)"/>
+     </g></g></g>
+   </g>
+   <circle cx="${CX}" cy="${CY}" r="316" fill="none" stroke="url(#gMetal)" stroke-width="26"/>
+   <circle cx="${CX}" cy="${CY}" r="330" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="3"/>
+   ${ticks}
+   <path d="M${CX-300} ${CY-70} A310 310 0 0 1 ${CX-90} ${CY-296}" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="10" stroke-linecap="round"/>
+   <g transform="translate(${CX+190} ${CY+290})"><rect x="-58" y="-24" width="116" height="44" rx="22" fill="#0a1632" stroke="rgba(255,255,255,.3)" stroke-width="2"/>${TX(0,8,'400×',26,'#cfe0ff',{w:800})}</g>
+  </g>
+  <g data-fx="fi@c0+.9/.6 dim@c0+3.2/.5">${PILL(1050,240,640,70,'MUSCLE CELL · long & striped','#ff6b81','',27,'#fff')}</g>
+  <g data-fx="up@c0+3.5/.6">${PILL(1050,330,640,70,'BONE CELL · star-shaped','#ffc857','',27)}</g>
+  ${callout(500,CX+148,CY-119,'Star-shaped body','arms reach out in every direction','#ffc857','c1+.6')}
+  ${callout(630,CX+44,CY-10,'Nucleus','the cell’s control centre','#c9bfff','c1+2.0')}
+  ${callout(760,CX+54,CY+46,'Thin ring of cytoplasm','a jelly-like layer around the nucleus','#ffd88a','c1+3.4')}`;
+ }
+});
+
+/* 10 — WHY BONE IS HARD */
+SC.push({kicker:'CHAPTER 10 · BONE TISSUE',title:'Layers, calcium and minerals',acc:'#ffc857',
+ cues:[
+  'Bone tissue is made up of **layers** of bone cells surrounded by **calcium** and other **minerals**.',
+  'These minerals are what make our bones **hard**.'],
+ svg:()=>{
+  const R=mk(77),CX=620,CY=520,radii=[95,160,225,290],th=52;
+  const ringsSoft=radii.map((r,i)=>`<circle cx="${CX}" cy="${CY}" r="${r}" fill="none" stroke="${i%2?'#e2c98f':'#f3e3b6'}" stroke-width="${th}" opacity=".24"/>`).join('');
+  const ringsHard=radii.map((r,i)=>`<circle cx="${CX}" cy="${CY}" r="${r}" fill="none" stroke="${i%2?'#e2c98f':'#f3e3b6'}" stroke-width="${th}"/><circle cx="${CX}" cy="${CY}" r="${r-th/2}" fill="none" stroke="rgba(120,90,30,.35)" stroke-width="2"/>`).join('');
+  const starSvg=`<path d="${starPath(10,13,7,2.4)}" fill="#fff5da" stroke="#b79552" stroke-width="2.5" stroke-linejoin="round"/><circle r="6.5" fill="url(#gNuc)"/>`;
+  let stars='',k=0;
+  [[95,4],[160,6],[225,8],[290,10]].forEach(([r,n],ri)=>{for(let j=0;j<n;j++){const a=j/n*PI2+ri*.4;stars+=G(f1(CX+r*Math.cos(a)),f1(CY+r*Math.sin(a)),starSvg,`pop@c0+${(.3+k*.04).toFixed(2)}/.5`,1,f1(a*180/Math.PI+90));k++}});
+  let ca='';
+  for(let i=0;i<78;i++){
+    const ri=Math.floor(R()*4),a=R()*PI2,r=radii[ri]+(R()-.5)*34,x=CX+r*Math.cos(a),y=CY+r*Math.sin(a);
+    const dist=340+R()*300,vx=Math.cos(a+.5*(R()-.5))*dist,vy=Math.sin(a+.5*(R()-.5))*dist;
+    ca+=`<g data-fx="fly@c0+${(1.0+R()*3.6).toFixed(2)}/1.1" data-v="${f1(vx)},${f1(vy)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="6.5" fill="#ffc857" stroke="#fff2b3" stroke-width="1.6"/></g>`;
+  }
+  let big='';
+  for(let i=0;i<7;i++){const a=i/7*PI2+.3,ri=[1,2,3][i%3],r=radii[ri]+(i%2?14:-14),x=CX+r*Math.cos(a),y=CY+r*Math.sin(a);big+=`<g data-fx="fly@c0+${(1.5+i*.4).toFixed(2)}/1.0" data-v="${f1(Math.cos(a)*420)},${f1(Math.sin(a)*420)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="17" fill="#ffb02e" stroke="#fff2b3" stroke-width="2.5"/>${TX(f1(x),f1(y+5.5),'Ca',16,'#5b3a00',{w:800})}</g>`}
+  return `
+  <g data-fx="fi@0/.5"><circle cx="${CX}" cy="${CY}" r="326" fill="rgba(70,52,24,.7)"/></g>
+  ${ringsSoft}
+  <g data-fx="fi@c1+.1/1.4">${ringsHard}</g>
+  <circle cx="${CX}" cy="${CY}" r="42" fill="#8e1230" stroke="#ff6b81" stroke-width="6"/><circle cx="${CX-10}" cy="${CY-10}" r="12" fill="rgba(255,255,255,.3)"/>
+  ${stars}${ca}${big}
+  <g clip-path="url(#cLens)"><g data-fx="slide@c1+.9/1.7" data-v="-540,0"><rect x="${CX-60}" y="180" width="130" height="680" fill="url(#gShine)" transform="skewX(-18)"/></g></g>
+  <g data-fx="fi@c0+.2/.6">
+   <g>${[['#fff5da','Bone cells in layers',starSvg],['#f3e3b6','Layers of bone tissue',`<circle r="14" fill="none" stroke="#f3e3b6" stroke-width="7"/><circle r="5" fill="#f3e3b6"/>`],['#ffc857','Calcium & other minerals',`<circle r="9" fill="#ffc857" stroke="#fff2b3" stroke-width="2"/>`]]
+     .map(([c,t,ic],i)=>`<g data-fx="right@c0+${(.4+i*1.3).toFixed(2)}/.7">${G(1130,288+i*74,`<g transform="scale(1.5)">${ic}</g>`,'')}${TX(1180,298+i*74,t,34,'#fff',{a:'start',w:700})}</g>`).join('')}</g>
+  </g>
+  ${CARD(1080,520,740,250,`
+    ${TX(1130,580,'HARDNESS OF BONE',24,'#9fb3d6',{a:'start',w:700,ls:4})}
+    <rect x="1130" y="610" width="640" height="46" rx="23" fill="rgba(255,255,255,.1)"/>
+    <rect id="hf10" x="1130" y="610" width="64" height="46" rx="23" fill="#ffc857"/>
+    ${TX(1130,700,'SOFT',22,'#9fb3d6',{a:'start',w:700,ls:3})}${TX(1770,700,'HARD',22,'#ffc857',{a:'end',w:800,ls:3})}
+    ${TX(1450,748,'minerals  →  hard bones',28,'#fff',{w:800,fx:'fi@c1+.8/.6'})}`,'fi@c0+.6/.6')}`;
+ },
+ tick:(lt,s)=>{
+  const c1=s.cs[1],p=lt<c1?clamp((lt-1.0)/3.8,0,1)*.45:.45+.55*seg(lt,c1+.1,c1+2.8);
+  s.q('hf10').setAttribute('width',f1(64+p*576));
+ }
+});
+
+/* 11 — BONES GIVE SHAPE */
+SC.push({kicker:'CHAPTER 11 · THE SKELETON',title:'Shape and support',acc:'#ffc857',tail:1.8,
+ cues:[['Bones give our bodies **shape** and allow us to **stand upright**.',6.4]],
+ svg:()=>{
+  const O='stroke="#c3a463"',B='stroke="#f6ebcb"';
+  const bl=(a,b,w)=>`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#c3a463" stroke-width="${w+8}" stroke-linecap="round"/><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#f6ebcb" stroke-width="${w}" stroke-linecap="round"/>`;
+  const m=p=>[-p[0],p[1]];
+  const arm=(sg)=>{const f=sg<0?m:(p=>p);return bl(f(J.sh),f(J.el),20)+bl(f(J.el),f(J.wr),17)+`<circle cx="${f(J.el)[0]}" cy="${f(J.el)[1]}" r="15" fill="#f6ebcb" stroke="#c3a463" stroke-width="4"/><circle cx="${f(J.wr)[0]}" cy="${f(J.wr)[1]+14}" r="17" fill="#f6ebcb" stroke="#c3a463" stroke-width="4"/>`};
+  const leg=(sg)=>{const f=sg<0?m:(p=>p);return bl(f(J.hip),f(J.kn),26)+bl(f(J.kn),f(J.an),22)+`<circle cx="${f(J.kn)[0]}" cy="${f(J.kn)[1]}" r="20" fill="#f6ebcb" stroke="#c3a463" stroke-width="4"/>`+bl(f(J.an),[f(J.an)[0]+sg*38,J.an[1]+12],17)};
+  let ribs='';for(let k=0;k<6;k++){const y=-185+k*28,w=108-k*9;for(const sg of[-1,1])ribs+=`<path d="M0 ${y} Q${sg*w} ${y-14} ${sg*(w-4)} ${y+46}" fill="none" stroke="#c3a463" stroke-width="16" stroke-linecap="round"/><path d="M0 ${y} Q${sg*w} ${y-14} ${sg*(w-4)} ${y+46}" fill="none" stroke="#f6ebcb" stroke-width="9" stroke-linecap="round"/>`}
+  let vert='';for(let k=0;k<12;k++)vert+=`<rect x="-17" y="${-208+k*23}" width="34" height="17" rx="7" fill="#f6ebcb" stroke="#c3a463" stroke-width="3"/>`;
+  const skull=`<ellipse cx="0" cy="-296" rx="58" ry="64" fill="#f6ebcb" stroke="#c3a463" stroke-width="5"/><rect x="-32" y="-252" width="64" height="40" rx="16" fill="#f6ebcb" stroke="#c3a463" stroke-width="5"/><circle cx="-23" cy="-296" r="14" fill="#2a2216"/><circle cx="23" cy="-296" r="14" fill="#2a2216"/><path d="M0 -278 l-7 14 h14z" fill="#2a2216"/><path d="M-22 -234 h44 M-12 -242 v16 M0 -242 v16 M12 -242 v16" stroke="#9c8149" stroke-width="3" stroke-linecap="round"/>`;
+  const pelvis=`<path d="M-100 40 C-132 92 -100 138 -30 128 C-10 124 0 104 0 82 C0 104 10 124 30 128 C100 138 132 92 100 40 C60 56 30 60 0 60 C-30 60 -60 56 -100 40Z" fill="#f6ebcb" stroke="#c3a463" stroke-width="5" stroke-linejoin="round"/><ellipse cx="0" cy="96" rx="22" ry="16" fill="#2a2216" opacity=".5"/>`;
+  const sk=`${pelvis}${leg(-1)}${leg(1)}${arm(-1)}${arm(1)}${vert}${ribs}${bl([0,-190],[0,-70],14)}${bl([-95,-195],[0,-205],14)}${bl([95,-195],[0,-205],14)}${skull}`;
+  return `
+   <ellipse cx="960" cy="842" rx="260" ry="26" fill="rgba(0,0,0,.35)" data-fx="fi@.2/.6"/>
+   <g transform="translate(960 505) scale(.96)"><g data-fx="fi@.3/1.2">${silh('stroke="rgba(53,224,209,.18)" fill="none"',210,76,100,86,'fill="rgba(53,224,209,.18)" stroke="none"')}</g></g>
+   <g transform="translate(960 505) scale(.96)"><g data-fx="zoom@.6/1.4">${sk}</g></g>
+   <g data-fx="fi@c0+3.3/.6"><line x1="960" y1="858" x2="960" y2="150" stroke="#ffc857" stroke-width="3.5" stroke-dasharray="3 14" stroke-linecap="round"/><path d="M932 178 L960 140 L988 178" fill="none" stroke="#ffc857" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>
+   ${PILL(1280,330,430,76,'GIVES SHAPE','#35e0d1','right@c0+1.0/.7',34)}${LN(1280,368,1110,368,'#35e0d1',4,'draw@c0+1.3/.6')}
+   ${PILL(1280,470,430,76,'STAND UPRIGHT','#ffc857','right@c0+3.6/.7',34)}${LN(1280,508,1010,508,'#ffc857',4,'draw@c0+3.9/.6')}
+   ${PILL(210,400,430,76,'SUPPORTS YOU','#9b8cff','left@c0+2.2/.7',34)}${LN(640,438,860,438,'#9b8cff',4,'draw@c0+2.5/.6')}`;
+ }
+});
+
+/* 12 — TEAMWORK */
+const RX12=520,RY12=205;
+SC.push({kicker:'CHAPTER 12 · BETTER TOGETHER',title:'Bones need muscles — muscles need bones',acc:'#ff6b81',tail:2,
+ cues:[
+  ['**Hard bones** and **soft muscles** work together to give us **strength**, **form**, and **movement**.',7.4],
+  ['Bones **cannot move by themselves**.',3.3],
+  ['They need muscles that **contract** and **release** to pull them into motion.',6.6],
+  ['But muscles can’t contract and release without being attached to something **hard and rigid**, like bones.',8.6],
+  ['In order for our bodies to function, we need **both** bones and muscles.',6.4]],
+ svg:()=>{
+  const ph=(c,from,to,body)=>`<g data-fx="fi@c${c}+.2/.6${to?` fo@c${to}/.4`:''}">${body}</g>`;
+  const badge=(x,l,col,at,ic)=>`<g data-fx="pop@c0+${at}/.6"><rect x="${x}" y="560" width="210" height="150" rx="30" class="card"/><circle cx="${x+105}" cy="615" r="30" fill="${col}"/><g transform="translate(${x+105} 615)">${ic}</g>${TX(x+105,682,l,25,'#fff',{w:800})}</g>`;
+  const iStr=`<path d="M-14 6 L0 -16 L14 6 M-10 14 H10" fill="none" stroke="#06122a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const iForm=`<rect x="-14" y="-14" width="28" height="28" rx="7" fill="none" stroke="#06122a" stroke-width="5"/>`;
+  const iMov=`<path d="M-14 0 H12 M4 -10 L14 0 L4 10" fill="none" stroke="#06122a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  return `
+  ${G(RX12,RY12,armSVG('a12'),'fi@0/.8')}
+  <g id="lock12" data-fx="fi@c1+.6/.5 fo@c2/.3"><g transform="translate(${RX12+170} ${RY12+330})"><rect x="-44" y="-10" width="88" height="68" rx="14" fill="#ff6b81"/><path d="M-22 -10 v-22 a22 22 0 0 1 44 0 v22" fill="none" stroke="#ff9aa8" stroke-width="12" stroke-linecap="round"/><circle cy="24" r="9" fill="#06122a"/></g></g>
+  ${ph(0,0,1,`<g>
+    <rect x="1060" y="240" width="330" height="96" rx="48" fill="#f6e7bf"/>${TX(1225,301,'HARD BONES',30,'#3a2c0b',{w:800})}
+    ${TX(1440,300,'+',60,'#fff',{w:800})}
+    <rect x="1490" y="240" width="330" height="96" rx="48" fill="#ff6b81"/>${TX(1655,301,'SOFT MUSCLES',30,'#fff',{w:800})}
+    ${TX(1440,450,'work together to give us',30,'#b6c8ea',{w:600})}
+    ${badge(1060,'STRENGTH','#ffc857','4.2',iStr)}${badge(1355,'FORM','#35e0d1','5.1',iForm)}${badge(1650,'MOVEMENT','#ff8a98','5.9',iMov)}</g>`)}
+  ${ph(1,1,2,`<g>${CARD(1060,260,760,330,`${TX(1440,370,'BONES ALONE',34,'#9fb3d6',{w:800,ls:5})}${TX(1440,470,'NO MUSCLE',68,'#ff6b81',{w:900})}${TX(1440,540,'= NO MOTION',48,'#fff',{w:800})}`,'')}</g>`)}
+  ${ph(2,2,3,`<g>${CARD(1060,235,760,190,`<circle cx="1130" cy="330" r="38" fill="#ff6b81"/>${TX(1130,345,'↑',44,'#fff',{w:800})}${TX(1200,322,'CONTRACT',44,'#ff6b81',{a:'start',w:900})}${TX(1200,372,'the muscle pulls the bone up',26,'#b6c8ea',{a:'start',w:500})}`,'')}
+    ${CARD(1060,455,760,190,`<circle cx="1130" cy="550" r="38" fill="#4aa8ff"/>${TX(1130,565,'↓',44,'#fff',{w:800})}${TX(1200,542,'RELEASE',44,'#4aa8ff',{a:'start',w:900})}${TX(1200,592,'the bone returns to rest',26,'#b6c8ea',{a:'start',w:500})}`,'')}</g>`)}
+  ${ph(3,3,4,`<g>
+    <g data-fx="fi@0/.1 fo@c3+4.0/.4">${CARD(1060,260,760,300,`<circle cx="1140" cy="360" r="40" fill="#ff6b81"/>${TX(1140,376,'✕',46,'#fff',{w:800})}${TX(1210,356,'NOT ATTACHED',44,'#ff6b81',{a:'start',w:900})}${TX(1210,404,'nothing to pull against',28,'#b6c8ea',{a:'start',w:500})}${TX(1210,452,'the muscle just shrinks',28,'#b6c8ea',{a:'start',w:500})}`,'')}</g>
+    <g data-fx="fi@c3+4.4/.5">${CARD(1060,260,760,300,`<circle cx="1140" cy="360" r="40" fill="#35e0d1"/>${TX(1140,376,'✓',46,'#06122a',{w:800})}${TX(1210,356,'ATTACHED',44,'#35e0d1',{a:'start',w:900})}${TX(1210,404,'to something hard & rigid',28,'#b6c8ea',{a:'start',w:500})}${TX(1210,452,'now it can pull the bone',28,'#b6c8ea',{a:'start',w:500})}`,'')}</g></g>`)}
+  <g data-fx="fi@c4+.2/.6">
+    ${CARD(1060,240,760,450,`${TX(1440,350,'BONES',66,'#f6e7bf',{w:900})}${TX(1440,420,'+',56,'#fff',{w:800})}${TX(1440,500,'MUSCLES',66,'#ff6b81',{w:900})}${LN(1160,540,1720,540,'rgba(255,255,255,.3)',3)}${TX(1440,610,'a body that works',38,'#fff',{w:700})}`,'')}
+    <g data-fx="ping@c4+.6/1.6"><rect x="1060" y="240" width="760" height="450" rx="34" fill="none" stroke="#35e0d1" stroke-width="5"/></g>
+  </g>`;
+ },
+ tick:(lt,s)=>{
+  const c=s.cs;let phi=0,o={vis:1,anchor:0,free:0,glow:undefined};
+  const loc=lt;
+  if(loc<c[1]){const d=c[1]-c[0];phi=55-55*Math.cos(PI2*clamp((loc-c[0])/d,0,1));o.vis=1;}
+  else if(loc<c[2]){o.vis=1-seg(loc,c[1]+.1,c[1]+.7);phi=0;}
+  else if(loc<c[3]){const t=loc-c[2];o.vis=seg(t,.2,.8);phi=t<1?0:t<2.6?110*seg(t,1,2.6):t<3.4?110:110*(1-seg(t,3.4,5.2));if(t>.8&&t<5.4)o.anchor=.9;}
+  else if(loc<c[4]){const t=loc-c[3];
+    if(t<4.2){phi=0;o.free=.7*(.5-.5*Math.cos(PI2*t/2.1));o.glow=0;}
+    else{o.free=.7*(.5-.5*Math.cos(PI2*4.2/2.1))*(1-seg(t,4.2,4.7));phi=110*seg(t,5.0,6.7);o.anchor=.9*seg(t,4.4,4.8);}
+  }else{const t=loc-c[4];phi=55+55*Math.cos(PI2*t/4.6);o.anchor=0;}
+  if(phi===0&&o.free===0&&o.glow===undefined)o.glow=0;
+  setArm(s.el,'a12',phi,o);
+ }
+});
+
+/* 13 — RECAP */
+SC.push({kicker:'SUMMARY',title:'Two tissues, one team',acc:'#35e0d1',tail:3.8,
+ cues:[['**Hard bones**, **soft muscles** — together, they make us **move**.',4.8]],
+ svg:()=>{
+  const rows=(items,col,x,at)=>items.map(([ic,t],i)=>`<g data-fx="right@${at+i*.35}/.6">${DOT(x+40,350+i*88,26,col)}<g transform="translate(${x+40} ${350+i*88})">${ic}</g>${TX(x+88,360+i*88,t,29,'#fff',{a:'start',w:600})}</g>`).join('');
+  const ck=`<path d="M-11 0 L-3 9 L12 -9" fill="none" stroke="#06122a" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  return `
+  ${CARD(110,215,810,490,`<rect x="110" y="215" width="810" height="96" rx="34" fill="#ff6b81"/>${TX(515,278,'MUSCLE CELLS',40,'#fff',{w:900,ls:3})}
+    ${rows([[ck,'Long, thin, thread-like cells'],[ck,'Many nuclei in each cell'],[ck,'Contract and release to move'],[ck,'Soft and flexible']],'#ff9aa8',140,.9)}`,'left@.3/.8')}
+  ${CARD(1000,215,810,490,`<rect x="1000" y="215" width="810" height="96" rx="34" fill="#f6e7bf"/>${TX(1405,278,'BONE CELLS',40,'#3a2c0b',{w:900,ls:3})}
+    ${rows([[ck,'Star-shaped cells'],[ck,'A nucleus + thin ring of cytoplasm'],[ck,'Surrounded by calcium & minerals'],[ck,'Hard and rigid']],'#ffd88a',1030,1.3)}`,'right@.3/.8')}
+  ${PILL(200,752,1520,84,'Bones give shape  ·  Muscles give motion  ·  Together: movement','#35e0d1','up@c0+1.4/.8',34)}`;
+ }
+});
+
+/* ========================= ENGINE ========================= */
+let TOTAL=0;
+SC.forEach((s,i)=>{
+  s.cues=s.cues.map(c=>Array.isArray(c)?{text:c[0],dur:c[1]}:{text:c});
+  let acc=0;s.cs=[];
+  s.cues.forEach(c=>{c.words=c.text.replace(/\*\*/g,'').trim().split(/\s+/).length;if(c.dur==null)c.dur=c.words/WPS+PAD;s.cs.push(acc);acc+=c.dur});
+  s.cueEnd=acc;s.dur=acc+(s.tail==null?1.2:s.tail);
+  s.start=i?SC[i-1].start+SC[i-1].dur:0;TOTAL=s.start+s.dur;
+  s.anims=[];
+});
+
+const player=$('#player'),stage=$('#stage'),scenesEl=$('#scenes'),head=$('#head'),capEl=$('#cap');
+function parseWhen(w,s){
+  let m=/^c(\d+)(?:\+(-?[\d.]+))?$/.exec(w);if(m)return s.cs[+m[1]]+(+m[2]||0);
+  m=/^e-([\d.]+)$/.exec(w);if(m)return s.dur-(+m[1]);
+  return parseFloat(w);
+}
+SC.forEach((s,i)=>{
+  const sec=document.createElement('section');sec.className='scene';
+  sec.innerHTML=`<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">${s.svg(s)}</svg>`;
+  scenesEl.appendChild(sec);s.el=sec;
+  const cache={};s.q=id=>cache[id]||(cache[id]=sec.querySelector('#'+id));
+  sec.querySelectorAll('[data-fx]').forEach(el=>{
+    const spec=el.dataset.fx.trim();if(!spec)return;
+    spec.split(/\s+/).forEach(tok=>{
+      const m=/^([A-Za-z0-9]+)@([^/\s]+)(?:\/([\d.]+))?$/.exec(tok);if(!m)return;
+      let p=P[m[1]];if(!p){console.warn('no preset',m[1]);return}
+      if(typeof p==='function')p=p(el);
+      if(p.pre)p.pre(el);
+      if(p.o)el.style.transformOrigin=p.o;
+      const start=parseWhen(m[2],s),dur=m[3]?+m[3]:p.d;
+      const a=el.animate(p.kf,{delay:start*1000,duration:dur*1000,fill:p.fill||'both',easing:p.e||'ease',iterations:p.loop?Infinity:1});
+      a.pause();
+      s.anims.push({a,delay:start*1000,end:p.loop?Infinity:(start+dur)*1000,last:null});
+    });
+  });
+});
+
+/* background sparks */
+(()=>{const R=mk(99),box=$('#sparks');for(let i=0;i<26;i++){const d=document.createElement('div');d.className='spark';const z=2+R()*5;d.style.cssText=`left:${R()*1920}px;top:${300+R()*900}px;width:${z}px;height:${z}px;animation-duration:${14+R()*22}s;animation-delay:${-R()*30}s`;box.appendChild(d)}})();
+
+/* ---------- voice ---------- */
+const synth=window.speechSynthesis;let voice=null,voiceOn=true;
+function pickVoice(){
+  if(!synth)return;const vs=synth.getVoices().filter(v=>/^en/i.test(v.lang));if(!vs.length)return;
+  voice=vs.find(v=>/Aria|Jenny|Natural|Online|Sonia|Libby/i.test(v.name)&&/en-(US|GB)/i.test(v.lang))||vs.find(v=>/Google US English/i.test(v.name))||vs.find(v=>/Zira|Samantha|Allison|Ava/i.test(v.name))||vs.find(v=>/en-US/i.test(v.lang))||vs[0];
+}
+if(synth){pickVoice();synth.onvoiceschanged=pickVoice}
+function speak(text){
+  if(!synth||!voiceOn)return;synth.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/\*\*/g,''));
+  if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-US';u.rate=clamp(speed*.95,.5,2);u.pitch=1;u.volume=1;
+  synth.speak(u);
+}
+
+/* ---------- player state ---------- */
+let T0=0,_lastSec=-1,t=0,playing=false,speed=1,cur=-1,lastKey=-1,lastWordIdx=-1,ccOn=true,ended=false,lastNow=0,idleTimer=0;
+const ICO_PLAY='<svg viewBox="0 0 24 24"><path class="f" d="M7 4.2v15.6a1 1 0 0 0 1.5.9l13-7.8a1 1 0 0 0 0-1.7l-13-7.8A1 1 0 0 0 7 4.2z"/></svg>';
+const ICO_PAUSE='<svg viewBox="0 0 24 24"><rect class="f" x="6" y="4" width="4.5" height="16" rx="1.2"/><rect class="f" x="13.5" y="4" width="4.5" height="16" rx="1.2"/></svg>';
+const bPlay=$('#bPlay');bPlay.innerHTML=ICO_PLAY;
+
+/* progress bar segments */
+const bar=$('#bar'),tip=$('#tip');
+SC.forEach((s,i)=>{const d=document.createElement('div');d.className='seg';d.style.flexGrow=s.dur;d.innerHTML='<i></i>';bar.appendChild(d);s.seg=d;s.fill=d.firstChild});
+const fmt=x=>{x=Math.max(0,Math.floor(x));return Math.floor(x/60)+':'+String(x%60).padStart(2,'0')};
+const chapName=s=>s.title||'Introduction';
+
+function setScene(i){
+  if(cur>=0)SC[cur].el.style.opacity=0;
+  cur=i;const s=SC[i];
+  s.anims.forEach(o=>o.last=null);
+  stage.style.setProperty('--accent',s.acc);document.documentElement.style.setProperty('--accent',s.acc);
+  head.style.display=s.kicker?'block':'none';
+  if(s.kicker){head.firstChild.textContent=s.kicker;head.lastChild.textContent=s.title;head.classList.remove('in');void head.offsetWidth;head.classList.add('in')}
+  $('#chap').textContent=(i?String(i).padStart(2,'0')+' · ':'')+chapName(s);
+  MD.emit('chapter',{chuong:i,ten:chapName(s),tong_chuong:SC.length});
+}
+function buildCap(ci,s){
+  const c=s.cues[ci],parts=c.text.split('**');let html='';
+  parts.forEach((p,k)=>{p.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w))html+=w;else html+=`<span class="w${k%2?' k':''}">${w}</span>`})});
+  capEl.innerHTML=html;capEl._w=[...capEl.querySelectorAll('.w')];lastWordIdx=-1;
+}
+function render(){
+  const tt=clamp(t,0,TOTAL-.001);
+  let si=SC.length-1;for(let i=0;i<SC.length;i++){if(tt<SC[i].start+SC[i].dur){si=i;break}}
+  if(si!==cur)setScene(si);
+  const s=SC[si],lt=tt-s.start,ms=lt*1000;
+  for(const o of s.anims){
+    if(o.last!==null&&((ms<=o.delay&&o.last<=o.delay)||(ms>=o.end&&o.last>=o.end)))continue;
+    o.a.currentTime=ms;o.last=ms;
+  }
+  s.el.style.opacity=clamp(Math.min(lt/.45,(s.dur-lt)/.5),0,1)*1;
+  if(si===0&&lt<.45)s.el.style.opacity=1;
+  s.tick&&s.tick(lt,s);
+  /* captions */
+  let ci=0;for(let k=0;k<s.cs.length;k++)if(lt>=s.cs[k])ci=k;
+  const key=si*100+ci;
+  if(key!==lastKey){lastKey=key;buildCap(ci,s);if(playing)speak(s.cues[ci].text)}
+  const c=s.cues[ci],prog=(lt-s.cs[ci])/Math.max(.1,c.dur-PAD*.4),n=Math.floor(clamp(prog,0,1)*capEl._w.length+.999);
+  if(n!==lastWordIdx){lastWordIdx=n;capEl._w.forEach((w,k)=>w.classList.toggle('on',k<n))}
+  capEl.parentNode.style.opacity=(lt>s.cueEnd+.9&&si>0&&si<SC.length-1)?0:1;
+  /* bar */
+  SC.forEach((x,i)=>{x.fill.style.width=(tt>=x.start+x.dur?100:tt<=x.start?0:(tt-x.start)/x.dur*100)+'%'});
+  $('#time').textContent=fmt(tt)+' / '+fmt(TOTAL);
+}
+function frame(now){
+  if(player.clientWidth!==_fw)fit();
+  const dt=Math.min(.1,(now-lastNow)/1000);lastNow=now;
+  if(playing){
+    t+=dt*speed;
+    if(t>=TOTAL-.05){t=TOTAL-.05;pause(true);ended=true;$('#endcard').classList.remove('hide');MD.emit('progress',{t:f1(TOTAL),tong:f1(TOTAL),pct:100});MD.emit('ended')}
+  }
+  render();
+  if(playing){const sec=Math.floor(t);if(sec!==_lastSec){_lastSec=sec;MD.emit('progress',{t:f1(t),tong:f1(TOTAL),pct:Math.round(t/TOTAL*100)})}}
+  requestAnimationFrame(frame);
+}
+function play(){
+  if(ended){t=0;ended=false;lastKey=-1}
+  $('#poster').classList.add('hide');$('#endcard').classList.add('hide');
+  playing=true;stage.classList.remove('paused');player.classList.add('playing');bPlay.innerHTML=ICO_PAUSE;
+  if(synth&&synth.paused)synth.resume();
+  poke();MD.emit('play',{t:f1(t)});
+}
+function pause(silent){
+  const was=playing;
+  playing=false;stage.classList.add('paused');player.classList.remove('playing');bPlay.innerHTML=ICO_PLAY;
+  if(synth&&synth.speaking)synth.pause();
+  if(was)MD.emit('pause',{t:f1(t)});
+}
+function seek(x){
+  t=clamp(x,0,TOTAL-.06);ended=false;$('#endcard').classList.add('hide');
+  if(synth)synth.cancel();lastKey=-1;
+  if(!playing&&!$('#poster').classList.contains('hide')){/* poster stays */}
+  render();
+}
+function togglePlay(){playing?pause():play()}
+function skipScene(d){const i=clamp((cur<0?0:cur)+d,0,SC.length-1);seek(SC[i].start+.02);if(!playing&&!$('#poster').classList.contains('hide'))return}
+function poke(){player.classList.remove('idle');clearTimeout(idleTimer);idleTimer=setTimeout(()=>player.classList.add('idle'),2600)}
+
+/* ---------- UI wiring ---------- */
+bPlay.onclick=togglePlay;
+$('#bBack').onclick=()=>seek(t-5);
+$('#poster').onclick=()=>{t=T0;lastKey=-1;play()};
+$('#endcard').onclick=()=>{t=0;ended=false;lastKey=-1;play()};
+stage.onclick=togglePlay;
+$('#bCC').onclick=()=>{ccOn=!ccOn;stage.classList.toggle('nocc',!ccOn);$('#bCC').classList.toggle('off',!ccOn)};
+$('#bVoice').onclick=()=>{voiceOn=!voiceOn;$('#bVoice').classList.toggle('off',!voiceOn);if(!voiceOn&&synth)synth.cancel();else lastKey=-1};
+const SPEEDS=[.75,1,1.25,1.5];
+$('#spd').onclick=()=>{speed=SPEEDS[(SPEEDS.indexOf(speed)+1)%SPEEDS.length];$('#spd').textContent=speed+'×';if(synth)synth.cancel();lastKey=-1};
+$('#bFull').onclick=()=>{const w=$('#wrap');if(document.fullscreenElement)document.exitFullscreen();else (w.requestFullscreen||w.webkitRequestFullscreen).call(w)};
+/* scrub bar */
+let drag=false;
+const barT=e=>{const r=bar.getBoundingClientRect();return clamp((e.clientX-r.left)/r.width,0,1)*TOTAL};
+const segAt=x=>{for(let i=0;i<SC.length;i++)if(x<SC[i].start+SC[i].dur)return SC[i];return SC[SC.length-1]};
+bar.addEventListener('pointerdown',e=>{drag=true;bar.classList.add('drag');bar.setPointerCapture(e.pointerId);const x=barT(e);if($('#poster').classList.contains('hide')===false){$('#poster').classList.add('hide')}seek(x)});
+bar.addEventListener('pointermove',e=>{
+  const x=barT(e);if(drag)seek(x);
+  const pr=player.getBoundingClientRect();tip.style.display='block';tip.style.left=clamp(e.clientX-pr.left,60,pr.width-60)+'px';
+  tip.textContent=fmt(x)+'  ·  '+chapName(segAt(x));
+});
+bar.addEventListener('pointerup',e=>{drag=false;bar.classList.remove('drag')});
+bar.addEventListener('pointerleave',()=>{tip.style.display='none'});
+player.addEventListener('mousemove',poke);player.addEventListener('touchstart',poke,{passive:true});
+window.addEventListener('keydown',e=>{
+  if(e.target.tagName==='BUTTON'&&e.code==='Space')e.preventDefault();
+  const k=e.key.toLowerCase();
+  if(e.code==='Space'||k==='k'){e.preventDefault();if(!$('#poster').classList.contains('hide')){t=T0;lastKey=-1}togglePlay()}
+  else if(e.key==='ArrowRight')seek(t+5);else if(e.key==='ArrowLeft')seek(t-5);
+  else if(k==='f')$('#bFull').click();else if(k==='c')$('#bCC').click();else if(k==='m')$('#bVoice').click();
+  else if(e.key==='.'||e.key===']')skipScene(1);else if(e.key===','||e.key==='[')skipScene(-1);
+  else if(e.key==='Home')seek(0);else if(e.key==='End')seek(TOTAL-1);
+  poke();
+});
+let _fw=0;function fit(){_fw=player.clientWidth;stage.style.transform=`scale(${_fw/1920})`}
+window.addEventListener('resize',fit);fit();if(window.ResizeObserver)new ResizeObserver(fit).observe(player);
+window.addEventListener('beforeunload',()=>synth&&synth.cancel());
+
+/* debug / testing hooks */
+window.__video={seek,SC,get total(){return TOTAL},get t(){return t},get playing(){return playing},play,pause};
+poke();
+t=5.2;render();requestAnimationFrame(n=>{lastNow=n;frame(n)});
+
+/* ---------- tuỳ chọn trên link + nhắn tin với trang mẹ (myDocument) ----------
+   ?t=60 bắt đầu từ giây 60 · ?cc=0 tắt phụ đề · ?voice=0 tắt lồng tiếng · ?toc=1.25 tốc độ */
+(()=>{
+  const q=MD.q;
+  if(q.get('cc')==='0')$('#bCC').click();
+  if(q.get('voice')==='0')$('#bVoice').click();
+  const sp=parseFloat(q.get('toc'));if(SPEEDS.includes(sp)){speed=sp;$('#spd').textContent=sp+'×'}
+  const st=parseFloat(q.get('t'));if(st>0)T0=clamp(st,0,TOTAL-.5);
+  MD.onLenh((lenh,m)=>{
+    if(lenh==='play'){if(!$('#poster').classList.contains('hide')){t=T0;lastKey=-1}play()}
+    else if(lenh==='pause')pause();
+    else if(lenh==='seek'&&isFinite(m.t))seek(+m.t);
+    else if(lenh==='chuong'&&SC[m.i|0])seek(SC[m.i|0].start+.02);
+  });
+  MD.emit('ready',{tong:f1(TOTAL),tong_chuong:SC.length});
+})();
+</script>
+</body>
+</html>

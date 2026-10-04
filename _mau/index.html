@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="mydocument:id" content="__ID__">
+<title>__TEN__</title>
+<style>
+  /* html.nhung = đang nằm trong khung iframe của trang khác (?nhung=1) → bỏ phần thừa */
+  :root{--bg:#070d1f;--ink:#eaf2ff;--accent:#35e0d1}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif}
+  body{display:grid;place-items:center;text-align:center}
+  html.nhung .chi-khi-mo-rieng{display:none}
+</style>
+</head>
+<body>
+  <main>
+    <h1>__TEN__</h1>
+    <p class="chi-khi-mo-rieng">Tài liệu mẫu — thay nội dung trong file này.</p>
+  </main>
+
+  <!-- Nhắn tin với trang mẹ khi được nhúng (tuỳ chọn; thiếu file này tài liệu vẫn chạy) -->
+  <script src="__NHUNG_JS__"></script>
+  <script>
+    var MD = window.MyDocument || { nhung:false, q:new URLSearchParams(location.search), emit:function(){}, onLenh:function(){} };
+    MD.emit('ready');
+    // MD.emit('progress', { t: 12, tong: 120, pct: 10 });   // báo tiến độ
+    // MD.emit('ended');                                      // báo hoàn thành
+    // MD.onLenh(function (lenh, m) { if (lenh === 'play') { /* ... */ } });
+  </script>
+</body>
+</html>
