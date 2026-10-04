@@ -31,7 +31,16 @@ nội dung tương tác HTML…), chia nhiều thư mục theo nội dung, subdo
 - Pane xem trước Claude: ảnh chụp lần đầu hay timeout; ảnh sau có thể bị phóng to 1,6× (lỗi công cụ, trang đúng).
 
 **VIỆC ĐANG CHỜ**
-- ⬜ **Thầy duyệt rồi mới** tạo repo GitHub `andrewclasses-01/myDocument` (riêng tư), commit + push (git push dùng credential andrewclasses-01, kiểm bằng `git push --dry-run`, không tin `gh`).
-- ⬜ DNS: bản ghi CNAME `document` → `andrewclasses-01.github.io` ở portal.inet.vn (Bảo vệ/proxy TẮT như andrewclasses.com), bật Pages + Enforce HTTPS, kiểm `curl -I https://document.andrewclasses.com/documents.json`.
+- ✅ (xong ở Chặng 2) repo, push, DNS, Pages, HTTPS — xem dưới.
 - ⬜ Thử video thật trên máy lớp/TOMKO: tiếng, toàn màn hình trong iframe, tốc độ lời so với hình.
 - ⬜ Chưa có: poster cho video, slide mẫu, tương tác mẫu, tích hợp myLesson (`taiLieu[]`), phụ đề tiếng Việt, xuất MP4.
+
+## Chặng 2 — 04/10/2026 — Đưa lên mạng (GitHub + DNS + Pages + HTTPS)
+
+Thầy duyệt; làm cùng ngày với Chặng 1.
+- **Repo:** `andrewclasses-01/myDocument`, **CÔNG KHAI** (kiểm `myLesson` cũng công khai; Pages repo riêng tư cần gói Enterprise nên cả cụm app đều để công khai).
+  Tạo qua giao diện github.com (Chrome đã đăng nhập andrewclasses-01 — `gh` trên máy là tài khoản khác). `git remote add origin …` + `git push -u origin main` (credential andrewclasses-01) chạy thẳng.
+- **DNS** (portal.inet.vn → OneShield → Bản ghi DNS): thêm CNAME `document` → `andrewclasses-01.github.io`, TTL 5 phút, bảo vệ TẮT (cùng nếp `aword`, `speaking`, `kiemtra`, `nentangtienganh`). Phân giải ra 4 IP GitHub Pages trong vài chục giây.
+- **Pages:** nguồn `main` / `(root)`; GitHub tự đọc `CNAME` làm tên miền tuỳ chỉnh; DNS check thành công; cấp chứng chỉ ngay; đã tick **Enforce HTTPS** (HTTP → 301 → HTTPS).
+- **Kiểm live:** `https://document.andrewclasses.com/` hiện danh mục; `documents.json` 200 + `Access-Control-Allow-Origin: *` + `Cache-Control: max-age=600`; video `?nhung=1` và `_chung/nhung.js` 200.
+- Gỡ lỗi nhỏ: `git commit` báo "LF will be replaced by CRLF" (autocrlf Windows) — vô hại, repo lưu LF nhờ `.gitattributes text=auto`.
