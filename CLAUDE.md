@@ -29,6 +29,6 @@ Chạy ở **https://document.andrewclasses.com** (GitHub Pages, `CNAME`). Đọ
 Pane xem trước của Claude chỉ vẽ khi chụp ảnh (rAF dừng khi pane ẩn): kiểm bằng `seek` + chụp, và với `postMessage` bằng JS đọc `__msgs`.
 
 ## Roadmap
-- Đẩy repo lên GitHub (`andrewclasses-01/myDocument`), trỏ DNS `document` → GitHub Pages, bật HTTPS.
+- ✅ Đã LIVE 04/10/2026: repo công khai `andrewclasses-01/myDocument`, Pages `main`/root, CNAME DNS `document`, HTTPS bắt buộc. Cập nhật = `git push`, ~1–10 phút (cache 10 phút).
 - Tích hợp myLesson: trường `taiLieu[]` trong bài + ô chọn trong app tạo bài (chờ thầy rõ hệ thống tài liệu).
 - Poster/thumbnail tự sinh cho video; slide mẫu; tài liệu tương tác mẫu.
