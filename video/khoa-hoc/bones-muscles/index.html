@@ -328,6 +328,10 @@ const P={
 /* ---------- scenes ---------- */
 const SC=[];
 const WPS=2.2, PAD=.9;
+/* v1.2.0 — GIỌNG THẬT (Teacher Andrew · myVoice): mỗi câu một file giong/<cảnh>-<câu>.mp3; d = số giây tiếng,
+   w = giây bắt đầu của TỪNG CHỮ PHỤ ĐỀ (Whisper đo). Khối dưới do tools/giong-video.mjs ghi — đừng sửa tay.
+   Có giọng thật ⇒ mỗi câu dài đúng bằng tiếng + GAP; thiếu/lỗi file ⇒ quay về giọng máy của trình duyệt. */
+const GIONG=/*GIONG*/{"ten":"Teacher Andrew · kể chuyện","thu":"giong/","cau":{"0-0":{"d":3.54,"w":[0.3,0.8,0.92,1.22,1.56,2.04,2.5]},"1-0":{"d":3.18,"w":[0.27,0.67,1.21,1.63,1.93,2.09,2.27]},"1-1":{"d":4.29,"w":[0.08,0.52,0.9,1.46,1.68,2.16,2.68,3.12,3.44]},"1-2":{"d":5.14,"w":[0,0.62,1.24,2.16,2.4,3.12,3.6,3.94]},"10-0":{"d":8.38,"w":[0.08,0.68,1.1,1.88,2.18,2.4,2.54,2.86,3.3,3.66,4.06,5.06,5.64,6.12,6.94,7.26]},"10-1":{"d":4.25,"w":[0.14,0.64,1.16,1.76,2.02,2.34,2.8,3.2]},"11-0":{"d":5.98,"w":[0.24,1.06,1.34,1.6,2.04,2.52,3.02,3.5,3.9,4.24,4.66]},"12-0":{"d":7.72,"w":[0.08,0.6,0.98,1.72,2.16,2.66,3.34,3.76,4.5,4.74,4.94,5.36,6.16,6.72]},"12-1":{"d":3.23,"w":[0.02,0.8,1.08,1.6,1.96]},"12-2":{"d":6.59,"w":[0.11,0.67,0.93,1.47,2.19,2.65,3.35,3.83,4.65,4.93,5.21,5.59]},"12-3":{"d":9.92,"w":[0.08,0.56,1.02,1.82,2.24,2.78,3.14,4.06,4.52,5.02,5.94,6.26,6.82,7.32,8.02,8.72]},"12-4":{"d":6.26,"w":[0.43,0.89,1.15,1.41,1.67,2.13,2.31,2.97,3.55,3.81,4.13,4.81,5.27]},"13-0":{"d":5.18,"w":[0.24,0.78,1.28,1.78,1.78,2.62,3.2,3.84,4.14,4.32]},"2-0":{"d":5.67,"w":[0.14,0.82,1.18,1.54,1.9,2.28,2.42,2.76,3.44,3.68,4.02,4.5]},"2-1":{"d":10.79,"w":[0,0.42,0.78,1.46,2.1,2.44,3.12,3.68,4.14,4.4,4.72,5.38,5.86,6.22,6.38,6.86,7.62,8,8.44,9.06,9.18,9.7]},"2-2":{"d":6.48,"w":[0.27,0.95,1.35,1.87,2.39,2.87,3.39,4.45,4.85,5.29]},"2-3":{"d":14.89,"w":[0.3,0.84,1,1.44,2.18,2.3,2.74,3.62,4.28,5.34,5.92,6.7,7.2,7.9,8.7,9.12,9.74,10.18,10.64,11.44,12.58,13,13.58,13.96,14.18]},"3-0":{"d":6.63,"w":[0.3,0.78,0.96,1.28,1.66,1.8,2.16,2.38,2.78,3.42,4,4.18,4.26,4.6,5.04,5.48]},"3-1":{"d":6.67,"w":[0,0.24,0.52,0.7,0.9,1.12,1.48,2.1,2.84,3.24,3.82,4.14,4.6,5.22,5.6,5.88]},"3-2":{"d":10.56,"w":[0.14,0.58,1.02,1.68,2.04,2.24,2.44,2.88,3.48,3.96,4.7,5.58,6.24,6.86,7.64,8.02,8.62,8.98,9.22,9.54]},"4-0":{"d":6.42,"w":[0.14,0.82,1.26,2.06,3.04,3.42,4.24,4.46,5.1,5.34]},"4-1":{"d":15.78,"w":[0.43,1.23,1.59,2.11,3.13,4.13,4.95,5.25,5.71,6.15,6.59,7.37,8.03,8.41,8.95,9.27,9.63,10.29,11.41,12.09,12.41,13.31,14.43,14.83]},"4-2":{"d":5.16,"w":[0.05,0.49,0.97,1.43,2.01,2.83,3.51,3.93,4.21]},"5-0":{"d":4.31,"w":[0.27,0.69,0.89,1.33,1.85,2.29,2.91,3.33]},"5-1":{"d":6.52,"w":[0.21,0.93,1.33,2.03,2.53,3.27,3.97,4.19,4.75,5.33]},"5-2":{"d":13.7,"w":[0,0.58,1.2,2.48,2.78,3.46,3.68,3.8,4.32,4.9,5.46,6.06,6.38,7.02,8.24,9.12,9.26,9.78,10.6,11.02,11.56,12.18,12.74]},"6-0":{"d":5.81,"w":[0,0.32,0.46,0.74,1.08,1.3,1.56,1.96,2.94,3.32,3.66,3.8,4.24,4.7,4.9]},"6-1":{"d":4.16,"w":[0,0.5,0.84,1.62,1.92,2.38,2.82,3.04]},"6-2":{"d":3.76,"w":[0.4,1.04,1.44,2.16,2.54,2.94]},"6-3":{"d":5.81,"w":[0.24,0.66,0.96,1.36,2.32,2.72,3.18,3.76,4.14,4.62,4.82]},"7-0":{"d":7.32,"w":[0.08,0.66,1.5,1.72,2.24,2.8,3.04,3.24,3.42,3.86,4.26,4.88,5.56,5.86,6.2]},"7-1":{"d":7.18,"w":[0.24,0.92,1.36,1.68,2.4,3.5,3.74,4.3,5.02,5.32,5.56,5.88]},"7-2":{"d":6.69,"w":[0.14,0.88,1.14,1.96,2.4,3.04,3.32,3.92,4.84,5.32,5.64]},"8-0":{"d":5.58,"w":[0.14,0.68,0.92,1.1,1.68,2.66,3.06,3.62,4.32]},"8-1":{"d":10.85,"w":[0.05,0.55,0.75,1.27,1.41,1.83,2.45,2.59,2.97,3.25,3.93,4.53,4.75,5.9,6.31,6.65,6.91,8.02,8.43,8.75,9.23,9.87]},"8-2":{"d":6.55,"w":[0.24,0.66,0.76,1.04,1.8,2.26,2.64,2.98,3.48,4.54,5.12,5.7]},"9-0":{"d":6.7,"w":[0.3,0.78,0.94,1.88,2.4,2.84,3.76,4.18,4.76,5.3,5.7]},"9-1":{"d":7.31,"w":[0.05,0.63,0.95,1.61,2.45,3.09,3.49,3.75,4.23,5.11,5.27,5.53,5.87,6.19]}}}/*/GIONG*/, GAP=.5;
 
 /* 0 — TITLE */
 SC.push({kicker:'',title:'',acc:'#ffc857',tail:3.8,
@@ -815,7 +819,12 @@ let TOTAL=0;
 SC.forEach((s,i)=>{
   s.cues=s.cues.map(c=>Array.isArray(c)?{text:c[0],dur:c[1]}:{text:c});
   let acc=0;s.cs=[];
-  s.cues.forEach(c=>{c.words=c.text.replace(/\*\*/g,'').trim().split(/\s+/).length;if(c.dur==null)c.dur=c.words/WPS+PAD;s.cs.push(acc);acc+=c.dur});
+  s.cues.forEach((c,k)=>{
+    c.words=c.text.replace(/\*\*/g,'').trim().split(/\s+/).length;
+    const g=GIONG&&GIONG.cau[i+'-'+k];
+    if(g){c.au=i+'-'+k;c.ad=g.d;c.ws=g.w;c.dur=g.d+GAP}
+    else if(c.dur==null)c.dur=c.words/WPS+PAD;
+    s.cs.push(acc);acc+=c.dur});
   s.cueEnd=acc;s.dur=acc+(s.tail==null?1.2:s.tail);
   s.start=i?SC[i-1].start+SC[i-1].dur:0;TOTAL=s.start+s.dur;
   s.anims=[];
@@ -864,6 +873,23 @@ function speak(text){
   if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-US';u.rate=clamp(speed*.95,.5,2);u.pitch=1;u.volume=1;
   synth.speak(u);
 }
+/* giọng thật: phát file của câu từ đúng chỗ (off giây) — tua giữa câu vẫn nghe tiếp đúng chữ */
+const AU={};let auCur=null,auLoi=false;
+function auCua(id){
+  if(!AU[id]){const a=new Audio(GIONG.thu+id+'.mp3');a.preload='auto';a.onerror=()=>{auLoi=true};AU[id]=a}
+  return AU[id];
+}
+function napHetAu(){if(GIONG&&!auLoi)SC.forEach(s=>s.cues.forEach(c=>c.au&&auCua(c.au)))}
+function dungAu(){if(auCur){auCur.pause();auCur=null}}
+function noi(c,off){
+  if(!voiceOn)return;
+  if(!c.au||auLoi){speak(c.text);return}
+  dungAu();if(synth)synth.cancel();
+  if(off>=c.ad-.05)return;
+  const a=auCua(c.au);
+  try{a.currentTime=Math.max(0,off)}catch(e){}
+  a.playbackRate=speed;a.play().catch(()=>{});auCur=a;
+}
 
 /* ---------- player state ---------- */
 let T0=0,_lastSec=-1,t=0,playing=false,speed=1,cur=-1,lastKey=-1,lastWordIdx=-1,ccOn=true,ended=false,lastNow=0,idleTimer=0;
@@ -907,8 +933,13 @@ function render(){
   /* captions */
   let ci=0;for(let k=0;k<s.cs.length;k++)if(lt>=s.cs[k])ci=k;
   const key=si*100+ci;
-  if(key!==lastKey){lastKey=key;buildCap(ci,s);if(playing)speak(s.cues[ci].text)}
-  const c=s.cues[ci],prog=(lt-s.cs[ci])/Math.max(.1,c.dur-PAD*.4),n=Math.floor(clamp(prog,0,1)*capEl._w.length+.999);
+  const c=s.cues[ci],off=lt-s.cs[ci];
+  if(key!==lastKey){lastKey=key;buildCap(ci,s);if(playing)noi(c,off)}
+  /* giọng thật trôi lệch đồng hồ video (máy chậm, tab bị ẩn…) quá 0,3 s ⇒ kéo về */
+  if(playing&&auCur&&!auCur.paused&&off<c.ad&&Math.abs(auCur.currentTime-off)>.3){try{auCur.currentTime=off}catch(e){}}
+  let n;
+  if(c.ws&&!auLoi){n=0;while(n<c.ws.length&&c.ws[n]<=off+.05)n++;if(n>=c.ws.length)n=capEl._w.length}
+  else{const prog=off/Math.max(.1,c.dur-PAD*.4);n=Math.floor(clamp(prog,0,1)*capEl._w.length+.999)}
   if(n!==lastWordIdx){lastWordIdx=n;capEl._w.forEach((w,k)=>w.classList.toggle('on',k<n))}
   capEl.parentNode.style.opacity=(lt>s.cueEnd+.9&&si>0&&si<SC.length-1)?0:1;
   /* bar */
@@ -931,17 +962,22 @@ function play(){
   $('#poster').classList.add('hide');$('#endcard').classList.add('hide');
   playing=true;stage.classList.remove('paused');player.classList.add('playing');bPlay.innerHTML=ICO_PAUSE;
   if(synth&&synth.paused)synth.resume();
+  /* dừng → tua → phát: chưa có tiếng đang dở thì phát lại câu hiện tại từ đúng chỗ */
+  if(voiceOn&&!auCur&&!(synth&&synth.paused))lastKey=-1;
+  if(auCur&&voiceOn)auCur.play().catch(()=>{});
+  napHetAu();
   poke();MD.emit('play',{t:f1(t)});
 }
 function pause(silent){
   const was=playing;
   playing=false;stage.classList.add('paused');player.classList.remove('playing');bPlay.innerHTML=ICO_PLAY;
   if(synth&&synth.speaking)synth.pause();
+  if(auCur)auCur.pause();
   if(was)MD.emit('pause',{t:f1(t)});
 }
 function seek(x){
   t=clamp(x,0,TOTAL-.06);ended=false;$('#endcard').classList.add('hide');
-  if(synth)synth.cancel();lastKey=-1;
+  if(synth)synth.cancel();dungAu();lastKey=-1;
   if(!playing&&!$('#poster').classList.contains('hide')){/* poster stays */}
   render();
 }
@@ -956,9 +992,9 @@ $('#poster').onclick=()=>{t=T0;lastKey=-1;play()};
 $('#endcard').onclick=()=>{t=0;ended=false;lastKey=-1;play()};
 stage.onclick=togglePlay;
 $('#bCC').onclick=()=>{ccOn=!ccOn;stage.classList.toggle('nocc',!ccOn);$('#bCC').classList.toggle('off',!ccOn)};
-$('#bVoice').onclick=()=>{voiceOn=!voiceOn;$('#bVoice').classList.toggle('off',!voiceOn);if(!voiceOn&&synth)synth.cancel();else lastKey=-1};
+$('#bVoice').onclick=()=>{voiceOn=!voiceOn;$('#bVoice').classList.toggle('off',!voiceOn);if(!voiceOn){if(synth)synth.cancel();dungAu()}else lastKey=-1};
 const SPEEDS=[.75,1,1.25,1.5];
-$('#spd').onclick=()=>{speed=SPEEDS[(SPEEDS.indexOf(speed)+1)%SPEEDS.length];$('#spd').textContent=speed+'×';if(synth)synth.cancel();lastKey=-1};
+$('#spd').onclick=()=>{speed=SPEEDS[(SPEEDS.indexOf(speed)+1)%SPEEDS.length];$('#spd').textContent=speed+'×';if(synth)synth.cancel();dungAu();lastKey=-1};
 $('#bFull').onclick=()=>{const w=$('#wrap');if(document.fullscreenElement)document.exitFullscreen();else (w.requestFullscreen||w.webkitRequestFullscreen).call(w)};
 /* scrub bar */
 let drag=false;
@@ -985,10 +1021,11 @@ window.addEventListener('keydown',e=>{
 });
 let _fw=0;function fit(){_fw=player.clientWidth;stage.style.transform=`scale(${_fw/1920})`}
 window.addEventListener('resize',fit);fit();if(window.ResizeObserver)new ResizeObserver(fit).observe(player);
-window.addEventListener('beforeunload',()=>synth&&synth.cancel());
+window.addEventListener('beforeunload',()=>{synth&&synth.cancel();dungAu()});
 
 /* debug / testing hooks */
-window.__video={seek,SC,get total(){return TOTAL},get t(){return t},get playing(){return playing},play,pause};
+window.__video={seek,SC,get total(){return TOTAL},get t(){return t},get playing(){return playing},play,pause,
+  get au(){return auCur?{id:auCur.src.split('/').pop(),t:auCur.currentTime,paused:auCur.paused,rate:auCur.playbackRate}:null},get loiAu(){return auLoi}};
 poke();
 t=5.2;render();requestAnimationFrame(n=>{lastNow=n;frame(n)});
 

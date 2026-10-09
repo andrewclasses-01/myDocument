@@ -44,3 +44,23 @@ Thầy duyệt; làm cùng ngày với Chặng 1.
 - **Pages:** nguồn `main` / `(root)`; GitHub tự đọc `CNAME` làm tên miền tuỳ chỉnh; DNS check thành công; cấp chứng chỉ ngay; đã tick **Enforce HTTPS** (HTTP → 301 → HTTPS).
 - **Kiểm live:** `https://document.andrewclasses.com/` hiện danh mục; `documents.json` 200 + `Access-Control-Allow-Origin: *` + `Cache-Control: max-age=600`; video `?nhung=1` và `_chung/nhung.js` 200.
 - Gỡ lỗi nhỏ: `git commit` báo "LF will be replaced by CRLF" (autocrlf Windows) — vô hại, repo lưu LF nhờ `.gitattributes text=auto`.
+
+## Chặng 3 — 09/10/2026 — Video bones-muscles lồng GIỌNG THẬT Teacher Andrew (v1.2.0)
+
+Thầy "ok build", chọn giọng **"thầy Andrew · kể chuyện"** của myVoice (mã `0670723f`, nhân bản từ `Desktop\Giong Andrew.wav`).
+- **Đọc:** `tools/doc-giong.mjs` gọi thẳng lõi VoiceStudio (cổng 3900, cùng API myVoice dùng): mỗi câu `/generate` → Whisper `/v1/audio/transcriptions`
+  (verbose_json + giờ TỪNG CHỮ) → khớp < 0,97 ⇒ đọc lại (seed mới + `duration` dài hơn) → `/stories/encode` MP3 64k. 38/38 câu khớp 100%
+  (8-2 và 11-0 sót 1 chữ lần đầu, đọc lại đủ). Tổng 2,2 MB.
+- **Gắn:** `tools/giong-video.mjs` chép mp3 vào `<video>/giong/<cảnh>-<câu>.mp3` + nhúng khối `GIONG` (d = giây tiếng, w = giây bắt đầu từng CHỮ PHỤ ĐỀ)
+  vào index.html giữa mốc `/*GIONG*/…/*/GIONG*/` (nhúng thẳng để mở file:// vẫn chạy). Chữ gạch nối Whisper tách đôi, dấu "—" không có tiếng ⇒ tool tự ghép (lệch 0).
+- **Trình phát:** có GIONG ⇒ câu dài = tiếng + 0,5 s (hình bám đầu câu nên tự dời theo); phát file từ đúng chỗ khi tua giữa câu; dừng/tiếp; đổi tốc độ
+  (`playbackRate`); M tắt/bật; lệch đồng hồ > 0,3 s tự kéo về; phụ đề sáng theo giờ chữ thật; file lỗi ⇒ quay về giọng máy trình duyệt.
+  Móc thử: `__video.au` (file đang phát, giây, dừng?), `__video.loiAu`.
+- Video dài **5:07** (cũ 4:37 — giọng thầy chậm hơn giọng máy, nhất là cảnh 2, 4, 5). Đã chụp soát cảnh 2/4/8/12: hình và lời khớp.
+- ⚠ Kho CÔNG KHAI ⇒ file giọng thầy ai có link cũng tải được (giọng thầy, không phải học sinh — thầy đã biết khi duyệt).
+
+**Làm video khác có giọng:** thêm mốc `const GIONG=/*GIONG*/null/*/GIONG*/` + phần phát tiếng như bones-muscles → lấy cues.json từ trang (dòng đầu doc-giong.mjs)
+→ `node tools/doc-giong.mjs cues.json <thư mục tạm>` → `node tools/giong-video.mjs <thư mục tạm> <thư mục video> "<tên giọng>"` → `node tools/build-catalog.js`.
+
+**VIỆC ĐANG CHỜ**
+- ⬜ Thầy nghe thật trên máy/TOMKO (giọng kể chuyện có hợp không, tốc độ, quãng nghỉ 0,5 s giữa câu).
