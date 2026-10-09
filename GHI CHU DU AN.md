@@ -64,3 +64,18 @@ Thầy "ok build", chọn giọng **"thầy Andrew · kể chuyện"** của myV
 
 **VIỆC ĐANG CHỜ**
 - ⬜ Thầy nghe thật trên máy/TOMKO (giọng kể chuyện có hợp không, tốc độ, quãng nghỉ 0,5 s giữa câu).
+
+## Chặng 4 — 09/10/2026 — Nhạc nền theo đoạn (bones-muscles v1.3.0)
+
+Thầy duyệt kho **Incompetech (Kevin MacLeod, CC BY 4.0 — chỉ cần ghi công)** + 4 bài, "ok tải và build". Pixabay Music bị loại: giấy phép cấm
+phát tán nguyên file, mà kho myDocument công khai. FreePD (CC0) đã đóng cửa.
+- 4 đoạn: cảnh 0–4 "Inspired" · 5–8 "Wallpaper" · 9–11 "Clean Soul" · 12–13 "Life of Riley". Nguồn + cách cắt: `video/khoa-hoc/bones-muscles/nhac/NGUON NHAC.md`.
+- Máy không có ffmpeg ⇒ cắt bằng Electron ẩn (WebAudio `decodeAudioData` → WAV, fade vào 0,6 s / ra 3 s), nén bằng lõi VoiceStudio `/stories/encode`
+  (mp3 96k). Mỗi file = độ dài đoạn + 3 s. Tổng 3,85 MB.
+- Trình phát (`nhacTick` gọi cuối `render`): vị trí nhạc = t − đầu đoạn (tua/dừng/tốc độ tự đúng, lệch > 0,35 s kéo về); chuyển đoạn chéo 1,5 s;
+  có lời ⇒ nhạc 0,07, không lời ⇒ 0,2 (hạ nhanh, lên chậm); đoạn cuối nhỏ dần hết trước khi dừng. Nút ♪ `#bMusic` (phím N), `?nhac=0`.
+  Ghi công ở màn WATCH AGAIN + `meta.json nhac_nen`. Móc thử `__video.nhac`.
+- Đổi độ dài cảnh (đọc lại giọng…) ⇒ phải cắt lại file nhạc cho khớp độ dài đoạn mới.
+
+**VIỆC ĐANG CHỜ**
+- ⬜ Thầy nghe thật: nhạc to/nhỏ so với giọng (chỉnh `NH_TO` / `NH_NHO`), bài có hợp từng đoạn không.

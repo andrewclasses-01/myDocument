@@ -3,7 +3,7 @@
   "loai": "video",
   "ten": "Why are bones hard and muscles soft?",
   "ten_vi": "Vì sao xương cứng còn cơ mềm?",
-  "mo_ta": "Video hoạt hình 14 cảnh: tế bào → mô → ba loại cơ → sợi cơ vân → cơ co/giãn → tế bào xương và canxi → xương và cơ phối hợp. Lồng tiếng giọng Teacher Andrew, phụ đề sáng theo từng chữ.",
+  "mo_ta": "Video hoạt hình 14 cảnh: tế bào → mô → ba loại cơ → sợi cơ vân → cơ co/giãn → tế bào xương và canxi → xương và cơ phối hợp. Lồng tiếng giọng Teacher Andrew, phụ đề sáng theo từng chữ, nhạc nền theo từng đoạn.",
   "mon": "Science",
   "chu_de": [
     "cell",
@@ -16,7 +16,7 @@
   "thoi_luong_giay": 307,
   "co_giong_doc": true,
   "ngay_tao": "2026-10-04",
-  "phien_ban": "1.2.0",
+  "phien_ban": "1.3.0",
   "tep_chinh": "index.html",
   "poster": null,
   "ti_le": "16:9",
@@ -24,6 +24,8 @@
     "t": "bắt đầu từ giây thứ N (vd ?t=60)",
     "cc": "0 = tắt phụ đề lúc đầu",
     "voice": "0 = tắt lồng tiếng lúc đầu",
-    "toc": "tốc độ phát: 0.75 | 1 | 1.25 | 1.5"
-  }
+    "toc": "tốc độ phát: 0.75 | 1 | 1.25 | 1.5",
+    "nhac": "0 = tắt nhạc nền lúc đầu"
+  },
+  "nhac_nen": "Kevin MacLeod (incompetech.com) — “Inspired”, “Wallpaper”, “Clean Soul”, “Life of Riley” — CC BY 4.0"
 }
