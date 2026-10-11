@@ -29,6 +29,33 @@
   ],
   "tai_lieu": [
     {
+      "id": "slide/huong-dan/cach-lam-bai-chuong-4-buoc",
+      "loai": "slide",
+      "nhom": "huong-dan",
+      "ma": "cach-lam-bai-chuong-4-buoc",
+      "ten": "Hướng dẫn cách làm bài tập",
+      "ten_vi": "Hướng dẫn phụ huynh: cách làm bài một chương (4 bước, KHÔNG có video mẫu)",
+      "mo_ta": "Bộ slide động 9 trang hướng dẫn phụ huynh làm bài một chương sách khóa NỀN TẢNG TIẾNG ANH trên andrewclasses.com: trang bài, đọc sách, tự luyện, luyện cùng bố mẹ, quay video thu hoạch và gửi lên nhóm Zalo. Mỗi trang có nút ĐÃ HIỂU chạy màu theo thời gian đọc. Dùng chung cho mọi chương. Bản 4 bước (từ Chương 2): bỏ bước xem video mẫu vì học sinh đã xem ở Chương 1.",
+      "mon": "Hướng dẫn",
+      "chu_de": [
+        "hướng dẫn",
+        "khóa nền tảng",
+        "phụ huynh"
+      ],
+      "ngon_ngu": "vi",
+      "co_giong_doc": false,
+      "ngay_tao": "2026-10-12",
+      "phien_ban": "1.12.0",
+      "poster": null,
+      "tep_chinh": "index.html",
+      "ti_le": "16:9",
+      "tuy_chon_nhung": {
+        "nhanh": "1 = bỏ thời gian chờ nút ĐÃ HIỂU (chỉ để thầy xem thử)"
+      },
+      "url": "slide/huong-dan/cach-lam-bai-chuong-4-buoc/",
+      "nhung_url": "slide/huong-dan/cach-lam-bai-chuong-4-buoc/?nhung=1"
+    },
+    {
       "id": "slide/huong-dan/cach-lam-bai-chuong",
       "loai": "slide",
       "nhom": "huong-dan",
@@ -45,7 +72,7 @@
       "ngon_ngu": "vi",
       "co_giong_doc": false,
       "ngay_tao": "2026-10-11",
-      "phien_ban": "1.11.4",
+      "phien_ban": "1.12.0",
       "poster": null,
       "tep_chinh": "index.html",
       "ti_le": "16:9",

@@ -1,0 +1,111 @@
+/* Bộ dùng chung — slide "hướng dẫn cách làm bài chương" (tách từ cach-lam-bai-chuong/index.html, v1.12.0 12/10/2026) */
+:root{--ink:#1E2B30;--muted:#5F7370;--teal:#0E7C6E;--orange:#F08A2C;--xanh:#22A45D}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff;color:var(--ink);font-family:'Montserrat','Segoe UI',system-ui,sans-serif}
+body{min-height:100vh;display:flex;justify-content:center;align-items:flex-start}
+html.nhung,html.nhung body{overflow:hidden}
+html.nhung body{min-height:0;display:block}
+#app{width:min(100vw,1100px,calc((100vh - 190px) * 16 / 9));min-width:300px;display:flex;flex-direction:column;background:#fff;
+  border-radius:16px;overflow:hidden;user-select:none;-webkit-user-select:none}
+html.nhung #app{width:100%;border-radius:0}
+
+/* ---------- khung cảnh 16:9 (vẽ ở 1920×1080 rồi thu/phóng) ---------- */
+#khung{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;
+  background:radial-gradient(900px 600px at 10% 0%,#FFE7C4 0%,transparent 60%),radial-gradient(900px 700px at 100% 100%,#D9F0EA 0%,transparent 62%),linear-gradient(160deg,#FFF9F0,#FFF3E2 60%,#FDF0DE)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.slide{position:absolute;inset:0;opacity:0;transform:translateX(7%) scale(.96);filter:blur(6px);
+  transition:opacity .55s cubic-bezier(.22,.9,.3,1),transform .7s cubic-bezier(.22,.9,.3,1),filter .55s;pointer-events:none}
+.slide.on{opacity:1;transform:none;filter:none}
+.slide.ra{opacity:0;transform:translateX(-7%) scale(.96);filter:blur(6px)}
+.slide.ra.lui{transform:translateX(7%) scale(.96)}
+.slide.vao-lui{transform:translateX(-7%) scale(.96)}
+.slide svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.slide svg text{font-family:'Montserrat','Segoe UI',system-ui,sans-serif}
+.slide svg .a{transform-box:fill-box;transform-origin:center}
+.slide:not(.chay) .a{animation:none!important}
+/* slogan ANDREW CLASSES — chữ mảnh như slogan trên AWord (.aw-rv-brand: weight 300, giãn chữ .32em, xám nhạt) */
+.slide svg text.slogan{font-family:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:300;letter-spacing:.32em}
+#so{position:absolute;right:22px;top:16px;font:800 13px Montserrat,sans-serif;color:rgba(30,43,48,.4);letter-spacing:.12em;z-index:2}
+
+/* ---------- chữ (HTML, cỡ thật — đọc được trên điện thoại) ---------- */
+#chu{padding:16px 22px 6px}
+#buoc{font-size:12px;font-weight:800;letter-spacing:.18em;color:var(--teal)}
+#tieu{font-size:22px;font-weight:900;line-height:1.2;margin:3px 0 6px}
+#noi{font-size:15.5px;line-height:1.55;color:#33454B;font-weight:500}
+#noi b{color:#C05F10;font-weight:800}
+#chu.doi #buoc,#chu.doi #tieu,#chu.doi #noi{animation:chuVao .55s cubic-bezier(.22,.9,.3,1) both}
+#chu.doi #tieu{animation-delay:.05s}#chu.doi #noi{animation-delay:.1s}
+@keyframes chuVao{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- điều khiển ---------- */
+#dk{display:flex;align-items:center;gap:10px;padding:10px 16px 16px}
+#lui{width:46px;height:46px;border-radius:14px;border:1.5px solid #dfe6e4;background:#fff;color:var(--ink);font:800 20px inherit;cursor:pointer;flex:none}
+#lui:disabled{opacity:.35;cursor:default}
+#cham{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+#cham i{width:9px;height:9px;border-radius:50%;background:#e2e8e6;transition:all .3s}
+#cham i.da{background:#9fd8b8}
+#cham i.on{background:var(--teal);width:24px;border-radius:9px}
+#hieu{position:relative;min-width:170px;height:50px;border-radius:14px;border:2px solid #cfe5d8;background:#fff;color:#7a8c88;
+  font:900 15px 'Montserrat',sans-serif;letter-spacing:.06em;cursor:not-allowed;overflow:hidden;flex:none;padding:0 18px}
+#hieu .day{position:absolute;inset:0;width:0;background:linear-gradient(90deg,#9fe0b8,#5cc98a)}
+#hieu .nhan{position:relative;display:flex;align-items:center;justify-content:center;gap:8px}
+#hieu.san{background:var(--xanh);border-color:var(--xanh);color:#fff;cursor:pointer;box-shadow:0 8px 22px rgba(34,164,93,.35);animation:sanSang 1.6s ease-in-out infinite}
+#hieu.san .day{display:none}
+@keyframes sanSang{50%{transform:translateY(-2px);box-shadow:0 12px 26px rgba(34,164,93,.45)}}
+@media (max-width:520px){
+  #chu{padding:12px 14px 4px} #tieu{font-size:18px} #noi{font-size:14px}
+  #dk{padding:8px 10px 12px;gap:8px} #hieu{min-width:140px;height:46px;font-size:14px} #lui{width:42px;height:42px}
+  #cham i{width:7px;height:7px} #cham i.on{width:16px}
+}
+
+/* ================= HOẠT HÌNH (vòng lặp — chỉ chạy khi trang đang mở) ================= */
+@keyframes noi{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes thoNhe{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes gatDau{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg)}60%{transform:rotate(2deg)}}
+@keyframes nhay{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes vongBam{0%{opacity:0;transform:scale(.4)}15%{opacity:.9}100%{opacity:0;transform:scale(1.9)}}
+/* trang 3 — đọc sách & suy ngẫm */
+@keyframes latTrang{0%,40%{transform:scaleX(1)}55%{transform:scaleX(-1)}70%,100%{transform:scaleX(-1);opacity:0}}
+@keyframes tuBay{0%{transform:translate(var(--fx),var(--fy)) scale(.3);opacity:0}6%{opacity:1}13%,78%{transform:none;opacity:1}86%,100%{transform:none;opacity:0}}
+@keyframes chuBay{0%{transform:translate(0,0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1);opacity:0}}
+@keyframes tuNay{0%{opacity:0;transform:translate(0,0) scale(.9)}3.5%{opacity:0;transform:translate(0,-215px) scale(1)}4.3%{opacity:1}9%{opacity:1;transform:translate(var(--dx),calc(var(--dy) - 215px)) scale(1)}13%,100%{opacity:0;transform:translate(calc(var(--dx)*1.15),calc(var(--dy)*1.15 - 215px)) scale(1)}}
+@keyframes may{0%,34%{opacity:0;transform:scale(.6)}40%,92%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.6)}}
+@keyframes go1{0%,42%{transform:scaleX(1)}56%,100%{transform:scaleX(0)}}
+@keyframes go2{0%,58%{transform:scaleX(1)}72%,100%{transform:scaleX(0)}}
+@keyframes nutDoc{0%,75%{opacity:0;transform:scale(.6)}79%,94%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes bamDoc{0%,82%{opacity:0;transform:scale(.4)}84%{opacity:.9}93%,100%{opacity:0;transform:scale(1.9)}}
+@keyframes docXanh{0%,84%{fill:#0E7C6E}86%,100%{fill:#22A45D}}
+/* trang 4 — tự luyện */
+@keyframes dapAnC{0%,38%{opacity:0}42%,92%{opacity:1}100%{opacity:0}}
+@keyframes bamC{0%,32%{opacity:0;transform:scale(.4)}35%{opacity:.9}46%,100%{opacity:0;transform:scale(1.9)}}
+@keyframes diem100{0%,56%{opacity:0;transform:scale(.4)}62%,92%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.4)}}
+@keyframes ngonC{0%,10%{transform:translate(90px,160px)}30%,40%{transform:translate(0,0)}52%,100%{transform:translate(90px,160px)}}
+/* trang 5/7 — bong bóng "bố mẹ nhìn thấy" */
+@keyframes luot{0%,8%{transform:translateY(0)}24%,100%{transform:translateY(-26px)}}
+@keyframes ngonB{0%,6%{transform:translate(20px,140px)}24%{transform:translate(10px,90px)}40%,54%{transform:translate(58px,-4px)}58%{transform:translate(58px,6px)}64%,100%{transform:translate(58px,-4px)}}
+@keyframes chonB{0%,57%{opacity:0}60%,92%{opacity:1}100%{opacity:0}}
+@keyframes vongB{0%,56%{opacity:0;transform:scale(.4)}60%{opacity:.9}72%,100%{opacity:0;transform:scale(1.8)}}
+@keyframes boHoi{0%,4%{opacity:0;transform:scale(.6)}10%,28%{opacity:1;transform:scale(1)}34%,100%{opacity:0;transform:scale(.6)}}
+@keyframes conNoi{0%,30%{opacity:0;transform:scale(.6)}36%,80%{opacity:1;transform:scale(1)}88%,100%{opacity:0;transform:scale(.6)}}
+@keyframes miengMo{0%,32%{opacity:0}34%,78%{opacity:1}80%,100%{opacity:0}}
+/* trang 7 — quay video: bố hỏi → con trả lời → bố bấm đáp án */
+@keyframes t7Bo{0%,2%{opacity:0;transform:scale(.6)}7%,29%{opacity:1;transform:scale(1)}33%,100%{opacity:0;transform:scale(.6)}}
+@keyframes t7Con{0%,33%{opacity:0;transform:scale(.6)}38%,73%{opacity:1;transform:scale(1)}77%,100%{opacity:0;transform:scale(.6)}}
+/* trang 6 — video mẫu */
+@keyframes chay100{0%,6%{transform:scaleX(0)}70%,100%{transform:scaleX(1)}}
+@keyframes xongVid{0%,70%{opacity:0;transform:scale(.5)}76%,94%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes anPlay{0%,5%{opacity:1}9%,96%{opacity:0}100%{opacity:1}}
+/* trang 8 — Zalo */
+@keyframes bayVao{0%{transform:translate(540px,260px) scale(.35) rotate(14deg);opacity:0}25%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes manA{0%,24%{opacity:1}27%,97%{opacity:0}100%{opacity:1}}
+@keyframes manB{0%,25%{opacity:0}28%,50%{opacity:1}53%,100%{opacity:0}}
+@keyframes manC{0%,51%{opacity:0}54%,94%{opacity:1}97%,100%{opacity:0}}
+@keyframes bamA{0%,12%{opacity:0;transform:scale(.4)}15%{opacity:.9}24%,100%{opacity:0;transform:scale(1.9)}}
+@keyframes bamB{0%,38%{opacity:0;transform:scale(.4)}41%{opacity:.9}50%,100%{opacity:0;transform:scale(1.9)}}
+@keyframes chonVid{0%,64%{opacity:0;transform:scale(.3)}67%,94%{opacity:1;transform:scale(1)}97%,100%{opacity:0}}
+@keyframes bamGui{0%,76%{opacity:0;transform:scale(.4)}79%{opacity:.9}88%,100%{opacity:0;transform:scale(1.9)}}
+@keyframes daGui{0%,84%{opacity:0;transform:translateY(20px)}87%,94%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes buoc1{0%,26%{opacity:1}29%,100%{opacity:.28}}
+@keyframes buoc2{0%,26%{opacity:.28}29%,51%{opacity:1}54%,100%{opacity:.28}}
+@keyframes buoc3{0%,52%{opacity:.28}55%,95%{opacity:1}98%,100%{opacity:.28}}
+@keyframes ngonTay{0%,8%{transform:translate(200px,470px)}12%,19%{transform:translate(150px,140px)}30%,34%{transform:translate(320px,600px)}38%,47%{transform:translate(349px,726px)}57%,60%{transform:translate(150px,470px)}63%,70%{transform:translate(62px,424px)}74%,86%{transform:translate(352px,322px)}94%,100%{transform:translate(200px,470px)}}
