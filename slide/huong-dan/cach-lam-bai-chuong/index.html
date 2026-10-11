@@ -79,7 +79,7 @@ html.nhung #app{width:100%;border-radius:0}
 @keyframes latTrang{0%,40%{transform:scaleX(1)}55%{transform:scaleX(-1)}70%,100%{transform:scaleX(-1);opacity:0}}
 @keyframes tuBay{0%{transform:translate(var(--fx),var(--fy)) scale(.3);opacity:0}6%{opacity:1}13%,78%{transform:none;opacity:1}86%,100%{transform:none;opacity:0}}
 @keyframes chuBay{0%{transform:translate(0,0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1);opacity:0}}
-@keyframes tuNay{0%{opacity:1;transform:translate(0,150px) scale(.9)}3.5%{opacity:1;transform:translate(0,0) scale(1)}9%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1)}13%,100%{opacity:0;transform:translate(calc(var(--dx)*1.15),calc(var(--dy)*1.15)) scale(1)}}
+@keyframes tuNay{0%{opacity:1;transform:translate(0,0) scale(.9)}3.5%{opacity:1;transform:translate(0,-150px) scale(1)}9%{opacity:1;transform:translate(var(--dx),calc(var(--dy) - 150px)) scale(1)}13%,100%{opacity:0;transform:translate(calc(var(--dx)*1.15),calc(var(--dy)*1.15 - 150px)) scale(1)}}
 @keyframes may{0%,34%{opacity:0;transform:scale(.6)}40%,92%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.6)}}
 @keyframes go1{0%,42%{transform:scaleX(1)}56%,100%{transform:scaleX(0)}}
 @keyframes go2{0%,58%{transform:scaleX(1)}72%,100%{transform:scaleX(0)}}
@@ -511,7 +511,7 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
   /* câu trích (v1.10, thầy 12/10): TỪNG CHỮ nảy ra từ đỉnh đầu cậu bé, toả về nhiều hướng rồi ẩn — chữ nhỏ, viết thường;
      chữ cuối ẩn xong thì mây suy nghĩ mới hiện. Lúc chờ, mọi chữ nằm THẤP, KHUẤT SAU ĐẦU (vẽ trước nhân vật) rồi mới trồi lên nảy ra */
   const TU='Ta sẽ không thể phấn đấu khi chẳng biết mình đang phấn đấu vì điều gì...'.split(' ');
-  const cau=`<g transform="translate(${ox} ${oy-332})">${TU.map((w,k)=>{
+  const cau=`<g transform="translate(${ox} ${oy-182})">${TU.map((w,k)=>{
     const goc=(-165+((k*7)%TU.length)*(150/(TU.length-1)))*Math.PI/180,xa=150+(k%3)*40;
     return A(`animation:tuNay 9s cubic-bezier(.2,.9,.3,1) infinite backwards;animation-delay:${(k*.13).toFixed(2)}s;--dx:${(Math.cos(goc)*xa*1.5).toFixed(0)}px;--dy:${(Math.sin(goc)*xa).toFixed(0)}px`,
       TX(0,0,w,26,k%2?C.orange:C.teal,{w:800}).replace('<text ','<text stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke" '))}).join('')}</g>`;
