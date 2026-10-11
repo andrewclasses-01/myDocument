@@ -157,7 +157,7 @@ const SLOGAN=`<text x="960" y="66" font-size="30" fill="#9aa3af" text-anchor="mi
 /* bàn: mặt bàn có cạnh sáng + bóng dưới */
 const BAN=(y=860,x0=-40,x1=1960)=>`<rect x="${x0}" y="${y+26}" width="${x1-x0}" height="400" fill="${C.wood2}"/><rect x="${x0}" y="${y}" width="${x1-x0}" height="34" rx="10" fill="${C.wood}"/><rect x="${x0}" y="${y}" width="${x1-x0}" height="8" rx="4" fill="${C.woodHi}"/><rect x="${x0}" y="${y+34}" width="${x1-x0}" height="14" fill="rgba(0,0,0,.12)"/>`;
 /* bàn tay chỉ (đầu ngón trỏ ở 0,0) */
-const NGON=(sc=1)=>`<g transform="scale(${sc})"><path d="M-6 0 Q-12 2 -12 14 L-12 58 Q-26 50 -34 58 Q-42 68 -30 80 L-2 110 Q6 118 18 118 L44 118 Q64 118 66 92 L66 50 Q66 38 54 38 Q46 38 44 46 Q42 32 30 32 Q22 32 20 40 Q18 30 8 30 Q2 30 0 34 L0 8 Q0 -2 -6 0Z" fill="#F7CDA6" stroke="#C98D5E" stroke-width="4" stroke-linejoin="round"/><path d="M20 40 L20 62 M44 46 L44 66" stroke="#C98D5E" stroke-width="3" stroke-linecap="round" opacity=".6"/></g>`;
+const NGON=(sc=1)=>`<g transform="scale(${sc*1.3})"><g transform="translate(13 85.4) rotate(-90)"><path d="M3 -14.5 L-48 -15.5 L-48 15.5 L3 14.5Z" fill="${DA.tre}" stroke="${DA2.tre}" stroke-width="2"/>${TAY_CHI('tre',{sw:2,vien:1})}</g></g>`;
 
 /* ---------- SÁCH NỀN TẢNG TIẾNG ANH ---------- */
 function BOOK(w=220,h=300){
@@ -222,31 +222,113 @@ function TOC(o){
 function TAY(vai,khuyu,ban,o){
   const ao=o.ao,da=DA[o.loai],r=o.loai==='lon'?24:21;
   const m=[vai[0]+(khuyu[0]-vai[0])*.55,vai[1]+(khuyu[1]-vai[1])*.55];
-  return `<path d="M${vai[0]} ${vai[1]} L${khuyu[0]} ${khuyu[1]} L${ban[0]} ${ban[1]}" fill="none" stroke="${da}" stroke-width="${o.loai==='lon'?32:28}" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M${vai[0]} ${vai[1]} L${m[0]} ${m[1]}" fill="none" stroke="${ao}" stroke-width="${o.loai==='lon'?50:44}" stroke-linecap="round"/>`;
+  return `<path d="M${vai[0]} ${vai[1]} L${khuyu[0]} ${khuyu[1]} L${ban[0]} ${ban[1]}" fill="none" stroke="${da}" stroke-width="${o.loai==='lon'?36:31}" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M${vai[0]} ${vai[1]} L${m[0]} ${m[1]}" fill="none" stroke="${ao}" stroke-width="${o.loai==='lon'?54:48}" stroke-linecap="round"/>`;
 }
-/* BÀN TAY nhìn thẳng (thấy mu bàn tay): lòng bàn + 4 ngón khép (dài ngắn khác nhau) + ngón cái, XOAY theo hướng cẳng tay
-   (khuỷu → cổ tay). Tay trái/phải lật để ngón cái luôn ở phía trong (gần thân). v1.3 — thay "hình tròn + ngón cái" cũ. */
+/* ================= BỘ VẼ BÀN TAY v1.4 =================
+   Thầy chê tay v1.3 "chưa ổn, phải giống thật" ⇒ vẽ theo GIẢI PHẪU: mỗi ngón 3 đốt (ngón cái 2 đốt) đi theo một đường giữa,
+   thon dần về đầu, đầu ngón tròn hơi bầu; nhìn MU tay thấy MÓNG + nếp đốt, nhìn LÒNG tay thấy nếp ngang.
+   Cỡ theo người thật: bề ngang 4 ngón ≈ 1,6 cổ tay · ngón giữa dài ≈ 4,8 lần bề rộng ngón · ngón cái rộng hơn ~1,3 lần ·
+   ngón giữa dài nhất, út ngắn nhất. Bàn tay không viền ngoài (như cánh tay), chỉ NGÓN có viền mảnh để tách ngón. */
+const MONG={tre:'#FBE4D8',lon:'#F3D2BE'};
+const f1=v=>(+v).toFixed(1);
+/* đường mềm đi QUA các điểm (Catmull-Rom → Bézier); trả các đoạn " C…" — điểm đầu do người gọi đặt bằng M */
+function CR(Q,dong){
+  const n=Q.length,g=i=>dong?Q[(i+n)%n]:Q[Math.max(0,Math.min(n-1,i))];let d='';
+  for(let i=0;i<(dong?n:n-1);i++){const p0=g(i-1),p1=g(i),p2=g(i+1),p3=g(i+2);
+    d+=` C${f1(p1[0]+(p2[0]-p0[0])/6)} ${f1(p1[1]+(p2[1]-p0[1])/6)} ${f1(p2[0]-(p3[0]-p1[0])/6)} ${f1(p2[1]-(p3[1]-p1[1])/6)} ${f1(p2[0])} ${f1(p2[1])}`;}
+  return d;
+}
+const KHOI=(Q,fill,ex='')=>`<path d="M${f1(Q[0][0])} ${f1(Q[0][1])}${CR(Q,1)}Z" fill="${fill}"${ex}/>`;
+const NET=(Q,st,sw,op=1)=>`<path d="M${f1(Q[0][0])} ${f1(Q[0][1])}${CR(Q)}" fill="none" stroke="${st}" stroke-width="${sw}" stroke-linecap="round" opacity="${op}"/>`;
+/* MỘT NGÓN. g = gốc ngón (khớp ngón–bàn) · a = hướng (độ) · L = độ dài từng đốt · b = góc gập ở từng khớp giữa các đốt ·
+   w = bề rộng ở gốc · mat: 'mu' (thấy móng) | 'long' (thấy bụng ngón) | 'canh' (nhìn cạnh: móng mỏng một bên) | 'cuon' (ngón gập, không thấy đầu)
+   bong = [dx,dy] bóng đổ xuống mặt vật đang cầm */
+function NGON_TAY(o){
+  const r=Math.PI/180,da=o.da,da2=o.da2,sw=o.sw||1.6;
+  let a=o.a;const P=[o.g];
+  o.L.forEach((l,i)=>{if(i)a+=(o.b&&o.b[i-1])||0;const p=P[P.length-1];P.push([p[0]+l*Math.cos(a*r),p[1]+l*Math.sin(a*r)])});
+  const n=P.length,tl=n===3?[1,.93,.9]:[1,.93,.85,.87],W=P.map((_,i)=>o.w*tl[i]);
+  const T=P.map((p,i)=>{const A=P[Math.max(0,i-1)],B=P[Math.min(n-1,i+1)],dx=B[0]-A[0],dy=B[1]-A[1],d=Math.hypot(dx,dy)||1;return[dx/d,dy/d]});
+  const N=T.map(t=>[t[1],-t[0]]);                       /* pháp tuyến "bên trái" của đường giữa */
+  const Lp=P.map((p,i)=>[p[0]+N[i][0]*W[i]/2,p[1]+N[i][1]*W[i]/2]),Rp=P.map((p,i)=>[p[0]-N[i][0]*W[i]/2,p[1]-N[i][1]*W[i]/2]);
+  const e=n-1,te=T[e],ne=N[e],re=W[e]/2,kk=re*.5523,tip=[P[e][0]+te[0]*re,P[e][1]+te[1]*re];
+  const d=`M${f1(Lp[0][0])} ${f1(Lp[0][1])}${CR(Lp)} C${f1(Lp[e][0]+te[0]*kk)} ${f1(Lp[e][1]+te[1]*kk)} ${f1(tip[0]+ne[0]*kk)} ${f1(tip[1]+ne[1]*kk)} ${f1(tip[0])} ${f1(tip[1])}`+
+    ` C${f1(tip[0]-ne[0]*kk)} ${f1(tip[1]-ne[1]*kk)} ${f1(Rp[e][0]+te[0]*kk)} ${f1(Rp[e][1]+te[1]*kk)} ${f1(Rp[e][0])} ${f1(Rp[e][1])}${CR(Rp.slice().reverse())}`;
+  let s=o.bong?`<path d="${d}Z" transform="translate(${o.bong[0]} ${o.bong[1]})" fill="#000" opacity=".16"/>`:'';
+  /* tô kín + viền HỞ ở gốc (gốc ngón liền vào bàn tay, không có vạch ngang) */
+  s+=`<path d="${d}Z" fill="${da}"/><path d="${d}" fill="none" stroke="${da2}" stroke-width="${sw}" stroke-linejoin="round" stroke-linecap="butt"/>`;
+  /* ánh sáng dọc sống ngón (cho ngón tròn, không dẹt) */
+  s+=NET(P.slice(1).map((p,i)=>[p[0]+N[i+1][0]*W[i+1]*.2,p[1]+N[i+1][1]*W[i+1]*.2]).concat([[P[e][0]+te[0]*re*.4+ne[0]*W[e]*.16,P[e][1]+te[1]*re*.4+ne[1]*W[e]*.16]]),'#fff',(o.w*.16).toFixed(1),.26);
+  /* nếp đốt: mu tay = nếp cong nhỏ ở khớp; lòng tay = nếp ngang; ngón gập = nếp ở chỗ gập */
+  const nep=(i,dai,cong,op)=>{const p=P[i],t=T[i],nn=N[i],h=W[i]*dai;
+    return `<path d="M${f1(p[0]+nn[0]*h)} ${f1(p[1]+nn[1]*h)} Q${f1(p[0]+t[0]*cong)} ${f1(p[1]+t[1]*cong)} ${f1(p[0]-nn[0]*h)} ${f1(p[1]-nn[1]*h)}" fill="none" stroke="${da2}" stroke-width="${(sw*.85).toFixed(2)}" stroke-linecap="round" opacity="${op}"/>`};
+  const mat=o.mat||'mu';
+  if(mat==='mu'){s+=nep(1,.24,2.6,.55);if(n===4)s+=nep(2,.2,2,.45);}
+  else if(mat==='long'){for(let i=1;i<n;i++)s+=nep(i,.32,-1.2,.5);}
+  else if(mat==='cuon'){s+=nep(n===4?2:1,.3,2.4,.55);}
+  else if(mat==='canh'){s+=nep(1,.18,1.6,.45);}
+  /* móng: ở đốt cuối, cách đầu ngón một chút da */
+  if(mat==='mu'||mat==='canh'){
+    const segL=Math.hypot(P[e][0]-P[e-1][0],P[e][1]-P[e-1][1]),nl=Math.min(segL*.74,W[e]*1.08),nw=W[e]*(mat==='canh'?.3:.74);
+    const lech=mat==='canh'?W[e]*.33:0,c=[P[e][0]+te[0]*(re*.8-nl/2)+ne[0]*lech,P[e][1]+te[1]*(re*.8-nl/2)+ne[1]*lech],goc=Math.atan2(te[1],te[0])/r;
+    s+=`<g transform="translate(${f1(c[0])} ${f1(c[1])}) rotate(${f1(goc)})"><rect x="${f1(-nl/2)}" y="${f1(-nw/2)}" width="${f1(nl)}" height="${f1(nw)}" rx="${f1(nw*.46)}" fill="${o.mong||'#FBE4D8'}" stroke="${da2}" stroke-width="${(sw*.6).toFixed(2)}" opacity=".95"/>`+
+       `<path d="M${f1(-nl*.25)} ${f1(-nw*.18)} L${f1(nl*.2)} ${f1(-nw*.18)}" stroke="#fff" stroke-width="${f1(nw*.18)}" stroke-linecap="round" opacity=".7"/></g>`;
+  }
+  return s;
+}
+/* BÀN TAY MỞ (hệ toạ độ: gốc = cổ tay, trục x = hướng các ngón; ngón cái ở phía y ÂM). mat 'mu' | 'long'; xoe = độ xoè ngón */
+function TAY_MO(loai,mat='mu',xoe=1){
+  const da=DA[loai],da2=DA2[loai],m=MONG[loai];
+  const ban=[[-3,-16.5],[7,-19.5],[16,-21],[27,-20],[37,-18],[41,-7],[41,5],[38,16],[26,19],[12,17.5],[-3,16.5]];
+  const ng=[[33,13.5,13,[13,9,8],10.4],[37,4.6,5,[17.5,11.5,9],12],[38,-4.6,-2,[19,12.5,10],12.4],[36,-13.5,-9,[17,11,9],12]]
+    .map(([x,y,a,L,w])=>NGON_TAY({g:[x-5,y],a:a*xoe,L,b:[6,5],w,da,da2,mat,mong:m})).join('');
+  const cai=NGON_TAY({g:[8,-11],a:-40,L:[17,14],b:[12],w:14.5,da,da2,mat,mong:m});
+  const chiTiet=mat==='long'
+    ?NET([[6,-6],[17,-1],[24,9]],da2,1.4,.4)+NET([[14,-12],[25,-9],[35,-9]],da2,1.3,.35)
+    :[-13.5,-4.6,4.6,13.5].map(y=>`<ellipse cx="33" cy="${y}" rx="3.4" ry="4" fill="#fff" opacity=".18"/>`).join('');
+  return `${cai}${KHOI(ban,da)}${chiTiet}${ng}`;
+}
+/* BÀN TAY CHỈ (nhìn mu tay): ngón trỏ duỗi, 3 ngón kia gập (thấy đốt gốc + nếp gập), ngón cái áp cạnh. Hệ như TAY_MO. */
+function TAY_CHI(loai,o={}){
+  const da=o.da||DA[loai],da2=o.da2||DA2[loai],m=MONG[loai],sw=o.sw||1.6;
+  const cai=NGON_TAY({g:[9,-8],a:-26,L:[17,15],b:[10],w:13.5,da,da2,mat:'canh',mong:m,sw});
+  const ban=[[-3,-16],[14,-17],[29,-17],[39,-15],[44,-6],[44,5],[41,14],[30,18],[14,17],[-3,16]];
+  const cuon=[[38,13.5,6,9.8],[40,5,7.5,10.8],[41,-3.5,8.5,11.4]].map(([x,y,l,w])=>NGON_TAY({g:[x-6,y],a:12,L:[l,3.5],b:[28],w,da,da2,mat:'cuon',sw})).join('');
+  const tro=NGON_TAY({g:[34,-11.5],a:-4,L:[22,13.5,11],b:[3,2],w:11.4,da,da2,mat:'mu',mong:m,sw});
+  return `${cai}${KHOI(ban,da,o.vien?` stroke="${da2}" stroke-width="${sw}"`:'')}<ellipse cx="38" cy="-11" rx="4" ry="4.4" fill="#fff" opacity=".22"/>${cuon}${tro}`;
+}
+/* BÀN TAY NẮM MÉP MÁY nhìn nghiêng (máy dựng đứng ở x∈[-9,9], cổ tay ở khoảng (-16,30)): ngón cái duỗi dọc mặt màn hình,
+   mu bàn tay úp lên mép máy, 4 ngón quặp ra mặt sau — vẽ út trước, trỏ sau cùng (đầu ngón trên quặp đè lên ngón dưới). */
+function TAY_NAM(loai){
+  const da=DA[loai],da2=DA2[loai],m=MONG[loai];
+  const cai=NGON_TAY({g:[-14,-2],a:-86,L:[21,18],b:[-5],w:14.5,da,da2,mat:'canh',mong:m});
+  const mu=KHOI([[-28,10],[-22,-6],[-8,-15],[8,-17],[19,-12],[23,1],[22,16],[16,27],[2,35],[-12,42],[-27,37]],da);
+  const ngon=[[22,10.4,[10,8,7]],[13,11.8,[12,9,8]],[3,12.4,[13,9.5,8]],[-7,12.4,[12.5,9,8]]]
+    .map(([y,w,L])=>NGON_TAY({g:[13,y],a:6,L,b:[82,68],w,da,da2,mat:'cuon'})).join('');
+  const khop=[-7,3,13,22].map(y=>`<ellipse cx="14" cy="${y}" rx="3.6" ry="4" fill="#fff" opacity=".2"/>`).join('');
+  return `${cai}${mu}${NET([[-19,-3],[-6,-9],[8,-11]],'#fff',3,.2)}${khop}${ngon}`;
+}
+/* BÀN TAY nhìn thẳng (dùng cho NGUOI): bàn tay MỞ, XOAY theo hướng cẳng tay (khuỷu → cổ tay), ngón cái luôn về phía thân.
+   Giơ lên ⇒ thấy lòng bàn tay (vẫy chào); buông xuống ⇒ thấy mu tay. */
 function BANTAY(ban,o,khuyu){
-  const lon=o.loai==='lon',k=lon?1.15:1,da=DA[o.loai],da2=DA2[o.loai];
+  const lon=o.loai==='lon',k=lon?1.15:1;
   const kh=khuyu||[ban[0]*.85,ban[1]+70];
-  const goc=Math.atan2(ban[1]-kh[1],ban[0]-kh[0])*180/Math.PI;
-  const lat=ban[0]<0?-1:1;
-  const ngon=[[-11,21],[-3.6,25],[3.8,24],[11,18]].map(([y,L])=>`<rect x="9" y="${y-4.2}" width="${L}" height="8.4" rx="4.2" fill="${da}" stroke="${da2}" stroke-width="1.8"/>`).join('');
-  return `<g transform="translate(${ban[0]} ${ban[1]}) rotate(${goc.toFixed(1)}) scale(${k} ${(k*lat).toFixed(2)})">
-     <path d="M-6 -15 Q8 -30 22 -26" stroke="${da2}" stroke-width="12.5" stroke-linecap="round" fill="none"/><path d="M-6 -15 Q8 -30 22 -26" stroke="${da}" stroke-width="9" stroke-linecap="round" fill="none"/>
-     ${ngon}<path d="M-16 -14 Q-20 0 -16 14 Q-4 20 12 15 Q16 0 12 -15 Q-4 -20 -16 -14Z" fill="${da}" stroke="${da2}" stroke-width="1.8"/>
-     <path d="M2 -9 Q6 0 2 9" stroke="${da2}" stroke-width="1.4" fill="none" opacity=".45"/></g>`;
+  const goc=Math.atan2(ban[1]-kh[1],ban[0]-kh[0]);
+  const s=Math.sin(goc),lat=-(Math.sign(ban[0])||1)*(Math.abs(s)<.2?1:Math.sign(s));
+  return `<g transform="translate(${ban[0]} ${ban[1]}) rotate(${f1(goc*180/Math.PI)}) scale(${k} ${k*lat})">${TAY_MO(o.loai,s<0?'long':'mu',1)}</g>`;
 }
-/* NGÓN CÁI đặt lên trang sách + phần bàn tay lộ ra ngoài mép (tay đỡ sách từ phía sau). (x,y) = mép sách; dau -1 trái · 1 phải */
-function NGON_CAI_SACH(x,y,dau,loai='tre'){
+/* TAY CẦM SÁCH (nhìn từ phía trang sách). (x,y) = mép sách; dau -1 trái · 1 phải.
+   lop 'sau' = bàn tay sau bìa ló ra ở mép (cạnh ngón trỏ + gò ngón cái) — vẽ TRƯỚC quyển sách để sách che phần sau bìa;
+   lop 'truoc' = ngón cái nằm trên trang (thấy móng), vắt qua mép bìa. */
+function TAY_SACH(x,y,dau,loai,lop){
   const da=DA[loai],da2=DA2[loai];
-  return `<g transform="translate(${x} ${y}) scale(${dau<0?1:-1} 1)">
-    <path d="M8 -46 Q-30 -44 -36 -4 Q-38 40 6 50 Z" fill="${da}" stroke="${da2}" stroke-width="2.5"/>
-    <path d="M-30 -20 Q-22 -26 -12 -24 M-32 0 Q-24 -6 -14 -4 M-30 20 Q-22 14 -12 16" stroke="${da2}" stroke-width="2" fill="none" opacity=".55"/>
-    <path d="M-2 22 Q18 6 42 -2 Q58 -7 61 4 Q63 14 50 19 Q28 27 4 38 Z" fill="${da}" stroke="${da2}" stroke-width="2.5"/>
-    <path d="M44 -1 Q56 -3 57 6 Q56 13 47 14 Q42 7 44 -1Z" fill="#fff" opacity=".5"/>
-    <path d="M22 12 Q24 20 20 26" stroke="${da2}" stroke-width="1.8" fill="none" opacity=".55"/></g>`;
+  const g=s=>`<g transform="translate(${x} ${y}) scale(${dau<0?1:-1} 1)">${s}</g>`;
+  if(lop==='sau')
+    return g(`${KHOI([[8,-30],[-5,-35],[-18,-36],[-28,-29],[-33,-15],[-33,2],[-30,18],[-29,34],[-30,58],[8,58]],da)}
+      ${NET([[-28,-25],[-17,-23],[-4,-22]],da2,1.7,.6)}${NET([[-24,-31],[-12,-32]],'#fff',2.6,.28)}
+      ${NET([[-31,-9],[-28,6],[-23,16]],da2,1.5,.3)}`);
+  return g(`${NGON_TAY({g:[-13,-2],a:-37,L:[25,23],b:[-9],w:18.5,da,da2,mat:'mu',mong:MONG[loai]})}<ellipse cx="-15" cy="0" rx="9" ry="10" fill="${da}"/>`);
 }
 function NGUOI(o){
   o=Object.assign({loai:'tre',toc:'#4A2C1D',ao:'#F2B92E'},o);
@@ -293,44 +375,37 @@ function NGHIENG(o){
   const than=`<path d="M-76 -94 C-72 -126 -38 -136 -10 -136 L40 -136 C66 -132 84 -112 86 -86 L98 180 L-90 180 Z" fill="${o.ao}"/>
     <path d="M-76 -94 C-72 -124 -44 -134 -14 -136 L-24 180 L-90 180Z" fill="#000" opacity=".07"/>
     <path d="M-14 -136 Q16 -118 48 -136" fill="none" stroke="#000" stroke-width="6" opacity=".13"/>`;
-  const ban=o.ban||[96,-30], khuyu=o.khuyu||[34,10], vai=[14,-98];
+  const ban=o.ban||[96,-30], khuyu=o.khuyu||[34,10], vai=[14,-98], co=o.coTay||ban;
   const m=[vai[0]+(khuyu[0]-vai[0])*.55,vai[1]+(khuyu[1]-vai[1])*.55];
-  const tay=`<path d="M${vai[0]} ${vai[1]} L${khuyu[0]} ${khuyu[1]} L${ban[0]} ${ban[1]}" fill="none" stroke="${da}" stroke-width="${lon?32:28}" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M${vai[0]} ${vai[1]} L${m[0]} ${m[1]}" fill="none" stroke="${o.ao}" stroke-width="${lon?52:46}" stroke-linecap="round"/>
-    <path d="M${vai[0]} ${vai[1]} L${m[0]} ${m[1]}" fill="none" stroke="#000" stroke-width="${lon?52:46}" stroke-linecap="round" opacity=".05"/>`;
+  const tay=`<path d="M${vai[0]} ${vai[1]} L${khuyu[0]} ${khuyu[1]} L${co[0]} ${co[1]}" fill="none" stroke="${da}" stroke-width="${lon?36:31}" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M${vai[0]} ${vai[1]} L${m[0]} ${m[1]}" fill="none" stroke="${o.ao}" stroke-width="${lon?56:50}" stroke-linecap="round"/>
+    <path d="M${vai[0]} ${vai[1]} L${m[0]} ${m[1]}" fill="none" stroke="#000" stroke-width="${lon?56:50}" stroke-linecap="round" opacity=".05"/>`;
   const kk=lon?1.12:1;
   const banTay=o.kieuTay==='nam'
-    /* nắm mép iPad: lòng bàn tay ôm cạnh dưới, 4 đốt ngón cong ra phía sau máy, ngón cái dọc theo cạnh máy */
-    ?`<g transform="translate(${ban[0]} ${ban[1]}) scale(${kk})">
-       <path d="M-20 -16 Q-26 8 -14 22 Q4 30 20 20 Q28 6 22 -14 Q4 -26 -20 -16Z" fill="${da}" stroke="${da2}" stroke-width="2"/>
-       ${[-12,-1,10,20].map((y,i)=>`<path d="M14 ${y-5} Q30 ${y-6} 32 ${y+1} Q30 ${y+8} 14 ${y+6}" fill="${da}" stroke="${da2}" stroke-width="2"/>`).join('')}
-       <path d="M-6 -14 Q0 -36 12 -50" stroke="${da2}" stroke-width="13" stroke-linecap="round" fill="none"/><path d="M-6 -14 Q0 -36 12 -50" stroke="${da}" stroke-width="9.5" stroke-linecap="round" fill="none"/></g>`
+    /* NẮM MÉP iPad (v1.4): mu bàn tay úp lên mép máy, 4 ngón quặp vòng ra mặt sau (thấy đốt gốc → đốt giữa gập xuống →
+       đầu ngón quặp vào), ngón cái duỗi dọc theo mặt màn hình. Hệ toạ độ xoay theo thân máy (máy dựng đứng ở x∈[-9,9]). */
+    ?`<g transform="translate(${ban[0]} ${ban[1]}) rotate(${o.gocMay||0}) scale(${kk})">${TAY_NAM(o.loai)}</g>`
     :o.kieuTay==='gio'
-    /* giơ tay khi nói: bàn tay dựng đứng, lòng bàn hướng về người đối diện, ngón khép, ngón cái chếch ra */
-    ?`<g transform="translate(${ban[0]} ${ban[1]}) scale(${kk})">
-       <path d="M8 4 Q22 -2 30 -18" stroke="${da2}" stroke-width="12.5" stroke-linecap="round" fill="none"/><path d="M8 4 Q22 -2 30 -18" stroke="${da}" stroke-width="9" stroke-linecap="round" fill="none"/>
-       <path d="M-14 24 L-16 -22 Q-16 -54 -1 -56 Q14 -56 14 -30 L16 24 Q0 30 -14 24Z" fill="${da}" stroke="${da2}" stroke-width="2"/>
-       <path d="M-8 -18 L-8 -46 M0 -16 L0 -50 M8 -18 L8 -44" stroke="${da2}" stroke-width="1.6" opacity=".5"/></g>`
+    /* GIƠ TAY khi nói (v1.4): bàn tay mở, ngón hơi xoè, ngón cái tách ra — dùng TAY_MO, xoay theo hướng cẳng tay */
+    ?`<g transform="translate(${ban[0]} ${ban[1]}) rotate(${f1(Math.atan2(ban[1]-khuyu[1],ban[0]-khuyu[0])*180/Math.PI-12)}) scale(${kk} ${-kk})">${TAY_MO(o.loai,'mu',.75)}</g>`
     :`<circle cx="${ban[0]}" cy="${ban[1]}" r="${lon?24:21}" fill="${da}"/>`;
   return `<g>${dauCo}${than}${toc}${mat}${o.vatCam||''}${tay}${banTay}</g>`;
 }
-/* NGÓN TAY ÔM MẶT SAU iPad (v1.3): tay đỡ hai bên, 4 ngón vòng từ đằng trước ra nằm trên mặt sau — ngón thon dần về đầu,
+/* NGÓN TAY ÔM MẶT SAU iPad (v1.4): mu tay ló ngoài mép, 4 ngón (NGON_TAY, có móng) vòng từ đằng trước ra nằm trên mặt sau,
    dài ngắn khác nhau (giữa dài nhất, út ngắn nhất), xoè nhẹ, có 2 nếp đốt + bóng đổ mềm; cạnh bàn tay lộ ở mép máy. */
 function OM_IPAD(cx,cy,w,h,loai='tre'){
-  const da=DA[loai],da2=DA2[loai],k=loai==='lon'?1.12:1;
-  /* một ngón: thon ở gốc (chỗ vòng qua mép máy), đầu ngón hơi bầu tròn */
-  const ngon1=(l,r,boc)=>`<path d="M0 ${(-r*.92).toFixed(1)} C${(l*.45).toFixed(1)} ${(-r*1.02).toFixed(1)} ${(l-r*1.3).toFixed(1)} ${(-r*1.12).toFixed(1)} ${(l-r*.55).toFixed(1)} ${(-r*.9).toFixed(1)} C${(l+r*.25).toFixed(1)} ${(-r*.55).toFixed(1)} ${(l+r*.25).toFixed(1)} ${(r*.55).toFixed(1)} ${(l-r*.55).toFixed(1)} ${(r*.9).toFixed(1)} C${(l-r*1.3).toFixed(1)} ${(r*1.12).toFixed(1)} ${(l*.45).toFixed(1)} ${(r*1.02).toFixed(1)} 0 ${(r*.92).toFixed(1)} Z"${boc}/>`;
+  const da=DA[loai],da2=DA2[loai],m=MONG[loai],k=loai==='lon'?1.15:1,r=Math.PI/180;
+  /* [gốc y, hướng, 3 đốt (phần nằm trên lưng máy), bề rộng] — trỏ · giữa · áp út · út */
+  const NG=[[-23,-7,[23,15,12.5],12.6],[-8,-1,[25.5,16.5,13.5],13.1],[7,5,[23.5,15.5,12.5],12.4],[21,11,[18.5,12,10.5],11]];
   const ben=dau=>{
-    const L=[34,41,39,30],R=[8.6,9.2,9,7.8],Y=[-34,-12,10,30],G=[-10,-3,4,11];
-    const ngon=Y.map((y,i)=>{const l=L[i]*k,r=R[i]*k;
-      return `<g transform="translate(${-2*k} ${(y*k).toFixed(1)}) rotate(${G[i]})">
-        <g transform="translate(2 3)">${ngon1(l,r,' fill="#000" opacity=".12"')}</g>
-        ${ngon1(l,r,` fill="${da}" stroke="${da2}" stroke-width="2"`)}
-        <path d="M0 ${(-r*.7).toFixed(1)} L${(l*.22).toFixed(1)} ${(-r*.72).toFixed(1)} L${(l*.22).toFixed(1)} ${(r*.72).toFixed(1)} L0 ${(r*.7).toFixed(1)}Z" fill="${da2}" opacity=".45"/>
-        <path d="M${(l*.58).toFixed(1)} ${(-r*.55).toFixed(1)} q-2.2 ${(r*.55).toFixed(1)} 0 ${(r*1.1).toFixed(1)}" stroke="${da2}" stroke-width="1.4" fill="none" opacity=".6"/></g>`}).join('');
-    /* cạnh bàn tay (phía ngón út) ôm qua mép máy rồi chạy xuống cổ tay */
-    const canh=`<path d="M${2*k} ${-46*k} Q${-16*k} ${-40*k} ${-20*k} ${-6*k} Q${-22*k} ${30*k} ${-10*k} ${58*k} L${4*k} ${56*k} Q${-2*k} ${26*k} ${2*k} ${-4*k} Z" fill="${da}" stroke="${da2}" stroke-width="2"/>`;
-    return `<g transform="translate(${cx+dau*w/2} ${cy}) scale(${dau<0?1:-1} 1)">${canh}${ngon}</g>`;
+    /* mu bàn tay ló ra ngoài mép máy (thấy từ phía sau), chạy xuống cổ tay */
+    const mu=KHOI([[-1,-36],[-12,-38],[-23,-33],[-31,-19],[-34,0],[-34,20],[-33,40],[-35,64],[-3,64],[-2,42],[0,24],[1,-18]],da);
+    const khop=NG.map(([y])=>`<ellipse cx="-7" cy="${y}" rx="4" ry="5.6" fill="#fff" opacity=".2"/>`).join('');
+    const ngon=NG.map(([y,a,L,w])=>NGON_TAY({g:[-7,y],a,L,b:[5,3],w,da,da2,mat:'mu',mong:m,bong:[2.5,3.5]})).join('');
+    /* nếp gập nơi ngón vòng qua mép máy */
+    const nep=NG.map(([y,a,L,w])=>{const c=Math.cos(a*r),s=Math.sin(a*r),x0=-7+9*c,y0=y+9*s,h=w*.42;
+      return `<path d="M${f1(x0+s*h)} ${f1(y0-c*h)} Q${f1(x0-2.5*c)} ${f1(y0-2.5*s)} ${f1(x0-s*h)} ${f1(y0+c*h)}" fill="none" stroke="${da2}" stroke-width="2" stroke-linecap="round" opacity=".5"/>`}).join('');
+    return `<g transform="translate(${cx+dau*w/2} ${cy+6}) scale(${dau<0?k:-k} ${k})">${mu}${khop}${ngon}${nep}</g>`;
   };
   return ben(-1)+ben(1);
 }
@@ -414,7 +489,7 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
  noi:'Con đọc kỹ những trang sách thầy ghi trên trang bài, vừa đọc vừa <b>suy ngẫm</b> — các bước sau thầy hỏi đúng những gì có trong sách đấy. Đọc xong con bấm <b>Con đã đọc xong</b>.',
  svg:()=>{
   const ox=640,oy=760;
-  const t={trai:[[-160,30],[-206,72]],phai:[[160,30],[206,72]]};
+  const t={trai:[[-120,190],[-215,122]],phai:[[120,190],[215,122]]};
   const trang=`<path d="M0 -112 Q92 -134 194 -114 L194 112 Q92 92 0 114Z" fill="#fffaf0" stroke="#d9cbb3" stroke-width="3"/>${[0,1,2,3,4,5].map(i=>`<line x1="26" y1="${-76+i*30}" x2="170" y2="${-82+i*30}" stroke="#d9cbb3" stroke-width="7" stroke-linecap="round"/>`).join('')}`;
   const sach=`<path d="M0 -100 Q-100 -130 -214 -116 L-214 130 Q-100 112 0 130 Q100 112 214 130 L214 -116 Q100 -130 0 -100Z" fill="${C.yellow}" stroke="#c9a51d" stroke-width="4"/>
      <path d="M0 -92 Q-90 -118 -200 -104 L-200 118 Q-90 100 0 118Z" fill="#fffaf0"/><path d="M0 -92 Q90 -118 200 -104 L200 118 Q90 100 0 118Z" fill="#fffaf0"/>
@@ -435,8 +510,9 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
     <circle cx="880" cy="520" r="15" fill="#fff" stroke="${C.teal}" stroke-width="5"/><circle cx="970" cy="540" r="24" fill="#fff" stroke="${C.teal}" stroke-width="5"/>`;
   return `${SLOGAN}<circle cx="${ox}" cy="${oy-170}" r="300" fill="${C.orangeS}"/>
    ${G(ox,oy,CON({nhin:[0,6],tay:t,tayRieng:1}),'',1.05)}
+   ${TAY_SACH(ox-214,oy+78,-1,'tre','sau')}${TAY_SACH(ox+214,oy+78,1,'tre','sau')}
    ${G(ox,oy+90,sach)}
-   ${NGON_CAI_SACH(ox-214,oy+80,-1)}${NGON_CAI_SACH(ox+214,oy+80,1)}
+   ${TAY_SACH(ox-214,oy+78,-1,'tre','truoc')}${TAY_SACH(ox+214,oy+78,1,'tre','truoc')}
    ${BAN(930)}
    ${cau}
    ${A('animation:may 9s infinite;transform-origin:1480px 520px;transform-box:view-box',may)}
@@ -448,7 +524,7 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
 SL.push({buoc:'BƯỚC 2',tieu:'Con tự luyện tập',
  noi:'Con tự làm hoạt động ngay trên trang bài. Phải <b>đúng 100%</b> mới mở bước sau — sai câu nào thì mở sách đọc lại rồi làm lại nhé.',
  svg:()=>{
-  const t={trai:[[-172,70],[-150,-8]],phai:[[172,70],[150,-8]]};
+  const t={trai:[[-180,118],[-153,58]],phai:[[180,118],[153,58]]};
   return `${SLOGAN}
    <circle cx="470" cy="560" r="300" fill="${C.orangeS}"/>
    ${G(470,780,CON({nhin:[0,7],tay:t,tayRieng:1}),'',1)}
@@ -466,7 +542,7 @@ SL.push({buoc:'BƯỚC 2',tieu:'Con tự luyện tập',
 SL.push({buoc:'BƯỚC 3',tieu:'Luyện tập cùng bố mẹ',
  noi:'Bố mẹ <b>cầm máy, màn hình quay về phía bố mẹ</b> (con không nhìn màn hình). Bố mẹ đọc câu hỏi, con <b>trả lời bằng lời</b>, bố mẹ chọn đáp án theo câu trả lời của con. Bước này cũng phải đúng 100%.',
  svg:()=>{
-  const tb={trai:[[-178,70],[-150,-14]],phai:[[178,70],[150,-14]]};
+  const tb={trai:[[-185,112],[-153,56]],phai:[[185,112],[153,56]]};
   return `${SLOGAN}
    ${G(860,780,BO({nhin:[0,8],tay:tb,tayRieng:1}),'',1.08)}
    ${G(860,762,IPAD_LUNG(290,200))}
@@ -498,12 +574,12 @@ SL.push({buoc:'BƯỚC 4',tieu:'Xem video bài làm mẫu',
   return `${SLOGAN}<defs><filter id="mo5" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
    <circle cx="470" cy="600" r="320" fill="${C.orangeS}"/>
    ${G(330,800,BO({nhin:[8,8],tay:tb}),'',.95)}
-   ${G(650,815,CON({nhin:[-8,7],mieng:'mo',tayRieng:1,tay:{trai:[[-150,20],[-70,-92]],phai:[[160,80],[110,130]]}}),'',.88)}
+   ${G(650,815,CON({nhin:[-8,7],mieng:'mo',tayRieng:1,tay:{trai:[[-30,75],[-36.4,-33]],phai:[[160,80],[110,130]]}}),'',.88)}
    <g><path d="M462 892 L488 832 L514 892" fill="none" stroke="#5b656b" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></g>
    ${G(488,800,IPAD_LUNG(220,150),'',1,0)}
-   <g transform="translate(546 695) rotate(-38) scale(.5)">${NGON(1)}</g>
    ${BAN(890)}
    <path d="M600 760 C760 700 860 600 920 540" fill="none" stroke="${C.teal}" stroke-width="6" stroke-dasharray="4 16" stroke-linecap="round"/>
+   <g transform="translate(618 786) rotate(-143) scale(.88 -.88)">${TAY_CHI('tre')}</g>
    ${G(1380,470,DEVICE(VW+44,VH+44,video,22,'cv5'))}
    <g transform="translate(1380 850)">${A('animation:xongVid 7s infinite',`${RR(-230,-42,460,84,42,C.xanh)}${TX(0,12,'✓ ĐÃ XEM HẾT 100%',32,'#fff',{w:900})}`)}</g>`;
  }});
@@ -512,7 +588,7 @@ SL.push({buoc:'BƯỚC 4',tieu:'Xem video bài làm mẫu',
 SL.push({buoc:'BƯỚC 5',tieu:'Quay video thu hoạch',
  noi:'Làm lại như bước 3 nhưng lần này <b>quay video</b>: bố mẹ và con ngồi đối diện nhau, đặt <b>điện thoại trên chân máy</b> quay rõ cả hai. Quay ở độ phân giải thấp cho video nhẹ nhé.',
  svg:()=>{
-  const bo=NGHIENG({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E',kieuTay:'nam',ban:[122,-30],khuyu:[52,24],vatCam:`<g transform="translate(126 8)">${IPAD_NGHIENG()}</g>`});
+  const bo=NGHIENG({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E',kieuTay:'nam',ban:[143.5,-40],gocMay:9.8,coTay:[124.6,-12.8],khuyu:[52,24],vatCam:`<g transform="translate(126 8)">${IPAD_NGHIENG()}</g>`});
   const con=NGHIENG({mieng:'noi',kieuTay:'gio',ban:[104,-52],khuyu:[48,26]});
   /* cảnh trong màn hình điện thoại: đúng hai bố con đối diện */
   const W=268,H=500;
