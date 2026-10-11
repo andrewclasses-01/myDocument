@@ -101,9 +101,6 @@ html.nhung #app{width:100%;border-radius:0}
 /* trang 7 — quay video: bố hỏi → con trả lời → bố bấm đáp án */
 @keyframes t7Bo{0%,2%{opacity:0;transform:scale(.6)}7%,29%{opacity:1;transform:scale(1)}33%,100%{opacity:0;transform:scale(.6)}}
 @keyframes t7Con{0%,33%{opacity:0;transform:scale(.6)}38%,73%{opacity:1;transform:scale(1)}77%,100%{opacity:0;transform:scale(.6)}}
-@keyframes t7Ngon{0%,70%{transform:translate(90px,260px);opacity:0}72%{opacity:1}78%,90%{transform:translate(0,0);opacity:1}96%,100%{transform:translate(90px,260px);opacity:0}}
-@keyframes t7Vong{0%,79%{opacity:0;transform:scale(.4)}81%{opacity:.9}92%,100%{opacity:0;transform:scale(1.9)}}
-@keyframes t7Chon{0%,80%{opacity:0}82%,96%{opacity:1}100%{opacity:0}}
 /* trang 6 — video mẫu */
 @keyframes chay100{0%,6%{transform:scaleX(0)}70%,100%{transform:scaleX(1)}}
 @keyframes xongVid{0%,70%{opacity:0;transform:scale(.5)}76%,94%{opacity:1;transform:scale(1)}100%{opacity:0}}
@@ -222,7 +219,7 @@ function MAT(o){
   return `${mat(-29)}${mat(29)}<path d="M-46 -252 Q-30 -262 -14 -254 M14 -254 Q30 -262 46 -252" fill="none" stroke="${o.toc}" stroke-width="7" stroke-linecap="round"/>
    <path d="M-3 -206 Q-8 -194 2 -192" fill="none" stroke="${DA2[o.loai]}" stroke-width="4" stroke-linecap="round"/>
    <ellipse cx="-52" cy="-192" rx="13" ry="8" fill="#F08F86" opacity=".35"/><ellipse cx="52" cy="-192" rx="13" ry="8" fill="#F08F86" opacity=".35"/>${mieng}
-   ${o.mieng==='noi'?A('animation:miengMo 8s infinite',`<path d="M-20 -181 Q0 -150 20 -181 Z" fill="#8A2E22"/><path d="M-10 -164 Q0 -170 10 -164 Q0 -158 -10 -164Z" fill="#E66A5C"/>`):''}`;
+   ${o.mieng==='noi'?A(`animation:${o.kfMieng||'miengMo'} 8s infinite`,`<path d="M-20 -181 Q0 -150 20 -181 Z" fill="#8A2E22"/><path d="M-10 -164 Q0 -170 10 -164 Q0 -158 -10 -164Z" fill="#E66A5C"/>`):''}`;
 }
 function TOC(o){
   return o.loai==='lon'
@@ -433,7 +430,10 @@ function MAN_CHON_B(){
    ${A('animation:ngonB 8s infinite;transform-box:view-box',NGON(.9))}`;
 }
 function THOAI(x,y,w,h,text,st,size=30,col='#fff',duoi='bl'){
-  const tp=duoi==='bl'?`M${x+50} ${y+h-2} L${x+30} ${y+h+38} L${x+100} ${y+h-2}Z`:`M${x+w-100} ${y+h-2} L${x+w-30} ${y+h+38} L${x+w-50} ${y+h-2}Z`;
+  /* duoi = [x,y] ⇒ đuôi mọc từ cạnh dưới, mũi nhọn chĩa thẳng vào điểm đó (đỉnh đầu người nói) */
+  if(Array.isArray(duoi)){const [hx,hy]=duoi,bx=Math.max(x+60,Math.min(x+w-60,hx)),by=y+h-2,dx=hx-bx,dy=hy-by,d=Math.hypot(dx,dy)||1,L=Math.min(90,d-18),
+    tx=bx+dx/d*L,ty=by+dy/d*L;duoi=`M${f1(bx-24)} ${by} L${f1(tx)} ${f1(ty)} L${f1(bx+24)} ${by}Z`;}
+  const tp=duoi.startsWith&&duoi.startsWith('M')?duoi:duoi==='bl'?`M${x+50} ${y+h-2} L${x+30} ${y+h+38} L${x+100} ${y+h-2}Z`:`M${x+w-100} ${y+h-2} L${x+w-30} ${y+h+38} L${x+w-50} ${y+h-2}Z`;
   return A(st,`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="30" fill="${col}" stroke="${C.line}" stroke-width="3"/><path d="${tp}" fill="${col}"/>${TX(x+w/2,y+h/2+size*.36,text,size,C.ink,{w:700})}`);
 }
 
@@ -474,6 +474,10 @@ SL.push({buoc:'TRANG BÀI CỦA CHƯƠNG',tieu:'Làm lần lượt từ trên xu
    <path d="M${ax} ${top} L${ax} ${bot-14}" stroke="${C.orange}" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 22"/><path d="M${ax-22} ${bot-40} L${ax} ${bot-6} L${ax+22} ${bot-40}" fill="none" stroke="${C.orange}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
    ${TX(ax+60,giua-12,'Làm lần lượt',48,C.ink,{a:'start',w:900})}${TX(ax+60,giua+50,'từ trên xuống',48,C.orange,{a:'start',w:900})}`;
  }});
+/* đồng hồ REC trong điện thoại trang 7 chạy thật (mm:ss, đếm từ 00:00 mỗi lần mở trang) */
+(()=>{setInterval(()=>{const nay=performance.now();document.querySelectorAll('.demGio').forEach(e=>{const sl=e.closest('.slide');
+  if(!sl||!sl.classList.contains('chay')){e._t0=0;if(e.textContent!=='REC 00:00')e.textContent='REC 00:00';return}
+  if(!e._t0)e._t0=nay;const g=Math.floor((nay-e._t0)/1000)%3600,v='REC '+String(Math.floor(g/60)).padStart(2,'0')+':'+String(g%60).padStart(2,'0');if(e.textContent!==v)e.textContent=v})},250)})();
 /* keyframes riêng từng hàng: hàng i MỞ ở mốc a_i, XONG ở b_i; mọi hàng cùng về KHOÁ ở cuối vòng */
 (()=>{
   const n=HANG_TB.length,dau=4,buoc=13;let css='';
@@ -482,6 +486,8 @@ SL.push({buoc:'TRANG BÀI CỦA CHƯƠNG',tieu:'Làm lần lượt từ trên xu
     css+=`@keyframes tb_mo${i}{0%,${a}%{opacity:0}${a+1.5}%,${b}%{opacity:1}${b+1.5}%,100%{opacity:0}}`;
     css+=`@keyframes tb_xong${i}{0%,${b}%{opacity:0}${b+1.5}%,94%{opacity:1}97%,100%{opacity:0}}`;
   }
+  /* trang 7: miệng con mấp máy khi đang trả lời (38%→73% vòng 8s) — con ngoài cảnh và con trong điện thoại dùng CHUNG keyframes này */
+  let m='0%,37%{opacity:0}';for(let t=38,b=0;t<73;t+=2.2,b^=1)m+=`${t.toFixed(1)}%{opacity:${b?0:1}}`;css+=`@keyframes t7Mieng{${m}73.5%,100%{opacity:0}}`;
   $('#kfDong').textContent=css;
 })();
 
@@ -594,31 +600,28 @@ SL.push({buoc:'BƯỚC 4',tieu:'Xem video bài làm mẫu',
 SL.push({buoc:'BƯỚC 5',tieu:'Quay video thu hoạch',
  noi:'Đặt <b>điện thoại trên chân máy</b> quay <b>mình con</b>, con ngồi nhìn thẳng vào máy. Bố mẹ ngồi cạnh điện thoại, cầm máy <b>đọc câu hỏi</b>; con <b>trả lời bằng lời</b>, bố mẹ chọn đáp án theo câu trả lời của con. Quay ở độ phân giải thấp cho video nhẹ nhé.',
  svg:()=>{
-  /* màn hình điện thoại: chỉ có con */
+  /* màn hình điện thoại: chỉ có con — miệng mấp máy CÙNG LÚC với con ngoài cảnh; đồng hồ REC chạy (JS cập nhật .demGio) */
   const W=228,H=420;
-  const manDT=`<rect width="${W}" height="${H}" fill="#FDEBD3"/><g transform="translate(${W/2} ${H-70}) scale(.62)">${CON({nhin:[0,2],khongTay:1})}</g>
+  const manDT=`<rect width="${W}" height="${H}" fill="#FDEBD3"/><g transform="translate(${W/2} ${H-70}) scale(.62)">${CON({nhin:[0,2],khongTay:1,mieng:'noi',kfMieng:'t7Mieng'})}</g>
     <rect y="${H-92}" width="${W}" height="92" fill="${C.wood}"/>
-    <rect width="${W}" height="50" fill="rgba(0,0,0,.35)"/><circle cx="24" cy="25" r="8" fill="#E53935" class="a" style="animation:nhay 1.2s infinite"/>${TX(40,33,'REC 02:15',18,'#fff',{a:'start',w:800})}
+    <rect width="${W}" height="50" fill="rgba(0,0,0,.35)"/><circle cx="24" cy="25" r="8" fill="#E53935" class="a" style="animation:nhay 1.2s infinite"/><text x="40" y="33" font-size="18" fill="#fff" font-weight="800" class="demGio">REC 00:00</text>
     <circle cx="${W/2}" cy="${H-40}" r="22" fill="#fff" opacity=".9"/><rect x="${W/2-10}" y="${H-50}" width="20" height="20" rx="4" fill="#E53935"/>`;
-  /* iPad bố cầm: câu hỏi + 4 đáp án; cuối vòng bố bấm B */
-  const IW=460,IH=330,b=22;
-  const manIP=`${QUIZ(IW-2*b,IH-2*b,{dung:1,stDung:'animation:t7Chon 8s infinite'})}`;
+  /* bố (thấy lưng) cầm iPad TRƯỚC NGỰC bằng hai tay: thân bố che phần lớn máy, chỉ ló một góc màn hình bên trái;
+     hai cánh tay buông dọc thân, cẳng tay và bàn tay khuất phía trước */
+  const ipad=`<g transform="translate(-40 -86) rotate(-7) scale(.85)"><rect x="-190" y="-112" width="380" height="250" rx="26" fill="${C.dark}"/><rect x="-174" y="-96" width="348" height="218" rx="14" fill="#EAF6F2"/>
+    <rect x="-160" y="-82" width="200" height="40" rx="8" fill="${C.tealS}"/><rect x="-160" y="-30" width="150" height="56" rx="10" fill="#fff" stroke="#dfe6e4" stroke-width="3"/><rect x="-160" y="36" width="150" height="56" rx="10" fill="#fff" stroke="#dfe6e4" stroke-width="3"/></g>`;
+  const tayBo=dau=>`<path d="M${dau*104} -96 L${dau*126} 40" stroke="#3E8E7E" stroke-width="54" stroke-linecap="round"/><path d="M${dau*104} -96 L${dau*126} 40" stroke="#000" stroke-width="54" stroke-linecap="round" opacity=".06"/>`;
   return `${SLOGAN}
-   ${G(750,720,CON({nhin:[0,2],mieng:'noi',tay:{trai:[[-130,60],[-100,150]],phai:[[130,60],[100,150]]}}))}
+   ${G(750,720,CON({nhin:[0,2],mieng:'noi',kfMieng:'t7Mieng',tay:{trai:[[-130,60],[-100,150]],phai:[[130,60],[100,150]]}}))}
    ${BAN(860)}
    <!-- điện thoại trên chân máy (tiền cảnh trái), màn hình quay ra người xem -->
    <g><line x1="420" y1="740" x2="420" y2="880" stroke="#2f3639" stroke-width="16" stroke-linecap="round"/>
     <path d="M420 870 L300 1100 M420 870 L540 1100 M420 870 L426 1110" stroke="#2f3639" stroke-width="15" stroke-linecap="round"/>
     <rect x="394" y="852" width="52" height="30" rx="8" fill="#3a4246"/><rect x="356" y="724" width="128" height="24" rx="8" fill="#3a4246"/></g>
    ${G(420,500,DEVICE(W+32,H+32,manDT,16,'cv6dt'))}
-   <!-- bố (tiền cảnh phải, thấy lưng): cánh tay đưa lên đỡ iPad, bàn tay khuất sau máy -->
-   <path d="M1300 930 L1236 830" stroke="#3E8E7E" stroke-width="64" stroke-linecap="round"/><path d="M1240 836 L1196 760" stroke="${DA.lon}" stroke-width="38" stroke-linecap="round"/>
-   ${G(1150,600,DEVICE(IW,IH,manIP,b,'cv6ip'))}
-   <g transform="translate(1251 573)">${VONG('animation:t7Vong 8s infinite')}</g>
-   <g transform="translate(1246 580)">${A('animation:t7Ngon 8s infinite;transform-box:view-box',NGON(.8))}</g>
-   ${G(1440,1040,LUNG({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E'}),'',1.25)}
-   ${THOAI(1270,300,640,96,'Những năm tháng đầu đời có vai trò gì...?','animation:t7Bo 8s infinite',27,'#fff','bl')}
-   ${THOAI(680,150,880,96,'Để học hỏi và chuẩn bị kiến thức cho tương lai...','animation:t7Con 8s infinite',27,C.orangeS,'bl')}`;
+   <g transform="translate(1440 1040) scale(1.25)">${ipad}${LUNG({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E'})}${tayBo(-1)}${tayBo(1)}</g>
+   ${THOAI(1130,450,640,96,'Những năm tháng đầu đời có vai trò gì...?','animation:t7Bo 8s infinite',27,'#fff',[1440,628])}
+   ${THOAI(560,150,880,96,'Để học hỏi và chuẩn bị kiến thức cho tương lai...','animation:t7Con 8s infinite',27,C.orangeS,[750,392])}`;
  }});
 
 /* 7 — BƯỚC 5 (tiếp): GỬI ZALO */
