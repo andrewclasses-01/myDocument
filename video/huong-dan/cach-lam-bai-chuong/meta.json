@@ -1,0 +1,26 @@
+{
+  "ma": "cach-lam-bai-chuong",
+  "loai": "video",
+  "ten": "Cách làm bài một chương sách",
+  "ten_vi": "Hướng dẫn phụ huynh: cách làm bài một chương sách NỀN TẢNG",
+  "mo_ta": "Video hoạt hình 9 cảnh hướng dẫn phụ huynh và học sinh làm bài một chương sách khóa NỀN TẢNG TIẾNG ANH trên andrewclasses.com: chuẩn bị, trang bài, xem video mẫu, đọc sách, tự luyện, luyện cùng bố mẹ, quay video thu hoạch gửi Zalo. Chỉ phụ đề, không lồng tiếng. Dùng chung cho mọi chương.",
+  "mon": "Hướng dẫn",
+  "chu_de": [
+    "hướng dẫn",
+    "khóa nền tảng",
+    "phụ huynh"
+  ],
+  "ngon_ngu": "vi",
+  "thoi_luong_giay": 0,
+  "co_giong_doc": false,
+  "ngay_tao": "2026-10-11",
+  "phien_ban": "1.0.0",
+  "tep_chinh": "index.html",
+  "poster": null,
+  "ti_le": "16:9",
+  "tuy_chon_nhung": {
+    "t": "bắt đầu từ giây thứ N (vd ?t=60)",
+    "cc": "0 = tắt phụ đề lúc đầu",
+    "toc": "tốc độ phát: 0.75 | 1 | 1.25 | 1.5"
+  }
+}
