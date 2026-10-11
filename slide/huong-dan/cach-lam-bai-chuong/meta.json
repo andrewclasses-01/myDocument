@@ -1,0 +1,26 @@
+{
+  "ma": "cach-lam-bai-chuong",
+  "loai": "slide",
+  "ten": "Cách làm bài một chương sách",
+  "ten_vi": "Hướng dẫn phụ huynh: cách làm bài một chương sách NỀN TẢNG",
+  "mo_ta": "Bộ slide động 9 trang hướng dẫn phụ huynh làm bài một chương sách khóa NỀN TẢNG TIẾNG ANH trên andrewclasses.com: trang bài, đọc sách, tự luyện, luyện cùng bố mẹ, xem video mẫu, quay video thu hoạch và gửi lên nhóm Zalo. Mỗi trang có nút ĐÃ HIỂU chạy màu theo thời gian đọc. Dùng chung cho mọi chương.",
+  "mon": "Hướng dẫn",
+  "chu_de": [
+    "hướng dẫn",
+    "khóa nền tảng",
+    "phụ huynh"
+  ],
+  "ngon_ngu": "vi",
+  "co_giong_doc": false,
+  "ngay_tao": "2026-10-11",
+  "phien_ban": "1.0.0",
+  "tep_chinh": "index.html",
+  "poster": null,
+  "ti_le": "16:9",
+  "tuy_chon_nhung": {
+    "nhanh": "1 = bỏ thời gian chờ nút ĐÃ HIỂU (chỉ để thầy xem thử)"
+  },
+  "su_kien_rieng": {
+    "cao": "{cao} — chiều cao tài liệu cần (px) để trang mẹ đặt khung iframe vừa khít"
+  }
+}
