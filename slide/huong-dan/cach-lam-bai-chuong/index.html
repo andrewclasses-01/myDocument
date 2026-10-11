@@ -79,11 +79,11 @@ html.nhung #app{width:100%;border-radius:0}
 @keyframes latTrang{0%,40%{transform:scaleX(1)}55%{transform:scaleX(-1)}70%,100%{transform:scaleX(-1);opacity:0}}
 @keyframes tuBay{0%{transform:translate(var(--fx),var(--fy)) scale(.3);opacity:0}6%{opacity:1}13%,78%{transform:none;opacity:1}86%,100%{transform:none;opacity:0}}
 @keyframes chuBay{0%{transform:translate(0,0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1);opacity:0}}
-@keyframes chuSach{0%{opacity:0;transform:translateY(40px) scale(.7)}5%{opacity:1}16%{opacity:1;transform:translateY(-40px) scale(1)}24%,100%{opacity:0;transform:translateY(-70px) scale(1)}}
-@keyframes may{0%,25%{opacity:0;transform:scale(.6)}32%,92%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.6)}}
-@keyframes go1{0%,34%{transform:scaleX(1)}50%,100%{transform:scaleX(0)}}
-@keyframes go2{0%,52%{transform:scaleX(1)}68%,100%{transform:scaleX(0)}}
-@keyframes nutDoc{0%,72%{opacity:0;transform:scale(.6)}77%,94%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes tuNay{0%{opacity:0;transform:translate(0,0) scale(.3)}1.5%{opacity:1}8%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1)}12%,100%{opacity:0;transform:translate(calc(var(--dx)*1.15),calc(var(--dy)*1.15)) scale(1)}}
+@keyframes may{0%,34%{opacity:0;transform:scale(.6)}40%,92%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.6)}}
+@keyframes go1{0%,42%{transform:scaleX(1)}56%,100%{transform:scaleX(0)}}
+@keyframes go2{0%,58%{transform:scaleX(1)}72%,100%{transform:scaleX(0)}}
+@keyframes nutDoc{0%,75%{opacity:0;transform:scale(.6)}79%,94%{opacity:1;transform:scale(1)}100%{opacity:0}}
 @keyframes bamDoc{0%,82%{opacity:0;transform:scale(.4)}84%{opacity:.9}93%,100%{opacity:0;transform:scale(1.9)}}
 @keyframes docXanh{0%,84%{fill:#0E7C6E}86%,100%{fill:#22A45D}}
 /* trang 4 — tự luyện */
@@ -508,10 +508,13 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
      <g transform="translate(107 7)">${BOOK(214,250).replace(/<rect x="[^"]*" y="[^"]*" width="214" height="250" rx="10" fill="rgba\(0,0,0,.12\)"\/>/,'')}</g>
      <rect x="-13" y="-120" width="26" height="254" rx="6" fill="#d8b21f"/><rect x="-13" y="-90" width="26" height="12" fill="${C.red}"/><rect x="-13" y="96" width="26" height="12" fill="${C.red}"/>
      <path d="M-13 -120 L-13 134" stroke="#000" stroke-width="3" opacity=".12"/>`;
-  /* câu trích (v1.9, thầy 12/10): chữ NHỎ, chữ thường, nhô lên từ mép trên quyển sách một chút rồi ẩn ngay;
-     xong thì mây suy nghĩ mới hiện chữ */
-  const cau=`<g transform="translate(${ox} ${oy-82})">${A('animation:chuSach 9s ease-out infinite',
-    TX(0,0,'Ta sẽ không thể phấn đấu khi chẳng biết',24,C.teal,{w:700})+TX(0,32,'mình đang phấn đấu vì điều gì...',24,C.teal,{w:700})).replace(/<text /g,'<text stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke" ')}</g>`;
+  /* câu trích (v1.10, thầy 12/10): TỪNG CHỮ nảy ra từ đỉnh đầu cậu bé, toả về nhiều hướng rồi ẩn — chữ nhỏ, viết thường;
+     chữ cuối ẩn xong thì mây suy nghĩ mới hiện */
+  const TU='Ta sẽ không thể phấn đấu khi chẳng biết mình đang phấn đấu vì điều gì...'.split(' ');
+  const cau=`<g transform="translate(${ox} ${oy-332})">${TU.map((w,k)=>{
+    const goc=(-165+((k*7)%TU.length)*(150/(TU.length-1)))*Math.PI/180,xa=150+(k%3)*40;
+    return A(`animation:tuNay 9s cubic-bezier(.2,.9,.3,1) infinite;animation-delay:${(k*.13).toFixed(2)}s;--dx:${(Math.cos(goc)*xa*1.5).toFixed(0)}px;--dy:${(Math.sin(goc)*xa).toFixed(0)}px`,
+      TX(0,0,w,26,k%2?C.orange:C.teal,{w:800}).replace('<text ','<text stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke" '))}).join('')}</g>`;
   /* mây suy nghĩ (to) — tâm (1480,520) */
   const may=`<g><g transform="translate(1480 520) scale(1.32) translate(-1270 -315)"><path d="M1080 360 C1020 360 1000 290 1060 270 C1050 200 1150 180 1190 220 C1220 160 1340 160 1360 220 C1420 190 1500 230 1480 290 C1540 310 1530 390 1470 400 C1460 450 1380 460 1350 430 C1310 470 1200 470 1180 430 C1130 450 1070 420 1080 360Z" fill="#fff" stroke="${C.teal}" stroke-width="4.5"/></g>
       ${TX(1480,500,'À, thì ra là vậy…',38,C.ink,{w:800})}<g transform="translate(1310 466)">${A('animation:go1 9s infinite;transform-origin:100% 50%',`<rect x="0" y="0" width="340" height="46" fill="#fff"/>`)}</g>
