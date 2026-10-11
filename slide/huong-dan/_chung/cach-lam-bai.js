@@ -11,7 +11,14 @@
      videoMau: true  (mặc định) — 5 bước, có bước XEM VIDEO MẪU (Chương 1 · slide/huong-dan/cach-lam-bai-chuong)
      videoMau: false — 4 bước, bỏ hẳn trang + mọi chỗ nhắc video mẫu (từ Chương 2 · slide/huong-dan/cach-lam-bai-chuong-4-buoc;
                        thầy chốt 12/10: "chương 1 học sinh đã có kinh nghiệm xem video mẫu rồi") */
-const CH=Object.assign({videoMau:true},window.HD_CAU_HINH||{});
+// ⭐ v1.13.0 — CÂU RIÊNG TỪNG CHƯƠNG (thầy 12/10): cauTrich = chữ bung trên đầu cậu bé (trang đọc sách) ·
+//   hoiBo / traLoiCon = lời hai bố con ở trang quay video. Để trống ⇒ câu của Chương 1.
+const CH=Object.assign({videoMau:true,
+  cauTrich:'Ta sẽ không thể phấn đấu khi chẳng biết mình đang phấn đấu vì điều gì...',
+  hoiBo:'Những năm tháng đầu đời có vai trò gì...?',
+  traLoiCon:'Để học hỏi và chuẩn bị kiến thức cho tương lai...'},window.HD_CAU_HINH||{});
+/* bề rộng bong bóng thoại theo độ dài câu (chữ 27px ≈ 14px/ký tự) */
+const rongThoai=(t,toiThieu)=>Math.max(toiThieu,Math.round(String(t).length*14.2+90));
 const B_QUAY=CH.videoMau?5:4;   /* số BƯỚC của "quay video, gửi Zalo" */
 const MD=window.MyDocument||{nhung:false,q:new URLSearchParams(location.search),emit(){},onLenh(){}};
 const $=(q,r=document)=>r.querySelector(q);
@@ -379,10 +386,12 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
      <path d="M-13 -120 L-13 134" stroke="#000" stroke-width="3" opacity=".12"/>`;
   /* câu trích (v1.10, thầy 12/10): TỪNG CHỮ nảy ra từ đỉnh đầu cậu bé, toả về nhiều hướng rồi ẩn — chữ nhỏ, viết thường;
      chữ cuối ẩn xong thì mây suy nghĩ mới hiện. Lúc chờ, mọi chữ nằm THẤP, KHUẤT SAU ĐẦU (vẽ trước nhân vật) rồi mới trồi lên nảy ra */
-  const TU='Ta sẽ không thể phấn đấu khi chẳng biết mình đang phấn đấu vì điều gì...'.split(' ');
+  const TU=String(CH.cauTrich).trim().split(/\s+/);
+  /* chữ CUỐI phải ẩn trước khi mây hiện (34% của 9 s ≈ 3,06 s; mỗi chữ sống ~1,17 s) ⇒ câu dài thì các chữ nảy dày hơn */
+  const BUOC_TRE=Math.min(.13,(2.9-1.17)/Math.max(1,TU.length-1));
   const cau=`<g transform="translate(${ox} ${oy-152})" opacity="1">${TU.map((w,k)=>{
     const goc=(-165+((k*7)%TU.length)*(150/(TU.length-1)))*Math.PI/180,xa=150+(k%3)*40;
-    return A(`opacity:0;animation:tuNay 9s cubic-bezier(.2,.9,.3,1) infinite backwards;animation-delay:${(k*.13).toFixed(2)}s;--dx:${(Math.cos(goc)*xa*1.5).toFixed(0)}px;--dy:${(Math.sin(goc)*xa).toFixed(0)}px`,
+    return A(`opacity:0;animation:tuNay 9s cubic-bezier(.2,.9,.3,1) infinite backwards;animation-delay:${(k*BUOC_TRE).toFixed(2)}s;--dx:${(Math.cos(goc)*xa*1.5).toFixed(0)}px;--dy:${(Math.sin(goc)*xa).toFixed(0)}px`,
       TX(0,0,w,26,k%2?C.orange:C.teal,{w:800}).replace('<text ','<text stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke" '))}).join('')}</g>`;
   /* mây suy nghĩ (to) — tâm (1480,520) */
   const may=`<g><g transform="translate(1480 520) scale(1.32) translate(-1270 -315)"><path d="M1080 360 C1020 360 1000 290 1060 270 C1050 200 1150 180 1190 220 C1220 160 1340 160 1360 220 C1420 190 1500 230 1480 290 C1540 310 1530 390 1470 400 C1460 450 1380 460 1350 430 C1310 470 1200 470 1180 430 C1130 450 1070 420 1080 360Z" fill="#fff" stroke="${C.teal}" stroke-width="4.5"/></g>
@@ -491,8 +500,8 @@ SL.push({buoc:'BƯỚC '+B_QUAY,tieu:'Quay video thu hoạch',
     <rect x="394" y="852" width="52" height="30" rx="8" fill="#3a4246"/><rect x="356" y="724" width="128" height="24" rx="8" fill="#3a4246"/></g>
    ${G(420,500,DEVICE(W+32,H+32,manDT,16,'cv6dt'))}
    <g transform="translate(1440 1040) scale(1.25)">${ipad}${LUNG({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E'})}${tayBo(-1)}${tayBo(1)}</g>
-   ${THOAI(1130,450,640,96,'Những năm tháng đầu đời có vai trò gì...?','animation:t7Bo 8s infinite',27,'#fff',[1440,628])}
-   ${THOAI(560,150,880,96,'Để học hỏi và chuẩn bị kiến thức cho tương lai...','animation:t7Con 8s infinite',27,C.orangeS,[750,392])}`;
+   ${(()=>{const w=rongThoai(CH.hoiBo,640);return THOAI(Math.min(1130,1900-w),450,w,96,CH.hoiBo,'animation:t7Bo 8s infinite',27,'#fff',[1440,628])})()}
+   ${(()=>{const w=rongThoai(CH.traLoiCon,880);return THOAI(Math.max(20,Math.min(560,1900-w)),150,w,96,CH.traLoiCon,'animation:t7Con 8s infinite',27,C.orangeS,[750,392])})()}`;
  }});
 
 /* 7 — BƯỚC 5 (tiếp): GỬI ZALO */
