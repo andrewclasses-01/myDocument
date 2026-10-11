@@ -98,6 +98,12 @@ html.nhung #app{width:100%;border-radius:0}
 @keyframes boHoi{0%,4%{opacity:0;transform:scale(.6)}10%,28%{opacity:1;transform:scale(1)}34%,100%{opacity:0;transform:scale(.6)}}
 @keyframes conNoi{0%,30%{opacity:0;transform:scale(.6)}36%,80%{opacity:1;transform:scale(1)}88%,100%{opacity:0;transform:scale(.6)}}
 @keyframes miengMo{0%,32%{opacity:0}34%,78%{opacity:1}80%,100%{opacity:0}}
+/* trang 7 — quay video: bố hỏi → con trả lời → bố bấm đáp án */
+@keyframes t7Bo{0%,2%{opacity:0;transform:scale(.6)}7%,29%{opacity:1;transform:scale(1)}33%,100%{opacity:0;transform:scale(.6)}}
+@keyframes t7Con{0%,33%{opacity:0;transform:scale(.6)}38%,73%{opacity:1;transform:scale(1)}77%,100%{opacity:0;transform:scale(.6)}}
+@keyframes t7Ngon{0%,70%{transform:translate(90px,260px);opacity:0}72%{opacity:1}78%,90%{transform:translate(0,0);opacity:1}96%,100%{transform:translate(90px,260px);opacity:0}}
+@keyframes t7Vong{0%,79%{opacity:0;transform:scale(.4)}81%{opacity:.9}92%,100%{opacity:0;transform:scale(1.9)}}
+@keyframes t7Chon{0%,80%{opacity:0}82%,96%{opacity:1}100%{opacity:0}}
 /* trang 6 — video mẫu */
 @keyframes chay100{0%,6%{transform:scaleX(0)}70%,100%{transform:scaleX(1)}}
 @keyframes xongVid{0%,70%{opacity:0;transform:scale(.5)}76%,94%{opacity:1;transform:scale(1)}100%{opacity:0}}
@@ -349,6 +355,18 @@ function NGUOI(o){
 }
 /* chỉ hai bàn tay (vẽ ĐÈ lên đồ vật đang cầm) */
 function HAI_BAN_TAY(o){o=Object.assign({loai:'tre'},o);return BANTAY(o.tay.trai[1],o,o.tay.trai[0])+BANTAY(o.tay.phai[1],o,o.tay.phai[0])}
+/* NGƯỜI NHÌN TỪ SAU LƯNG (đầu toàn tóc, gáy, hai tai, lưng áo) — cùng hệ toạ độ NGUOI */
+function LUNG(o){
+  o=Object.assign({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E'},o);
+  const sw=o.loai==='lon'?118:100,da=DA[o.loai],da2=DA2[o.loai];
+  return `<g><path d="M${-sw} -40 C${-sw} -104 -62 -134 -30 -136 L30 -136 C62 -134 ${sw} -104 ${sw} -40 L${sw+10} 260 L${-sw-10} 260 Z" fill="${o.ao}"/>
+    <path d="M${-sw} -40 C${-sw} -104 -62 -134 -30 -136 L0 -136 L0 260 L${-sw-10} 260Z" fill="#000" opacity=".05"/>
+    <rect x="-24" y="-176" width="48" height="48" rx="10" fill="${da2}"/><path d="M-34 -136 Q0 -126 34 -136" fill="none" stroke="#000" stroke-width="7" opacity=".12"/>
+    <ellipse cx="-76" cy="-212" rx="14" ry="20" fill="${da}"/><ellipse cx="76" cy="-212" rx="14" ry="20" fill="${da}"/>
+    <ellipse cx="0" cy="-218" rx="76" ry="90" fill="${da}"/>
+    <path d="M-79 -196 C-94 -290 -40 -324 2 -322 C46 -322 96 -288 79 -196 C72 -170 40 -160 0 -160 C-40 -160 -72 -170 -79 -196Z" fill="${o.toc}"/>
+    <path d="M-36 -300 Q0 -314 38 -298" stroke="#fff" stroke-width="5" opacity=".14" fill="none" stroke-linecap="round"/></g>`;
+}
 const CON=(o={})=>NGUOI(Object.assign({loai:'tre',toc:'#4A2C1D',ao:'#F2B92E'},o));
 const BO=(o={})=>NGUOI(Object.assign({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E'},o));
 
@@ -472,18 +490,23 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
  noi:'Con đọc kỹ những trang sách thầy ghi trên trang bài, vừa đọc vừa <b>suy ngẫm</b> — các bước sau thầy hỏi đúng những gì có trong sách đấy. Đọc xong con bấm <b>Con đã đọc xong</b>.',
  svg:()=>{
   const ox=640,oy=760;
-  const t={trai:[[-120,190],[-211.8,102.3]],phai:[[120,190],[211.8,102.3]]};
-  const trang=`<path d="M0 -112 Q92 -134 194 -114 L194 112 Q92 92 0 114Z" fill="#fffaf0" stroke="#d9cbb3" stroke-width="3"/>${[0,1,2,3,4,5].map(i=>`<line x1="26" y1="${-76+i*30}" x2="170" y2="${-82+i*30}" stroke="#d9cbb3" stroke-width="7" stroke-linecap="round"/>`).join('')}`;
-  const sach=`<path d="M0 -100 Q-100 -130 -214 -116 L-214 130 Q-100 112 0 130 Q100 112 214 130 L214 -116 Q100 -130 0 -100Z" fill="${C.yellow}" stroke="#c9a51d" stroke-width="4"/>
-     <path d="M0 -92 Q-90 -118 -200 -104 L-200 118 Q-90 100 0 118Z" fill="#fffaf0"/><path d="M0 -92 Q90 -118 200 -104 L200 118 Q90 100 0 118Z" fill="#fffaf0"/>
-     ${[0,1,2,3,4,5].map(i=>`<line x1="-176" y1="${-64+i*30}" x2="-26" y2="${-58+i*30}" stroke="#d9cbb3" stroke-width="7" stroke-linecap="round"/><line x1="26" y1="${-58+i*30}" x2="176" y2="${-64+i*30}" stroke="#d9cbb3" stroke-width="7" stroke-linecap="round"/>`).join('')}
-     <g transform="translate(2 -6)">${A('animation:latTrang 5s ease-in-out infinite;transform-origin:0 50%;transform-box:view-box',trang)}</g>`;
+  const t={trai:[[-120,190],[-211.8,107]],phai:[[120,190],[211.8,107]]};
+  /* sách MỞ, BÌA QUAY RA NGƯỜI XEM (như ảnh mẫu thầy gửi): bìa sau bên trái, gáy giữa, bìa trước bên phải; mép giấy xoè ở trên */
+  const sach=`<path d="M-206 -110 Q-110 -158 0 -122 Q110 -158 206 -110 L206 -100 L-206 -100Z" fill="#e9e4da"/>
+     <path d="M-200 -112 Q-108 -148 0 -116 Q108 -148 200 -112 L200 -100 L-200 -100Z" fill="#fff"/>
+     <path d="M-194 -114 Q-104 -142 0 -110 M194 -114 Q104 -142 0 -110" fill="none" stroke="#e3ddd2" stroke-width="2.5"/>
+     <rect x="-208" y="-110" width="428" height="250" rx="10" fill="rgba(0,0,0,.14)"/>
+     <rect x="-214" y="-118" width="226" height="250" rx="10" fill="${C.yellow}"/><rect x="-214" y="40" width="226" height="92" rx="10" fill="${C.green}"/><rect x="-214" y="40" width="226" height="12" fill="${C.green}"/><rect x="-214" y="34" width="226" height="8" fill="${C.orange}"/>
+     ${TX(-107,-40,'ANDREW',22,'#1b2a5a',{w:800,ls:3})}${TX(-107,-12,'CLASSES',22,'#1b2a5a',{w:800,ls:3})}
+     <g transform="translate(107 7)">${BOOK(214,250).replace(/<rect x="[^"]*" y="[^"]*" width="214" height="250" rx="10" fill="rgba\(0,0,0,.12\)"\/>/,'')}</g>
+     <rect x="-13" y="-120" width="26" height="254" rx="6" fill="#d8b21f"/><rect x="-13" y="-90" width="26" height="12" fill="${C.red}"/><rect x="-13" y="96" width="26" height="12" fill="${C.red}"/>
+     <path d="M-13 -120 L-13 134" stroke="#000" stroke-width="3" opacity=".12"/>`;
   /* câu trích: từng chữ bay từ trang sách lên đúng chỗ của nó, ghép thành 2 dòng */
   const DONG=['TA SẼ KHÔNG THỂ PHẤN ĐẤU KHI CHẲNG BIẾT','MÌNH ĐANG PHẤN ĐẤU VÌ ĐIỀU GÌ!'],CO=36,RC=CO*.66,KC=CO*.34;
   let k=0;
   const cau=DONG.map((d,j)=>{
     const tu=d.split(' '),rong=tu.reduce((a,w)=>a+w.length*RC,0)+(tu.length-1)*KC;let x=620-rong/2;const y=200+j*58;
-    return tu.map(w=>{const gx=x;x+=w.length*RC+KC;const fx=ox-gx-20,fy=oy+60-y;const d0=(k++*.22).toFixed(2);
+    return tu.map(w=>{const gx=x;x+=w.length*RC+KC;const fx=ox-gx-20,fy=oy-50-y;const d0=(k++*.22).toFixed(2);
       return `<g class="tuCau" data-j="${j}" transform="translate(${gx.toFixed(0)} ${y})">${A(`animation:tuBay 9s cubic-bezier(.22,.9,.3,1) infinite;animation-delay:${d0}s;--fx:${fx.toFixed(0)}px;--fy:${fy}px;transform-box:view-box;transform-origin:0 0`,TX(0,0,w,CO,j?C.orange:C.teal,{a:'start',w:900}))}</g>`}).join('');
   }).join('');
   /* mây suy nghĩ (to) — tâm (1480,520) */
@@ -493,8 +516,8 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
     <circle cx="880" cy="520" r="15" fill="#fff" stroke="${C.teal}" stroke-width="5"/><circle cx="970" cy="540" r="24" fill="#fff" stroke="${C.teal}" stroke-width="5"/>`;
   return `${SLOGAN}<circle cx="${ox}" cy="${oy-170}" r="300" fill="${C.orangeS}"/>
    ${G(ox,oy,CON({nhin:[0,6],tay:t,tayRieng:1}),'',1.05)}
-   ${G(ox,oy+90,sach)}
-   ${TAY_OM(ox-214,845,-1,14)}${TAY_OM(ox+214,845,1,14)}
+   ${G(ox,oy+60,sach)}
+   ${TAY_OM(ox-214,850,-1,14)}${TAY_OM(ox+214,850,1,14)}
    ${BAN(930)}
    ${cau}
    ${A('animation:may 9s infinite;transform-origin:1480px 520px;transform-box:view-box',may)}
@@ -506,12 +529,12 @@ SL.push({buoc:'BƯỚC 1',tieu:'Con tự đọc sách',
 SL.push({buoc:'BƯỚC 2',tieu:'Con tự luyện tập',
  noi:'Con tự làm hoạt động ngay trên trang bài. Phải <b>đúng 100%</b> mới mở bước sau — sai câu nào thì mở sách đọc lại rồi làm lại nhé.',
  svg:()=>{
-  const t={trai:[[-180,118],[-142.2,14.8]],phai:[[180,118],[142.2,14.8]]};
+  const t={trai:[[-165,64],[-142.2,14.8]],phai:[[165,64],[142.2,14.8]]};
   return `${SLOGAN}
    <circle cx="470" cy="560" r="300" fill="${C.orangeS}"/>
    ${G(470,780,CON({nhin:[0,7],tay:t,tayRieng:1}),'',1)}
    ${G(470,770,IPAD_LUNG(270,190),'',1,0)}
-   ${OM_IPAD(470,770,270,190,'tre',{khuyu:[-45,124],w:31})}
+   ${OM_IPAD(470,770,270,190,'tre',{khuyu:[-30,70],w:31})}
    ${BAN(880)}
    <path d="M620 700 C760 640 820 560 900 520" fill="none" stroke="${C.teal}" stroke-width="6" stroke-dasharray="4 16" stroke-linecap="round"/>
    ${G(1330,500,DEVICE(820,560,QUIZ(776,516,{dung:2,stDung:'animation:dapAnC 7s infinite'}),22,'cv3'))}
@@ -524,11 +547,11 @@ SL.push({buoc:'BƯỚC 2',tieu:'Con tự luyện tập',
 SL.push({buoc:'BƯỚC 3',tieu:'Luyện tập cùng bố mẹ',
  noi:'Bố mẹ <b>cầm máy, màn hình quay về phía bố mẹ</b> (con không nhìn màn hình). Bố mẹ đọc câu hỏi, con <b>trả lời bằng lời</b>, bố mẹ chọn đáp án theo câu trả lời của con. Bước này cũng phải đúng 100%.',
  svg:()=>{
-  const tb={trai:[[-185,112],[-141.9,9.3]],phai:[[185,112],[141.9,9.3]]};
+  const tb={trai:[[-165.7,59.3],[-141.9,9.3]],phai:[[165.7,59.3],[141.9,9.3]]};
   return `${SLOGAN}
    ${G(860,780,BO({nhin:[0,8],tay:tb,tayRieng:1}),'',1.08)}
    ${G(860,762,IPAD_LUNG(290,200))}
-   ${OM_IPAD(860,762,290,200,'lon',{khuyu:[-55,135],w:38.9})}
+   ${OM_IPAD(860,762,290,200,'lon',{khuyu:[-34,78],w:38.9})}
    ${G(1380,800,CON({nhin:[-7,0],mieng:'noi',tay:{trai:[[-140,60],[-100,120]],phai:[[150,0],[160,-90]]}}),'',.98)}
    ${BAN(890)}
    ${THOAI(1240,150,520,100,'Dạ, con nghĩ là… B ạ!','animation:conNoi 8s infinite',30,C.orangeS,'bl')}
@@ -565,31 +588,37 @@ SL.push({buoc:'BƯỚC 4',tieu:'Xem video bài làm mẫu',
    <g transform="translate(1380 850)">${A('animation:xongVid 7s infinite',`${RR(-230,-42,460,84,42,C.xanh)}${TX(0,12,'✓ ĐÃ XEM HẾT 100%',32,'#fff',{w:900})}`)}</g>`;
  }});
 
-/* 6 — BƯỚC 5: QUAY VIDEO (bố con NGỒI ĐỐI DIỆN; điện thoại trên chân máy, màn hình quay ra người xem) */
+/* 6 — BƯỚC 5: QUAY VIDEO (bố cục thầy chốt 12/10): CON ngồi nhìn thẳng · điện thoại trên chân máy CHỈ quay con ·
+   BỐ ngồi cạnh điện thoại ở tiền cảnh, thấy LƯNG bố đang cầm iPad đọc câu hỏi (bố không có trong video) · bố hỏi → con trả lời →
+   bố bấm chọn 1 đáp án trên iPad. Hạn chế thấy bàn tay: tay bố khuất sau iPad, tay con khuất dưới bàn. */
 SL.push({buoc:'BƯỚC 5',tieu:'Quay video thu hoạch',
- noi:'Làm lại như bước 3 nhưng lần này <b>quay video</b>: bố mẹ và con ngồi đối diện nhau, đặt <b>điện thoại trên chân máy</b> quay rõ cả hai. Quay ở độ phân giải thấp cho video nhẹ nhé.',
+ noi:'Đặt <b>điện thoại trên chân máy</b> quay <b>mình con</b>, con ngồi nhìn thẳng vào máy. Bố mẹ ngồi cạnh điện thoại, cầm máy <b>đọc câu hỏi</b>; con <b>trả lời bằng lời</b>, bố mẹ chọn đáp án theo câu trả lời của con. Quay ở độ phân giải thấp cho video nhẹ nhé.',
  svg:()=>{
-  const bo=NGHIENG({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E',kieuTay:'nam',ban:[143.5,-40],gocMay:9.8,coTay:[124.6,-12.8],khuyu:[52,24],vatCam:`<g transform="translate(126 8)">${IPAD_NGHIENG()}</g>`});
-  const con=NGHIENG({mieng:'noi',kieuTay:'gio',ban:[104,-52],khuyu:[48,26]});
-  /* cảnh trong màn hình điện thoại: đúng hai bố con đối diện */
-  const W=268,H=500;
-  const manDT=`<rect width="${W}" height="${H}" fill="#FDEBD3"/>
-    <g transform="translate(70 360) scale(.42)">${bo}</g><g transform="translate(205 368) scale(-.38 .38)">${con}</g>
-    <rect y="${H-130}" width="${W}" height="130" fill="${C.wood}"/>
-    <rect width="${W}" height="54" fill="rgba(0,0,0,.35)"/><circle cx="26" cy="27" r="9" fill="#E53935" class="a" style="animation:nhay 1.2s infinite"/>${TX(44,35,'REC 02:15',20,'#fff',{a:'start',w:800})}
-    <circle cx="${W/2}" cy="${H-46}" r="26" fill="#fff" opacity=".9"/><rect x="${W/2-12}" y="${H-58}" width="24" height="24" rx="5" fill="#E53935"/>`;
+  /* màn hình điện thoại: chỉ có con */
+  const W=228,H=420;
+  const manDT=`<rect width="${W}" height="${H}" fill="#FDEBD3"/><g transform="translate(${W/2} ${H-70}) scale(.62)">${CON({nhin:[0,2],khongTay:1})}</g>
+    <rect y="${H-92}" width="${W}" height="92" fill="${C.wood}"/>
+    <rect width="${W}" height="50" fill="rgba(0,0,0,.35)"/><circle cx="24" cy="25" r="8" fill="#E53935" class="a" style="animation:nhay 1.2s infinite"/>${TX(40,33,'REC 02:15',18,'#fff',{a:'start',w:800})}
+    <circle cx="${W/2}" cy="${H-40}" r="22" fill="#fff" opacity=".9"/><rect x="${W/2-10}" y="${H-50}" width="20" height="20" rx="4" fill="#E53935"/>`;
+  /* iPad bố cầm: câu hỏi + 4 đáp án; cuối vòng bố bấm B */
+  const IW=460,IH=330,b=22;
+  const manIP=`${QUIZ(IW-2*b,IH-2*b,{dung:1,stDung:'animation:t7Chon 8s infinite'})}`;
   return `${SLOGAN}
-   <g transform="translate(560 780)">${bo}</g>
-   <g transform="translate(1000 790) scale(-.92 .92)">${con}</g>
-   ${BAN(880,180,1360)}
-   ${THOAI(1040,250,440,96,'Dạ, con nghĩ là… B ạ!','animation:conNoi 8s infinite',28,C.orangeS,'bl')}
-   ${BONG_TRON(300,330,175,'cb6',[540,425],MAN_CHON_B())}
-   <!-- chân máy đứng dưới sàn (tiền cảnh) -->
-   <g><line x1="1600" y1="700" x2="1600" y2="900" stroke="#2f3639" stroke-width="18" stroke-linecap="round"/>
-    <path d="M1600 890 L1470 1110 M1600 890 L1730 1110 M1600 890 L1606 1120" stroke="#2f3639" stroke-width="16" stroke-linecap="round"/>
-    <rect x="1572" y="868" width="56" height="34" rx="8" fill="#3a4246"/>
-    <rect x="1530" y="684" width="140" height="26" rx="8" fill="#3a4246"/></g>
-   ${G(1600,420,DEVICE(300,540,manDT,16,'cv6dt'))}`;
+   ${G(750,720,CON({nhin:[0,2],mieng:'noi',tay:{trai:[[-130,60],[-100,150]],phai:[[130,60],[100,150]]}}))}
+   ${BAN(860)}
+   <!-- điện thoại trên chân máy (tiền cảnh trái), màn hình quay ra người xem -->
+   <g><line x1="420" y1="740" x2="420" y2="880" stroke="#2f3639" stroke-width="16" stroke-linecap="round"/>
+    <path d="M420 870 L300 1100 M420 870 L540 1100 M420 870 L426 1110" stroke="#2f3639" stroke-width="15" stroke-linecap="round"/>
+    <rect x="394" y="852" width="52" height="30" rx="8" fill="#3a4246"/><rect x="356" y="724" width="128" height="24" rx="8" fill="#3a4246"/></g>
+   ${G(420,500,DEVICE(W+32,H+32,manDT,16,'cv6dt'))}
+   <!-- bố (tiền cảnh phải, thấy lưng): cánh tay đưa lên đỡ iPad, bàn tay khuất sau máy -->
+   <path d="M1300 930 L1236 830" stroke="#3E8E7E" stroke-width="64" stroke-linecap="round"/><path d="M1240 836 L1196 760" stroke="${DA.lon}" stroke-width="38" stroke-linecap="round"/>
+   ${G(1150,600,DEVICE(IW,IH,manIP,b,'cv6ip'))}
+   <g transform="translate(1251 573)">${VONG('animation:t7Vong 8s infinite')}</g>
+   <g transform="translate(1246 580)">${A('animation:t7Ngon 8s infinite;transform-box:view-box',NGON(.8))}</g>
+   ${G(1440,1040,LUNG({loai:'lon',toc:'#2B1D16',ao:'#3E8E7E'}),'',1.25)}
+   ${THOAI(1270,300,640,96,'Những năm tháng đầu đời có vai trò gì...?','animation:t7Bo 8s infinite',27,'#fff','bl')}
+   ${THOAI(680,150,880,96,'Để học hỏi và chuẩn bị kiến thức cho tương lai...','animation:t7Con 8s infinite',27,C.orangeS,'bl')}`;
  }});
 
 /* 7 — BƯỚC 5 (tiếp): GỬI ZALO */
