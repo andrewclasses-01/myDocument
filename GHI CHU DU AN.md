@@ -108,3 +108,17 @@ chuyển trang kiểu **Cover** của PowerPoint; thầy xem mẫu trước rồ
 **VIỆC ĐANG CHỜ**
 - ⬜ Thầy nghe thật nhạc nền bones-muscles (chặng 4).
 - ⬜ Muốn làm slide khác cùng kiểu: tách khung trình chiếu ra `slide/_chung/` (hiện chép trong index.html) khi có bộ thứ 2.
+
+## Chặng 6 — 12/10/2026 — Trình chiếu dùng chung `slide/_chung/` + bộ slide do app myLesson sinh (`slide/bai/…`)
+
+**Bối cảnh:** app myLesson v2.159.0 có khung QUẢN LÝ SLIDE, nút "chuyển pptx sang myDocument" (main `lib/slide-mydoc.js`).
+**Đã làm (`77b9d60`):** tách trình chiếu của `bones-muscles-sp` thành `slide/_chung/trinh-chieu.css` + `trinh-chieu.js` (JS tự dựng
+khung `.san` + nút; đọc `window.TRINH_CHIEU = { tong, duoi }`, ảnh `anh/sNN.<duoi>`). `bones-muscles-sp` GIỮ NGUYÊN (không trỏ vào _chung).
+**Bộ do app sinh:** `slide/bai/<slug mã bài + tên file pptx>/` — index.html tối giản (meta `mydocument:ban` = dấu bản để app biết đã live),
+ảnh JPEG q84 1920 ngang, `poster.jpg`, meta.json có `nguon` (đường pptx, dấu "/"), `so_trang`, `sinh_boi: "myLesson"`, `ti_le: "16:9"`.
+⛔ Đừng sửa tay index.html của bộ `slide/bai/…` (app ghi đè khi chuyển lại) — sửa trình chiếu ở `slide/_chung/`.
+⛔ `build-catalog.js` bỏ qua thư mục không có meta.json nên `_chung` không vào danh mục.
+
+**VIỆC ĐANG CHỜ**
+- ⬜ Lần chuyển thật đầu tiên từ app (mới chạy trên bản sao kho trong máy).
+- ⬜ Thầy nghe thật nhạc nền bones-muscles (chặng 4).

@@ -23,6 +23,8 @@ Chạy ở **https://document.andrewclasses.com** (GitHub Pages, `CNAME`). Đọ
 - `video/khoa-hoc/bones-muscles` — video hoạt hình "Why are bones hard and muscles soft?" (14 cảnh, 4:37). Kiến trúc riêng của video:
   động cơ Web Animations điều khiển bằng đồng hồ chính (xem phần cuối `GHI CHU DU AN.md` mục "kiến thức mang theo từ BonesMuscles Video").
   Tuỳ chọn link: `?t= ?cc=0 ?voice=0 ?toc=`.
+- `slide/_chung/trinh-chieu.{css,js}` — trình chiếu ảnh tĩnh DÙNG CHUNG (Cover + vuốt), cấu hình `window.TRINH_CHIEU={tong,duoi}`.
+  Bộ `slide/bai/<ma>/` do app myLesson v2.159.0 sinh (meta `sinh_boi: myLesson`, `nguon` = file pptx) — đừng sửa tay, app ghi đè.
 - `slide/khoa-hoc/bones-muscles-sp` — 15 slide ẢNH TĨNH (WebP) xuất từ `SLIDE 2.pptx` cho bài SP SLIDE myLesson; chuyển trang hiệu ứng
   COVER (slide mới trượt đè slide cũ) + vuốt bám ngón tay; `?trang=N`; báo `chapter`/`ended`. Cách xuất ảnh: `GHI CHU DU AN.md` chặng 5.
 
