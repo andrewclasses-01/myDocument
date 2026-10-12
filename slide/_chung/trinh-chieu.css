@@ -1,0 +1,39 @@
+/* myDocument — TRÌNH CHIẾU SLIDE ẢNH TĨNH dùng chung (slide/_chung/trinh-chieu.css + .js).
+   Mỗi bộ slide chỉ cần index.html khai `window.TRINH_CHIEU = { tong, duoi }` + ảnh anh/s01.<duoi>…
+   Bộ do app myLesson (v2.159.0, khung QUẢN LÝ SLIDE) tự sinh khi chuyển pptx sang myDocument.
+   Bản gốc làm tay: slide/khoa-hoc/bones-muscles-sp (12/10/2026) — giữ nguyên, không trỏ vào file này. */
+/* Bộ slide ẢNH TĨNH (xuất từ SLIDE 2.pptx bằng PowerPoint, 1920×1080 → WebP).
+     Chuyển trang = hiệu ứng COVER như PowerPoint: slide mới TRƯỢT VÀO ĐÈ LÊN slide cũ (slide cũ đứng yên).
+     Tới = vào từ PHẢI · lùi = vào từ TRÁI. Vuốt thì slide mới bám theo ngón tay.
+     html.nhung = nằm trong khung iframe (?nhung=1) → bỏ nền tối quanh khung, slide phủ kín khung. */
+  :root{--bg:#0b1220;--nut:rgba(15,23,42,.55);--nut-ro:rgba(15,23,42,.8);--chu:#fff;--nhan:#22c55e;--t:520ms}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;background:var(--bg);overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;
+    -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  body{display:grid;place-items:center}
+  html.nhung,html.nhung body{background:#000}
+
+  /* Sân khấu 16:9 lớn nhất vừa màn hình */
+  .san{position:relative;width:min(100vw,calc(100vh*16/9));aspect-ratio:16/9;overflow:hidden;background:#fff;touch-action:pan-y}
+  html:not(.nhung) .san{box-shadow:0 20px 60px rgba(0,0,0,.45);border-radius:6px}
+  .tr{position:absolute;inset:0;background:#fff center/cover no-repeat;will-change:transform;visibility:hidden}
+  .tr.hien{visibility:visible}
+  .tr.tren{z-index:2;box-shadow:0 0 28px rgba(0,0,0,.35)}
+  .tr.chay{transition:transform var(--t) cubic-bezier(.22,.61,.36,1)}
+
+  /* Nút + đếm trang (phủ trên slide, tự mờ khi để yên) */
+  .ui{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity .35s}
+  .ui.an{opacity:0}
+  .nut{pointer-events:auto;position:absolute;top:50%;translate:0 -50%;width:clamp(34px,5.2%,58px);aspect-ratio:1;border:0;
+    border-radius:50%;background:var(--nut);color:var(--chu);display:grid;place-items:center;cursor:pointer;
+    backdrop-filter:blur(4px);transition:background .2s,opacity .2s}
+  .nut:hover{background:var(--nut-ro)}
+  .nut:disabled{opacity:0;pointer-events:none}
+  .nut svg{width:48%;height:48%}
+  #lui{left:1.6%} #toi{right:1.6%}
+  .dem{position:absolute;right:1.6%;bottom:3%;padding:.35em .8em;border-radius:999px;background:var(--nut);color:var(--chu);
+    font-size:clamp(11px,1.5vw,16px);font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums;backdrop-filter:blur(4px)}
+  .toan{pointer-events:auto;position:absolute;left:1.6%;bottom:3%;width:clamp(28px,3.6%,40px);aspect-ratio:1;border:0;border-radius:8px;
+    background:var(--nut);color:var(--chu);display:grid;place-items:center;cursor:pointer}
+  .toan svg{width:58%;height:58%}
+  .vach{position:absolute;left:0;bottom:0;height:4px;width:0;background:var(--nhan);transition:width .4s}
