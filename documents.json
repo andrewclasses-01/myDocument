@@ -56,6 +56,29 @@
       "nhung_url": "slide/huong-dan/cach-lam-bai-chuong-4-buoc/?nhung=1"
     },
     {
+      "id": "slide/khoa-hoc/bones-muscles-sp",
+      "loai": "slide",
+      "nhom": "khoa-hoc",
+      "ma": "bones-muscles-sp",
+      "ten": "Why Are Bones Hard and Muscles Soft? (Speaking Slide)",
+      "ten_vi": "Vì sao xương cứng còn cơ mềm? (slide Speaking)",
+      "mo_ta": "15 slide ảnh tĩnh xuất từ SLIDE 2.pptx (DS-S5.I1.W1 BONES AND MUSCLES) cho bài SP SLIDE; chuyển trang hiệu ứng Cover, vuốt được; ?trang=N mở ở slide N.",
+      "mon": "khoa-hoc",
+      "chu_de": [
+        "bones",
+        "muscles",
+        "cells",
+        "speaking"
+      ],
+      "ngon_ngu": "en",
+      "ngay_tao": "2026-10-12",
+      "phien_ban": "1.0.0",
+      "poster": "slide/khoa-hoc/bones-muscles-sp/poster.webp",
+      "tep_chinh": "index.html",
+      "url": "slide/khoa-hoc/bones-muscles-sp/",
+      "nhung_url": "slide/khoa-hoc/bones-muscles-sp/?nhung=1"
+    },
+    {
       "id": "slide/huong-dan/cach-lam-bai-chuong",
       "loai": "slide",
       "nhom": "huong-dan",
