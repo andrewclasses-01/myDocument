@@ -79,3 +79,32 @@ phát tán nguyên file, mà kho myDocument công khai. FreePD (CC0) đã đóng
 
 **VIỆC ĐANG CHỜ**
 - ⬜ Thầy nghe thật: nhạc to/nhỏ so với giọng (chỉnh `NH_TO` / `NH_NHO`), bài có hợp từng đoạn không.
+
+## Chặng 5 — 12/10/2026 — Slide Speaking `slide/khoa-hoc/bones-muscles-sp` (v1.0.0) cho bài SP SLIDE myLesson
+
+**Bối cảnh:** thầy muốn bài SP SLIDE của B2-B (12/10, DS-S5.I1.W1 BONES AND MUSCLES) dùng slide PowerPoint `SLIDE 2.pptx`
+thay link Canva, qua myDocument để nhúng iframe được (cùng tên miền, link cố định). Chốt: CHỈ SLIDE 2, ẢNH TĨNH,
+chuyển trang kiểu **Cover** của PowerPoint; thầy xem mẫu trước rồi mới đẩy. Sau đó thầy thêm slide 15 (THANKS FOR LISTENING).
+
+**Đã làm:**
+- Xuất ảnh: PowerShell COM `PowerPoint.Application` → `Presentations.Open(src, ReadOnly)` → `Slide.Export(png, 1920, 1080)`
+  rồi Pillow nén WebP q82 (15 slide ≈ 1,4 MB; pptx gốc 14,9 MB). Ảnh ở `anh/s01..s15.webp`, `poster.webp` = slide 1 nhỏ.
+- `index.html` tự viết (không thư viện): sân khấu 16:9 lớn nhất vừa khung; mỗi slide một lớp `.tr` nền ảnh.
+  **COVER** = slide đích nằm TRÊN (`.tren`, có bóng), trượt từ mép vào đè slide cũ đứng yên (tới: từ phải, lùi: từ trái),
+  `transition: transform var(--t)` (520 ms, cubic-bezier(.22,.61,.36,1)). Vuốt (pointer events): slide kế BÁM NGÓN TAY,
+  thả > 18% bề ngang hoặc vuốt nhanh (> 0,5 px/ms) là sang, không đủ thì lùi ra mép. Vuốt dọc bị bỏ (`touch-action:pan-y`).
+- Nút ‹ › (ẩn ở 2 đầu), đếm `n / 15`, thanh tiến độ xanh đáy, nút toàn màn hình; nút tự mờ sau 2,5 s. Phím ←/→/Space/PgUp/PgDn/Home/End/F.
+- Hợp đồng nhúng: `chapter {so,tong}` mỗi lần sang trang, `ended` khi tới slide cuối, nhận lệnh `{lenh:'chuong'|'seek', so}`;
+  `?trang=N` mở ở slide N. Móc thử `window.__slide` (`cur`, `toi()`, `lui()`, `sang(n)`).
+- Push `d59f3be` (15 slide). Live: `https://document.andrewclasses.com/slide/khoa-hoc/bones-muscles-sp/?nhung=1`.
+
+**Khám phá / bẫy:**
+- `setTimeout` lưới an toàn của hiệu ứng phải tính theo `--t` (ban đầu cứng 700 ms ⇒ khi thử với `--t` dài để chụp
+  giữa hiệu ứng thì hiệu ứng bị cắt). Nay = `--t` + 250 ms.
+- Đường dẫn Windows trong heredoc bash bị nuốt `\5`, `\3` thành ký tự điều khiển ⇒ ghi `nguon` trong meta.json bằng dấu `/`.
+- Thêm slide cho bộ này: xuất lại, so pixel với bản cũ (Pillow `ImageChops.difference`), chép ảnh mới, sửa `TONG` + chữ `1 / N`
+  trong index.html + `so_trang` meta.json, chạy `build-catalog.js`.
+
+**VIỆC ĐANG CHỜ**
+- ⬜ Thầy nghe thật nhạc nền bones-muscles (chặng 4).
+- ⬜ Muốn làm slide khác cùng kiểu: tách khung trình chiếu ra `slide/_chung/` (hiện chép trong index.html) khi có bộ thứ 2.
