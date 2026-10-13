@@ -586,6 +586,11 @@ function xepCauTrich(){
 $('#cham').innerHTML=SL.map(()=>'<i></i>').join('');
 const DOT=[...$('#cham').children];
 let cur=-1,daHieu=new Set(),hen=null,batDau=0,ketThuc=false;
+/* 13/10/2026 (thầy chốt) — trang mẹ gắn `xong=1` khi phụ huynh ĐÃ đọc hết lần trước ⇒ xem lại tự do: mọi trang coi như đã hiểu
+   (khỏi chờ thanh chạy), bấm chấm nào nhảy trang đó, trang cuối bấm nút là quay lại từ đầu. */
+const XEM_LAI=/[?&]xong=1(&|$)/.test(location.search);
+if(XEM_LAI){SL.forEach((s,k)=>{daHieu.add(k);DOT[k].classList.add('da')});ketThuc=true}
+DOT.forEach((d,k)=>{d.style.cursor='pointer';d.onclick=()=>{if(k<=Math.max(-1,...daHieu)+1)den(k,k<cur)}});
 function doCaoChu(){
   const chu=$('#chu'),b=$('#buoc'),t=$('#tieu'),n=$('#noi');
   const cu=[b.textContent,t.textContent,n.innerHTML];let max=0;
@@ -600,7 +605,7 @@ function baoCao(){MD.emit('cao',{cao:Math.ceil($('#app').getBoundingClientRect()
 function veNut(){
   const xong=daHieu.has(cur);
   hieu.classList.toggle('san',xong);
-  nhan.textContent=xong?(cur===SL.length-1?'ĐÃ HIỂU HẾT ✓':'ĐÃ HIỂU ›'):'ĐÃ HIỂU';
+  nhan.textContent=xong?(cur===SL.length-1?(ketThuc?'XEM LẠI TỪ ĐẦU ↺':'ĐÃ HIỂU HẾT ✓'):'ĐÃ HIỂU ›'):'ĐÃ HIỂU';
 }
 function demGio(){
   cancelAnimationFrame(hen);
@@ -635,8 +640,9 @@ function den(i,lui){
 function tiep(){
   if(!daHieu.has(cur))return;
   if(cur===SL.length-1){
-    if(!ketThuc){ketThuc=true;MD.emit('progress',{t:SL.length,tong:SL.length,pct:100});MD.emit('ended')}
-    nhan.textContent='ĐÃ XEM HẾT ✓';return;
+    if(ketThuc){den(0,true);return}   // 13/10/2026 — xem lại từ đầu
+    ketThuc=true;MD.emit('progress',{t:SL.length,tong:SL.length,pct:100});MD.emit('ended');
+    nhan.textContent='XEM LẠI TỪ ĐẦU ↺';return;
   }
   MD.emit('progress',{t:cur+1,tong:SL.length,pct:Math.round((cur+1)/SL.length*100)});
   den(cur+1);
