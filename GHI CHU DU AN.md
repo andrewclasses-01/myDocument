@@ -122,3 +122,21 @@ khung `.san` + nút; đọc `window.TRINH_CHIEU = { tong, duoi }`, ảnh `anh/sN
 **VIỆC ĐANG CHỜ**
 - ⬜ Lần chuyển thật đầu tiên từ app (mới chạy trên bản sao kho trong máy).
 - ⬜ Thầy nghe thật nhạc nền bones-muscles (chặng 4).
+
+## Chặng 7 — 13/10/2026 — Slide HƯỚNG DẪN CÁCH LÀM BÀI xem lại tự do (`663e33e`, `cach-lam-bai.js?v=1.14.0`)
+
+**Bối cảnh:** thầy muốn mọi nội dung hướng dẫn của lesson CHƯƠNG (myLesson) xem đi xem lại thoải mái. Trước đây mỗi lần mở trang bài,
+bộ slide bắt chờ hết thanh chạy từng trang + trang cuối chỉ hiện "ĐÃ XEM HẾT ✓" (không quay lại đầu được, chấm không bấm được).
+**Đã làm (`slide/huong-dan/_chung/cach-lam-bai.js`):**
+- Tham số `xong=1` trên URL (trang mẹ myLesson gắn khi phụ huynh đã đọc hết lần trước) ⇒ mọi trang coi như đã hiểu (`daHieu` đủ, chấm `da`,
+  `ketThuc=true`, KHÔNG phát lại `ended`).
+- Chấm trang bấm được: nhảy tới trang `k` nếu `k ≤ max(daHieu)+1` (lần đầu vẫn không nhảy cóc).
+- Trang cuối khi đã kết thúc: nút thành "XEM LẠI TỪ ĐẦU ↺", bấm là về trang 1.
+- Bump `?v=1.14.0` ở cả 2 bộ (`cach-lam-bai-chuong`, `cach-lam-bai-chuong-4-buoc`).
+**Kiểm:** máy chủ tĩnh 8765 — có `xong=1`: trang 1 nút "ĐÃ HIỂU ›" ngay, bấm chấm cuối nhảy trang 9, bấm nút về trang 1; không có `xong=1`:
+nút "ĐÃ HIỂU" (chờ), bấm chấm trang 6/2 không nhảy. Console sạch.
+
+**VIỆC ĐANG CHỜ**
+- ⬜ Lần chuyển thật đầu tiên từ app (mới chạy trên bản sao kho trong máy).
+- ⬜ Thầy nghe thật nhạc nền bones-muscles (chặng 4).
+- ⬜ Thầy xem lại hướng dẫn trên trang bài Chương 1 (đã đọc hết) ⇒ bấm qua trang không phải chờ.
