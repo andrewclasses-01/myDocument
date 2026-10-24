@@ -140,3 +140,16 @@ nút "ĐÃ HIỂU" (chờ), bấm chấm trang 6/2 không nhảy. Console sạch
 - ⬜ Lần chuyển thật đầu tiên từ app (mới chạy trên bản sao kho trong máy).
 - ⬜ Thầy nghe thật nhạc nền bones-muscles (chặng 4).
 - ⬜ Thầy xem lại hướng dẫn trên trang bài Chương 1 (đã đọc hết) ⇒ bấm qua trang không phải chờ.
+
+## Chặng 8 — 24/10/2026 — Chặn phím tắt xem mã (`_chung/chan-phim.js`)
+
+**Bối cảnh:** thầy chốt chỉ chặn phím tắt, giữ copy (cùng đợt myLesson web v1.413.0 + AWord Đợt 582).
+**Đã làm:** Chặn: F12 · Ctrl/Cmd+U · Ctrl/Cmd+S · Ctrl+Shift+I/J/C/K · Mac Cmd+Opt+I/J/C/U (keydown pha capture, preventDefault). KHÔNG chặn bôi đen / copy / chuột phải. File là BẢN CHÉP của myLesson Web `js/chan-phim.js` (web v1.413.0) — sửa bản gốc rồi chép lại sang 4 kho (AWord/web core/ · kiemtra js/ · nentangtienganh / · myDocument _chung/). ⛔ Không phải bảo mật: `view-source:` gõ tay, menu trình duyệt, tắt JS, curl vẫn xem được.
+- Gắn trước `</head>` 6 trang: trang duyệt gốc · `_mau/` (tài liệu mới từ `tools/tao.js` tự có) · 2 slide hướng dẫn · bones-muscles-sp ·
+  video bones-muscles. Dùng đường TUYỆT ĐỐI `/_chung/chan-phim.js?v=1` (trang ở nhiều độ sâu; document.andrewclasses.com là gốc tên miền).
+- Bộ `slide/bai/<ma>/` do app myLesson sinh: app v2.189.1 `slide-mydoc.js::trangIndex` thêm `<script src="${len}_chung/chan-phim.js?v=1">`
+  ⇒ bộ sinh từ nay tự có; bộ đã sinh trước đó (nếu có) có khi app chuyển lại.
+**Kiểm:** máy chủ 8765 — video bones-muscles `?nhung=1`: `__chanPhim` có, Ctrl+U bị chặn, `MyDocument` vẫn chạy; trang gốc có thẻ.
+
+**VIỆC ĐANG CHỜ**
+- (giữ các mục chặng 7)
