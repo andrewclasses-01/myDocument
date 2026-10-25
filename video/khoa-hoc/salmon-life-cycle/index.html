@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="mydocument:id" content="video/khoa-hoc/salmon-life-cycle">
+<title>The Salmon Life Cycle</title>
+<!-- Phim vẽ bằng code (phong cách bảng trắng, thư viện Lemo-Opuscar): film.js vẽ khung hình tại giây t lên canvas,
+     đồng hồ chính = am-thanh.mp3 (giọng Teacher Andrew + nhạc + tiếng bút đã trộn sẵn). Tuỳ chọn link: ?t=N  ?cc=0 -->
+<style>
+  @font-face{font-family:'AD';src:url(fonts/ArchitectsDaughter-Regular.ttf)}
+  :root{--bg:#15171c;--ink:#f4f2ec;--accent:#d97757;--bar:rgba(20,22,28,.78)}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden}
+  #khung{position:relative;width:100%;height:100%;display:grid;place-items:center}
+  #c{display:block;width:min(100vw,177.78vh);height:auto;aspect-ratio:16/9;background:#f4f3ef;cursor:pointer}
+  #nut-lon{position:absolute;inset:0;margin:auto;width:118px;height:118px;border-radius:50%;border:0;cursor:pointer;
+    background:var(--accent);box-shadow:0 10px 40px rgba(0,0,0,.35);display:grid;place-items:center;transition:transform .2s cubic-bezier(.22,.9,.3,1)}
+  #nut-lon:hover{transform:scale(1.06)}
+  #nut-lon svg{width:46px;height:46px;margin-left:8px;fill:#fff}
+  #nut-lon.an{display:none}
+  #thanh{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--bar);
+    opacity:0;transition:opacity .25s}
+  #khung:hover #thanh,#khung.dung #thanh{opacity:1}
+  #thanh button{background:none;border:0;color:var(--ink);cursor:pointer;padding:4px;display:grid;place-items:center;border-radius:8px}
+  #thanh button:hover{background:rgba(255,255,255,.12)}
+  #thanh svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  #tua{flex:1;accent-color:var(--accent);cursor:pointer}
+  #gio{font-variant-numeric:tabular-nums;font-size:14px;min-width:88px;text-align:center}
+  #cc.tat{opacity:.45}
+  #dang-tai{position:absolute;inset:0;display:grid;place-items:center;font-size:18px;color:#bbb}
+</style>
+<script src="/_chung/chan-phim.js?v=1"></script>
+</head>
+<body>
+<div id="khung" class="dung">
+  <canvas id="c" width="1920" height="1080"></canvas>
+  <div id="dang-tai">Loading…</div>
+  <button id="nut-lon" class="an" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></button>
+  <div id="thanh">
+    <button id="choi" aria-label="Play/Pause"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg></button>
+    <input id="tua" type="range" min="0" max="1000" value="0" aria-label="Seek">
+    <span id="gio">0:00 / 0:00</span>
+    <button id="cc" aria-label="Subtitles"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 10.5a2 2 0 1 0 0 3M16 10.5a2 2 0 1 0 0 3"/></svg></button>
+    <button id="to" aria-label="Fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+  </div>
+</div>
+<audio id="am" src="am-thanh.mp3" preload="auto"></audio>
+
+<script src="../../../_chung/nhung.js"></script>
+<script type="module">
+  const MD = window.MyDocument || { nhung: false, q: new URLSearchParams(location.search), emit() {}, onLenh() {} };
+  const $ = id => document.getElementById(id);
+  const am = $('am'), cv = $('c'), ctx = cv.getContext('2d'), khung = $('khung');
+  const ICON_PLAY = '<polygon points="6 4 20 12 6 20 6 4"/>', ICON_PAUSE = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+
+  await document.fonts.load('44px AD');
+  const F = await (await import('./film.js')).build();
+  const DUR = F.dur;
+  let cc = MD.q.get('cc') !== '0'; $('cc').classList.toggle('tat', !cc);
+  let daChoi = false, tCuoi = -1, baoLuc = -1;
+  const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  const ve = t => { if (t === tCuoi) return; tCuoi = t; F.render(ctx, t); $('tua').value = Math.round(t / DUR * 1000); $('gio').textContent = `${fmt(t)} / ${fmt(DUR)}`; };
+
+  // bìa: khung cuối (cả vòng tròn + tiêu đề) cho tới khi bấm chơi
+  F.setSubs(false); F.render(ctx, DUR - .1); F.setSubs(cc);
+  $('gio').textContent = `0:00 / ${fmt(DUR)}`;
+  $('dang-tai').remove(); $('nut-lon').classList.remove('an');
+  const t0 = Math.min(DUR - 1, Math.max(0, +MD.q.get('t') || 0));
+  if (t0) am.currentTime = t0;
+
+  function choi() {
+    daChoi = true; tCuoi = -1;
+    if (am.ended || am.currentTime >= DUR - .05) am.currentTime = 0;
+    am.play();
+  }
+  const dung = () => am.pause();
+  const doi = () => am.paused ? choi() : dung();
+  am.addEventListener('play', () => { $('nut-lon').classList.add('an'); khung.classList.remove('dung'); $('choi').querySelector('svg').innerHTML = ICON_PAUSE; MD.emit('play', { t: am.currentTime }); });
+  am.addEventListener('pause', () => { khung.classList.add('dung'); $('choi').querySelector('svg').innerHTML = ICON_PLAY; if (!am.ended) MD.emit('pause', { t: am.currentTime }); });
+  am.addEventListener('ended', () => { $('nut-lon').classList.remove('an'); MD.emit('ended'); });
+
+  (function vong() {
+    if (daChoi) {
+      const t = Math.min(DUR, am.currentTime); ve(t);
+      const s = Math.floor(t);
+      if (!am.paused && s !== baoLuc) { baoLuc = s; MD.emit('progress', { t: +t.toFixed(1), tong: DUR, pct: Math.round(t / DUR * 100) }); }
+    }
+    requestAnimationFrame(vong);
+  })();
+
+  $('nut-lon').onclick = choi; cv.onclick = doi; $('choi').onclick = doi;
+  $('tua').oninput = e => { daChoi = true; am.currentTime = e.target.value / 1000 * DUR; tCuoi = -1; };
+  $('cc').onclick = () => { cc = !cc; F.setSubs(cc); $('cc').classList.toggle('tat', !cc); tCuoi = -1; };
+  $('to').onclick = () => document.fullscreenElement ? document.exitFullscreen() : khung.requestFullscreen?.();
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); doi(); } });
+  MD.onLenh((lenh, m) => {
+    if (lenh === 'play') choi(); else if (lenh === 'pause') dung();
+    else if (lenh === 'seek' && m.t != null) { daChoi = true; am.currentTime = Math.max(0, Math.min(DUR, +m.t)); tCuoi = -1; }
+  });
+  window.__step = t => { daChoi = true; am.currentTime = t; tCuoi = -1; ve(t); };   // cho kiểm thử: vẽ ngay giây t
+  MD.emit('ready', { tong: DUR });
+</script>
+</body>
+</html>

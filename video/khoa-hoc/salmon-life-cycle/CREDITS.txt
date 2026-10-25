@@ -1,0 +1,18 @@
+The Salmon Circle — a Whiteboard Explainer for Andrew Classes
+All pictures are drawn by code (engine/wb.js from the Lemo-Opuscar library, MIT). No generated images, no third-party artwork.
+
+Narration
+  Teacher Andrew's own cloned voice ("Andrew · kể chuyện"), generated locally with the VoiceStudio / OmniVoice core via myVoice.
+Lettering (on the board)
+  EMS Tech — SIL Open Font License 1.1. Single-line font by Sheldon B. Michaels, derived from
+  "Architects Daughter" by Kimberly Geswein; SVG conversion by Windell H. Oskay (Evil Mad Scientist).
+Subtitles
+  Architects Daughter — Kimberly Geswein, SIL Open Font License 1.1 (fonts/OFL-ArchitectsDaughter.txt).
+Music samples (CC0 1.0)
+  Versilian Community Sample Library (Versilian Studios): marimba, glockenspiel, vibraphone, vibraphone_bowed,
+  harp, mbira, tubular_bells, woodblock, shaker, sus_cymbal, gran_cassa.
+  Kalimba: modal synthesis (core/audio/pluck.py), no samples.
+Score, foley and sound design
+  Original, synthesized in music.py and mix.py.
+Tools
+  Lemo-Opuscar library (github.com/lemomo-ai/lemo-opuscar, MIT): render, mux, speech check (faster-whisper, MIT).

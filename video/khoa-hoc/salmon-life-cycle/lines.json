@@ -1,0 +1,9 @@
+[
+  {"id": "v1", "speed": 1.1, "text": "This tiny egg, in a cold river, holds a big adventure."},
+  {"id": "v2", "speed": 1.1, "text": "It hatches, and grows into a little fry."},
+  {"id": "v3", "speed": 1.1, "text": "As a smolt, it swims all the way down to the sea."},
+  {"id": "v4", "speed": 1.1, "text": "In the ocean, it eats and eats, and grows into a big, strong adult."},
+  {"id": "v5", "speed": 1.1, "text": "But one day, it turns around, and swims back home."},
+  {"id": "v6", "speed": 1.1, "text": "It jumps up waterfalls, all the way to the place where it was born."},
+  {"id": "v7", "speed": 1.1, "text": "There, it lays its eggs. That's called spawning. And the circle starts again."}
+]

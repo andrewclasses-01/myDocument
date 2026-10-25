@@ -1,0 +1,22 @@
+{
+  "ma": "salmon-life-cycle",
+  "loai": "video",
+  "ten": "The Salmon Life Cycle",
+  "ten_vi": "Vòng đời cá hồi",
+  "mo_ta": "Phim bảng trắng vẽ bằng code (40 giây): trứng → fry → smolt xuôi ra biển → adult → bơi ngược về, nhảy thác → spawn; máy quay lùi ra thấy cả đường đi là một vòng tròn. Giọng Teacher Andrew (kể chuyện), phụ đề tiếng Anh, nhạc tự soạn, tiếng bút dạ từng nét.",
+  "mon": "Science",
+  "chu_de": ["salmon", "life cycle", "animals", "fish"],
+  "ngon_ngu": "en",
+  "thoi_luong_giay": 40,
+  "co_giong_doc": true,
+  "ngay_tao": "2026-10-25",
+  "phien_ban": "1.0.0",
+  "tep_chinh": "index.html",
+  "poster": null,
+  "ti_le": "16:9",
+  "tuy_chon_nhung": {
+    "t": "bắt đầu từ giây thứ N (vd ?t=20)",
+    "cc": "0 = tắt phụ đề lúc đầu"
+  },
+  "lam_bang": "Lemo-Opuscar (phong cách Whiteboard Explainer) — nguồn dựng ở D:\\OTHERS\\CLAUDE\\salmon-life-cycle"
+}
