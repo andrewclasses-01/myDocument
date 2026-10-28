@@ -1,0 +1,249 @@
+{
+ "tongGiay": 155,
+ "doan": [
+  {
+   "slide": 1,
+   "ten": "Strange Mole Rats",
+   "loi": [
+    "Look at this little animal.",
+    "It is a **mole rat**.",
+    "It has no **fur**.",
+    "And it lives **underground**.",
+    "No fur, and a home under the ground?",
+    "That is **strange**!"
+   ],
+   "chuManHinh": [
+    "Strange animal",
+    "No fur, lives underground"
+   ],
+   "giay": 14,
+   "theoGoiY": "bắt đầu từ hình → không lông → sống dưới đất → vì sao 'lạ'",
+   "nhomNhac": 0
+  },
+  {
+   "slide": 2,
+   "ten": "Rat Look, Bee Life",
+   "loi": [
+    "Look at these three pictures.",
+    "The first one shows its look: it **looks like** a rat.",
+    "The other two show bees and ants.",
+    "It looks like a rat, but it **lives like** bees or ants."
+   ],
+   "chuManHinh": [
+    "Looks like a rat",
+    "Lives like bees or ants"
+   ],
+   "giay": 16,
+   "theoGoiY": "3 hình: 1 hình về ngoại hình, 2 hình về cách sống → mẫu 'looks like… but lives like…' → gọi tên ong, kiến",
+   "nhomNhac": 0
+  },
+  {
+   "slide": 3,
+   "ten": "Four Sharp Teeth",
+   "loi": [
+    "Now look at its mouth.",
+    "It has very sharp **teeth**, at the **front** of its mouth.",
+    "Two teeth on top.",
+    "Two teeth on the bottom.",
+    "That is four sharp teeth."
+   ],
+   "chuManHinh": [
+    "Very sharp teeth",
+    "Front of the mouth",
+    "2 on top + 2 on bottom"
+   ],
+   "giay": 14,
+   "theoGoiY": "tả răng → trông thế nào → ở đâu → đọc chậm số: hai trên, hai dưới",
+   "nhomNhac": 0
+  },
+  {
+   "slide": 4,
+   "ten": "Living in a Big Group",
+   "loi": [
+    "Look, there are **many** mole rats here.",
+    "They live together in **tunnels** under the ground.",
+    "Remember the bees and ants?",
+    "They live in a big **group**, too."
+   ],
+   "chuManHinh": [
+    "Live with many others"
+   ],
+   "giay": 13,
+   "theoGoiY": "nhìn hình → từ 'many' → sống với ai, ở đâu → nối lại slide 2 (ong, kiến)",
+   "nhomNhac": 1
+  },
+  {
+   "slide": 5,
+   "ten": "The Queen Mole Rat",
+   "loi": [
+    "Only one mole rat has babies.",
+    "She is the **queen**.",
+    "Look at this big number.",
+    "She can have up to **one hundred** babies **a year**!",
+    "See her tiny babies all around her?"
+   ],
+   "chuManHinh": [
+    "One mother = the \"queen\"",
+    "Up to 100 babies a year"
+   ],
+   "giay": 15,
+   "theoGoiY": "ai là nữ hoàng → làm gì → giải thích số 100 trong một năm → tả những gì quanh bà",
+   "nhomNhac": 1
+  },
+  {
+   "slide": 6,
+   "ten": "Helping the Queen",
+   "loi": [
+    "You just met the queen.",
+    "Who helps her?",
+    "The other mole rats **bring food** to her.",
+    "They keep her **safe**.",
+    "And they **care for** her babies."
+   ],
+   "chuManHinh": [
+    "Bring food",
+    "Keep her safe",
+    "Care for her babies"
+   ],
+   "giay": 12,
+   "theoGoiY": "nối từ nữ hoàng → ai giúp bà → mỗi hình một việc: mang thức ăn, giữ an toàn, chăm con",
+   "nhomNhac": 1
+  },
+  {
+   "slide": 7,
+   "ten": "Everyone Has a Job",
+   "loi": [
+    "All mole rats have a **job**.",
+    "Some are small, some are big, and some are the biggest.",
+    "Each **size** has one job.",
+    "Let's look at each size."
+   ],
+   "chuManHinh": [
+    "Small → big → biggest",
+    "Each size, one job"
+   ],
+   "giay": 13,
+   "theoGoiY": "nói về kích cỡ khác nhau → ý chính: cỡ nào việc nấy → báo trước sẽ nói từng cỡ",
+   "nhomNhac": 1
+  },
+  {
+   "slide": 8,
+   "ten": "Small Mole Rats' Jobs",
+   "loi": [
+    "First, the small mole rats.",
+    "Look at the first picture: they **find food**, so the group can eat.",
+    "In the second, they keep the **tunnel** clean, so it is a good home."
+   ],
+   "chuManHinh": [
+    "Find food",
+    "Keep the tunnel clean"
+   ],
+   "giay": 15,
+   "theoGoiY": "hai hình → mỗi hình một việc → một lý do vì sao việc đó quan trọng",
+   "nhomNhac": 2
+  },
+  {
+   "slide": 9,
+   "ten": "Big Diggers, Biggest Guards",
+   "loi": [
+    "Now compare these two.",
+    "Which one is bigger?",
+    "The **big** mole rats dig.",
+    "The **biggest** mole rats keep everyone safe, even the queen."
+   ],
+   "chuManHinh": [
+    "Big → \"dig\"",
+    "Biggest → keep all safe"
+   ],
+   "giay": 11,
+   "theoGoiY": "so sánh hai hình → ai to hơn → big = đào, biggest = bảo vệ → nối lại slide 6 (giữ nữ hoàng an toàn)",
+   "nhomNhac": 2
+  },
+  {
+   "slide": 10,
+   "ten": "Dig and Dig",
+   "loi": [
+    "Look at this long tunnel.",
+    "The mole rat is eating a root.",
+    "Mole rats **dig** and dig.",
+    "Why? **Scientists** think they look for **roots** to eat.",
+    "It is only an idea, not a sure fact."
+   ],
+   "chuManHinh": [
+    "Dig and dig",
+    "Scientists' idea: roots to eat"
+   ],
+   "giay": 16,
+   "theoGoiY": "bắt đầu từ hình: đường hầm → con chuột đang làm gì → nhà khoa học 'think' → nói rõ đây chỉ là ý kiến",
+   "nhomNhac": 2
+  },
+  {
+   "slide": 11,
+   "ten": "Mole Rats in Zoos",
+   "loi": [
+    "Today, you can see some mole rats in **zoos**.",
+    "So, why are they strange?",
+    "They have no fur, they live like bees, and their queen has one hundred babies a year!",
+    "Small, but very **strange**!"
+   ],
+   "chuManHinh": [
+    "Now seen in zoos"
+   ],
+   "giay": 16,
+   "theoGoiY": "nơi có thể xem chuột chũi bây giờ → nhìn lại slide 1: kể 3 điều lạ → câu kết của riêng mình",
+   "nhomNhac": 2
+  }
+ ],
+ "nhac": [
+  {
+   "tieuDe": "Investigations",
+   "slide": [
+    1,
+    3
+   ],
+   "camXuc": "Humorous, Mysterious",
+   "khac": [
+    "Marty Gots a Plan",
+    "Aquarium"
+   ],
+   "tep": "nhac/Investigations.mp3",
+   "dai": "00:01:34",
+   "nhacCu": "Pizzicato Strings, English Horn, Bassoon, Marimba, Glockenspiel, Cowbells",
+   "ghiCong": "\"Investigations\" Kevin MacLeod (incompetech.com) · Licensed under Creative Commons: By Attribution 4.0 — http://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "tieuDe": "Teddy Bear Waltz",
+   "slide": [
+    4,
+    7
+   ],
+   "camXuc": "Bouncy, Bright, Relaxed",
+   "khac": [
+    "Wholesome",
+    "Daily Beetle"
+   ],
+   "tep": "nhac/Teddy Bear Waltz.mp3",
+   "dai": "00:03:15",
+   "nhacCu": "Flute, Glockenspiel, Clarinet, Cellos, Violas, Basses",
+   "ghiCong": "\"Teddy Bear Waltz\" Kevin MacLeod (incompetech.com) · Licensed under Creative Commons: By Attribution 4.0 — http://creativecommons.org/licenses/by/4.0/",
+   "thayDoi": true
+  },
+  {
+   "tieuDe": "Industrious Ferret",
+   "slide": [
+    8,
+    11
+   ],
+   "camXuc": "Bouncy, Grooving, Relaxed",
+   "khac": [
+    "Carefree",
+    "Life of Riley"
+   ],
+   "tep": "nhac/Industrious Ferret.mp3",
+   "dai": "00:03:37",
+   "nhacCu": "Lute, English Horn, Cellos, Violas, Percussion",
+   "ghiCong": "\"Industrious Ferret\" Kevin MacLeod (incompetech.com) · Licensed under Creative Commons: By Attribution 4.0 — http://creativecommons.org/licenses/by/4.0/"
+  }
+ ],
+ "ghiChu": "Mỗi đoạn đi đúng thứ tự các bước của Speaking Guide từng slide (bắt đầu từ hình, mẫu so sánh 'looks like… but lives like…', đọc rõ số, nối lại slide 2 và slide 6, slide cuối quay về ý 'strange' ở slide 1). Nhạc chia 3 phần: tò mò lúc gặp con vật lạ (slide 1–3), ấm áp khi nói về nữ hoàng và cả đàn (4–7), rộn ràng khi nói về công việc và đào hầm (8–11)."
+}

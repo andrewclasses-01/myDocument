@@ -24,10 +24,38 @@
     }
   ],
   "nhom": [
+    "doc-hieu",
     "huong-dan",
     "khoa-hoc"
   ],
   "tai_lieu": [
+    {
+      "id": "video/doc-hieu/dw-s2-w2-mole-rat",
+      "loai": "video",
+      "nhom": "doc-hieu",
+      "ma": "dw-s2-w2-mole-rat",
+      "ten": "DW-S2.W2 · Mole Rat",
+      "ten_vi": "",
+      "mo_ta": "Video bài nói mẫu cho bài đọc DW-S2.W2 · Mole Rat (173 giây), giọng Teacher Andrew, phụ đề tiếng Anh.",
+      "mon": "Reading",
+      "chu_de": [],
+      "ngon_ngu": "en",
+      "thoi_luong_giay": 173,
+      "co_giong_doc": true,
+      "ngay_tao": "2026-10-28",
+      "ngay_sua": "2026-10-28",
+      "phien_ban": "1.0.0",
+      "poster": "video/doc-hieu/dw-s2-w2-mole-rat/poster.jpg",
+      "tep_chinh": "index.html",
+      "ti_le": "16:9",
+      "tuy_chon_nhung": {
+        "t": "bắt đầu từ giây thứ N (vd ?t=20)",
+        "cc": "0 = tắt phụ đề lúc đầu"
+      },
+      "ma_bai": "DW-S2.W2",
+      "url": "video/doc-hieu/dw-s2-w2-mole-rat/",
+      "nhung_url": "video/doc-hieu/dw-s2-w2-mole-rat/?nhung=1"
+    },
     {
       "id": "video/khoa-hoc/salmon-life-cycle",
       "loai": "video",
