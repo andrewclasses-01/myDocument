@@ -30,13 +30,16 @@
   #gio{font-variant-numeric:tabular-nums;font-size:14px;min-width:88px;text-align:center}
   #cc.tat{opacity:.45}
   #dang-tai{position:absolute;inset:0;display:grid;place-items:center;font-size:18px;color:#bbb}
+  #dang-tai.an{display:none}
+  #dang-tai .xoay{width:46px;height:46px;border-radius:50%;border:4px solid rgba(14,124,110,.22);border-top-color:#0E7C6E;animation:xoay .8s linear infinite}
+  @keyframes xoay{to{transform:rotate(360deg)}}
 </style>
 <script src="/_chung/chan-phim.js?v=1"></script>
 </head>
 <body>
 <div id="khung" class="dung">
   <canvas id="c" width="1920" height="1080"></canvas>
-  <div id="dang-tai">Loading…</div>
+  <div id="dang-tai"><span class="xoay" aria-label="Loading"></span></div>
   <button id="nut-lon" class="an" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></button>
   <div id="thanh">
     <button id="choi" aria-label="Play/Pause"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg></button>
@@ -66,14 +69,22 @@
   // bìa: khung cuối (cả vòng tròn + tiêu đề) cho tới khi bấm chơi
   F.setSubs(false); F.render(ctx, DUR - .1); F.setSubs(cc);
   $('gio').textContent = `0:00 / ${fmt(DUR)}`;
-  $('dang-tai').remove(); $('nut-lon').classList.remove('an');
+  $('dang-tai').classList.add('an'); $('nut-lon').classList.remove('an');
   const t0 = Math.min(DUR - 1, Math.max(0, +MD.q.get('t') || 0));
   if (t0) am.currentTime = t0;
 
+  // 28/10/2026 — tiếng chưa nạp đủ ⇒ vòng xoay, chờ `canplay` rồi vẽ đúng khung rồi mới phát (hình + tiếng cùng lúc)
+  let choNap = null;
   function choi() {
     daChoi = true; tCuoi = -1;
     if (am.ended || am.currentTime >= DUR - .05) am.currentTime = 0;
-    am.play();
+    if (am.readyState < 3) {
+      if (choNap) return;
+      $('dang-tai').classList.remove('an'); $('nut-lon').classList.add('an');
+      choNap = () => { am.removeEventListener('canplay', choNap); choNap = null; $('dang-tai').classList.add('an'); ve(am.currentTime); am.play(); };
+      am.addEventListener('canplay', choNap); return;
+    }
+    ve(am.currentTime); am.play();
   }
   const dung = () => am.pause();
   const doi = () => am.paused ? choi() : dung();
