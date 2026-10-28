@@ -59,6 +59,9 @@
   var W = +Q.get('w') || CFG.w, H = +Q.get('h') || CFG.h;
   var PLAY = '<polygon points="6 4 20 12 6 20 6 4"/>', PAUSE = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
   var P = null, DUR = 0, daChoi = false, tCuoi = -1, baoLuc = -1, cc = Q.get('cc') !== '0';
+  // v0.12.3 (thầy chốt 28/10/2026) — KHOÁ TUA: trang mẹ (trang bài học sinh myLesson) gửi {lenh:'khoaTua', t: giây xem liền xa nhất}
+  // ⇒ không tua/kéo quá mốc đó (kéo lên thì chấm đang phát nhảy về mốc); t = null ⇒ mở khoá (em đã xem hết). Mở riêng = không khoá.
+  var TUA_MAX = Infinity;
   fr.width = W; fr.height = H;
   function vua() { var k = Math.min(khung.clientWidth / W, khung.clientHeight / H); san.style.transform = 'scale(' + k + ') translate(-50%,-50%)'; }
   addEventListener('resize', vua); vua();
@@ -103,14 +106,16 @@
     }
     requestAnimationFrame(vong);
   })();
-  function tuaToi(t) { if (!P) return; daChoi = true; am.currentTime = Math.max(0, Math.min(DUR, +t)); tCuoi = -1; ve(Math.max(0, Math.min(DUR, +t))); }
+  function tuaToi(t) { if (!P) return; daChoi = true; t = Math.max(0, Math.min(DUR, TUA_MAX, +t)); am.currentTime = t; tCuoi = -1; ve(t); }
+  am.addEventListener('seeking', function () { if (am.currentTime > TUA_MAX + 0.3) am.currentTime = TUA_MAX; });   // mọi đường tua khác
   $('nut-lon').onclick = choi; san.onclick = doi; $('choi').onclick = doi;
   $('tua').oninput = function (e) { tuaToi(e.target.value / 1000 * DUR); };
   $('cc').onclick = function () { cc = !cc; datPhuDe(); };
   $('to').onclick = function () { if (document.fullscreenElement) document.exitFullscreen(); else if (khung.requestFullscreen) khung.requestFullscreen(); };
   addEventListener('keydown', function (e) { if (e.code === 'Space') { e.preventDefault(); doi(); } });
   // lệnh từ trang mẹ: myDocument (nhung.js) hoặc app myStudio (postMessage thẳng)
-  MD.onLenh(function (lenh, m) { if (lenh === 'play') choi(); else if (lenh === 'pause') dung(); else if (lenh === 'seek' && m.t != null) tuaToi(m.t); });
+  MD.onLenh(function (lenh, m) { if (lenh === 'play') choi(); else if (lenh === 'pause') dung(); else if (lenh === 'seek' && m.t != null) tuaToi(m.t);
+    else if (lenh === 'khoaTua') TUA_MAX = (m.t == null || !isFinite(+m.t)) ? Infinity : Math.max(0, +m.t); });
   // v0.12.0 NGHE THỬ BẢNG CHỈNH TIẾNG (chỉ trong app myStudio): trang mẹ gửi {lenh:'tron', cai} ⇒ tắt tiếng mix.wav, phát 3 tiếng
   // riêng tron/*.flac qua WebAudio; đồng hồ vẫn là <audio> (đã tắt tiếng). Công thức nhạc GIỐNG HỆT tron-lai.py (nhac_xu_ly).
   var TR = null, napDo = null;

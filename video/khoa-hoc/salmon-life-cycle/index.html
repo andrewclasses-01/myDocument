@@ -95,8 +95,12 @@
   $('cc').onclick = () => { cc = !cc; F.setSubs(cc); $('cc').classList.toggle('tat', !cc); tCuoi = -1; };
   $('to').onclick = () => document.fullscreenElement ? document.exitFullscreen() : khung.requestFullscreen?.();
   addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); doi(); } });
+  // 28/10/2026 — KHOÁ TUA (trang bài học sinh myLesson gửi {lenh:'khoaTua', t}): không tua quá giây xem liền xa nhất; t = null ⇒ mở khoá
+  let TUA_MAX = Infinity;
+  am.addEventListener('seeking', () => { if (am.currentTime > TUA_MAX + 0.3) { am.currentTime = TUA_MAX; tCuoi = -1; } });
   MD.onLenh((lenh, m) => {
     if (lenh === 'play') choi(); else if (lenh === 'pause') dung();
+    else if (lenh === 'khoaTua') TUA_MAX = (m.t == null || !isFinite(+m.t)) ? Infinity : Math.max(0, +m.t);
     else if (lenh === 'seek' && m.t != null) { daChoi = true; am.currentTime = Math.max(0, Math.min(DUR, +m.t)); tCuoi = -1; }
   });
   window.__step = t => { daChoi = true; am.currentTime = t; tCuoi = -1; ve(t); };   // cho kiểm thử: vẽ ngay giây t
