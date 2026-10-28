@@ -32,6 +32,7 @@ và dựng **một link** — không cần sửa kho. File này là hợp đồn
 }
 ```
 Trường có thể thiếu (tuỳ tài liệu); chỉ `id`, `loai`, `ma`, `ten`, `url`, `nhung_url` luôn có.
+`ma_bai` (từ 28/10/2026): mã bài đọc của thầy mà video đi kèm (vd `"DW-S2.W2"`) — video bài nói mẫu do myStudio đưa lên; myLesson dùng để đưa video của đúng bài lên đầu danh sách.
 Cache Pages ~10 phút → dùng `fetch(…, {cache:'no-cache'})`.
 
 ## 3. Tuỳ chọn trên link (tài liệu nào hỗ trợ thì ghi trong `tuy_chon_nhung`)

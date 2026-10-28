@@ -13,7 +13,7 @@ const LOAI = new Set(cfg.loai.map(l => l.ma));
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /* các trường meta.json được đưa vào danh mục (trường lạ bị bỏ, để danh mục gọn) */
 const TRUONG = ['ten', 'ten_vi', 'mo_ta', 'mon', 'chu_de', 'ngon_ngu', 'trinh_do', 'thoi_luong_giay',
-  'co_giong_doc', 'ngay_tao', 'ngay_sua', 'phien_ban', 'poster', 'tep_chinh', 'ti_le', 'tuy_chon_nhung'];
+  'co_giong_doc', 'ngay_tao', 'ngay_sua', 'phien_ban', 'poster', 'tep_chinh', 'ti_le', 'tuy_chon_nhung', 'ma_bai'];
 
 const loi = [], canh_bao = [], items = [];
 
