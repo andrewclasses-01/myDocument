@@ -1,0 +1,25 @@
+{
+ "ma": "how-big-is-the-sun-mat-troi-to-co-nao",
+ "loai": "video",
+ "ten": "How big is the Sun? (Mặt Trời to cỡ nào)",
+ "ten_vi": "",
+ "mo_ta": "Phim vẽ bằng code (TEACHING 1), 47 giây. Đã đóng gói bản web cho document.andrewclasses.com trong web/ (phim.html, film.js, lib.js, phông chữ, lời và mốc giọng — toàn đường dẫn tương đối, phụ đề cháy sẵn, có nút bật tắt phụ đề, không tiếng). Phim gốc 'How big is the Sun?' dài 46,5 giây: Mặt Trời từ khổng lồ thu nhỏ dần qua 5 con số đến khi chỉ còn một chấm cam trên tựa đề.",
+ "mon": "",
+ "chu_de": [],
+ "ngon_ngu": "en",
+ "thoi_luong_giay": 47,
+ "co_giong_doc": true,
+ "ngay_tao": "2026-10-29",
+ "ngay_sua": "2026-10-29",
+ "phien_ban": "1.0.0",
+ "tep_chinh": "index.html",
+ "poster": "poster.jpg",
+ "ti_le": "16:9",
+ "tuy_chon_nhung": {
+  "t": "bắt đầu từ giây thứ N (vd ?t=20)",
+  "cc": "0 = tắt phụ đề lúc đầu"
+ },
+ "sinh_boi": "myStudio · Phim vẽ",
+ "phim_id": "how-big-is-the-sun-mat-troi-to-co-nao",
+ "lam_bang": "Lemo-Opuscar (Dark Science Data)"
+}

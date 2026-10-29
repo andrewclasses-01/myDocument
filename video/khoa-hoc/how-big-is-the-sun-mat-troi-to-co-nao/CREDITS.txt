@@ -1,0 +1,20 @@
+How big is the Sun? — a Dark Science Data film for Andrew Classes
+All pictures are drawn by code (film.js). No generated images, no photos, no third-party artwork.
+
+Narration
+  Teacher Andrew's own cloned voice ("Andrew 26/10 · kể chuyện"), recorded locally by myStudio.
+Facts
+  NASA, Sun Fact Sheet (nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html) and NASA Science "Sun: Facts":
+  diameter about 1.39 million km (109 Earths), volume about 1.3 million Earths, light time about 8 min 20 s,
+  99.8 % of the Solar System's mass, a medium-size (G-type) star. Star row sizes are not to scale.
+Fonts (SIL Open Font License 1.1)
+  Inter — The Inter Project Authors (github.com/rsms/inter)
+  STIX Two Text — The STIX Fonts Project Authors
+  Dancing Script — The Dancing Script Project Authors (Pablo Impallari)
+Music samples (CC0 1.0)
+  Versilian Community Sample Library (Versilian Studios): vibraphone_bowed, glockenspiel.
+  VS Chamber Orchestra: Community Edition (Versilian Studios): upright piano.
+Score, foley and sound design
+  Original, written and synthesized in music.py and mix.py.
+Tools
+  Lemo-Opuscar library (MIT): render, mux. Speech check: faster-whisper (MIT).
