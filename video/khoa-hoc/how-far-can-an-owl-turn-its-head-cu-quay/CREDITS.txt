@@ -1,0 +1,17 @@
+How far can an owl turn its head? — Colored-Pencil Science Book (Tranh chì màu khoa học), Andrew Classes
+
+Pictures
+  Painted for this film by a local image model (Animagine, run on the teacher's own computer) from original prompts;
+  short real-motion clips made locally from those pictures with an image-to-video model (Wan 2.2). No third-party artwork.
+  Paper, pencil lines, the eye diagram, the neck-bone beads, labels and transitions are drawn in code.
+Narration
+  Teacher Andrew's own cloned voice, generated locally in myStudio.
+Lettering
+  Patrick Hand — Patrick Wagesreiter, SIL Open Font License 1.1 (fonts/OFL-patrickhand.txt).
+  Dancing Script — Impallari Type, SIL Open Font License 1.1.
+Music samples (CC0 1.0)
+  Versilian Community Sample Library (Versilian Studios): harp, marimba, glockenspiel, vibraphone (bowed), ocarina.
+Score, foley and ambience
+  Original, composed and synthesized in music.py and mix.py.
+Tools
+  Lemo-Opuscar library (MIT): render, mux, subtitles; faster-whisper (MIT) for the speech check.
