@@ -9,7 +9,10 @@
 <!-- Trình phát CHUNG của thẻ Phim vẽ (myStudio v0.6.0) — dùng cho mọi phong cách:
      khung ẩn nạp trang phim (window.DUR / READY / render(t), cùng nguồn) ⇒ đồng hồ chính = tệp âm thanh đã trộn,
      mỗi khung gọi render(t). Ở app: phim = index.html, am = mix.wav. Trên myDocument: phim = phim.html, am = am-thanh.mp3.
-     Tuỳ chọn link: ?t=N  ?cc=0. Nhận lệnh trang mẹ {lenh:'play'|'pause'|'seek', t}; báo ready/play/pause/progress/ended. -->
+     Tuỳ chọn link: ?t=N  ?cc=0. Nhận lệnh trang mẹ {lenh:'play'|'pause'|'seek', t}; báo ready/play/pause/progress/ended.
+     v0.17.0 CHẾ ĐỘ MP4 (phim dùng bộ vẽ ảnh — Anime / Chì màu / CARTOON 1, thầy chốt 29/10): CFG.video = 'phim.mp4' ⇒ thẻ <video> thay khung
+     phim + <audio>, và CHÍNH video làm đồng hồ (cùng API: currentTime/play/pause/readyState/seeking) ⇒ khoá tua, chờ nạp, ready/progress/ended
+     giữ nguyên; phụ đề đã in sẵn trong hình (nút CC ẩn). Bản web vẽ lại phim nặng 20 MB/225 tệp, chờ 79 s ⇒ MP4 phát ngay khi đang tải. -->
 <style>
   :root{--bg:#15171c;--ink:#f4f2ec;--accent:#d97757;--bar:rgba(20,22,28,.78)}
   *{box-sizing:border-box;margin:0}
@@ -17,6 +20,7 @@
   #khung{position:relative;width:100%;height:100%;overflow:hidden}
   #san{position:absolute;left:50%;top:50%;transform-origin:0 0;cursor:pointer}
   #san iframe{display:block;border:0;pointer-events:none;background:#f4f3ef}
+  #san video{display:block;border:0;pointer-events:none;background:#000;object-fit:contain}
   #nut-lon{position:absolute;inset:0;margin:auto;width:110px;height:110px;border-radius:50%;border:0;cursor:pointer;
     background:var(--accent);box-shadow:0 10px 40px rgba(0,0,0,.35);display:grid;place-items:center;transition:transform .2s cubic-bezier(.22,.9,.3,1)}
   #nut-lon:hover{transform:scale(1.06)}
@@ -53,7 +57,7 @@
 <script src="../../../_chung/nhung.js"></script>
 <script>
 (function () {
-  var CFG = { phim: 'phim.html', am: 'am-thanh.mp3', w: 1920, h: 1080 };
+  var CFG = { phim: '', am: '', w: 1920, h: 1080, video: 'phim.mp4', poster: 'poster.jpg', dur: '31' };
   var MD = window.MyDocument || { nhung: false, q: new URLSearchParams(location.search), emit: function () {}, onLenh: function () {} };
   var Q = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -64,6 +68,15 @@
   // v0.12.3 (thầy chốt 28/10/2026) — KHOÁ TUA: trang mẹ (trang bài học sinh myLesson) gửi {lenh:'khoaTua', t: giây xem liền xa nhất}
   // ⇒ không tua/kéo quá mốc đó (kéo lên thì chấm đang phát nhảy về mốc); t = null ⇒ mở khoá (em đã xem hết). Mở riêng = không khoá.
   var TUA_MAX = Infinity;
+  // v0.17.0 chế độ MP4: chỗ giữ '__VIDEO__' chưa thay (máy chủ xem thử trong app) = tắt
+  var VID = Q.get('video') || (CFG.video.indexOf('__') === 0 ? '' : CFG.video);
+  if (VID) {
+    var vd = document.createElement('video');
+    vd.id = 'am'; vd.preload = 'auto'; vd.playsInline = true; vd.setAttribute('playsinline', ''); vd.setAttribute('webkit-playsinline', '');
+    if (CFG.poster && CFG.poster.indexOf('__') !== 0) vd.poster = CFG.poster;
+    san.replaceChild(vd, fr); am.parentNode.removeChild(am);
+    am = vd; fr = vd; $('cc').classList.add('an');
+  }
   fr.width = W; fr.height = H;
   function vua() { var k = Math.min(khung.clientWidth / W, khung.clientHeight / H); san.style.transform = 'scale(' + k + ') translate(-50%,-50%)'; }
   addEventListener('resize', vua); vua();
@@ -74,12 +87,19 @@
     $('tua').value = Math.round(t / DUR * 1000); $('gio').textContent = fmt(t) + ' / ' + fmt(DUR);
   }
   function datPhuDe() { if (P && P.setSubs) { try { P.setSubs(cc); } catch (_) {} } $('cc').classList.toggle('tat', !cc); tCuoi = -1; }
-  fr.src = (Q.get('phim') || CFG.phim) + (/\?/.test(Q.get('phim') || CFG.phim) ? '&' : '?') + 'nhung=1';
-  am.src = Q.get('am') || CFG.am;
-  // chờ trang phim sẵn sàng (window.READY) — mốc tuyệt đối 180 s, không treo vào rAF
+  if (VID) am.src = VID;
+  else {
+    fr.src = (Q.get('phim') || CFG.phim) + (/\?/.test(Q.get('phim') || CFG.phim) ? '&' : '?') + 'nhung=1';
+    am.src = Q.get('am') || CFG.am;
+  }
+  // chờ trang phim sẵn sàng (window.READY) — mốc tuyệt đối 180 s, không treo vào rAF.
+  // Chế độ MP4: "trang phim" giả — sẵn sàng khi video biết độ dài; render() không làm gì (hình do chính video vẽ).
   var batDau = Date.now();
   (function cho() {
-    var w = null; try { w = fr.contentWindow; } catch (_) {}
+    var w = null;
+    // iPhone Safari không tải trước video khi chưa có cú bấm ⇒ dùng độ dài biết sẵn (CFG.dur) để sẵn sàng ngay, có siêu dữ liệu thì lấy số thật
+    if (VID) { var dV = isFinite(am.duration) && am.duration > 0 ? am.duration : parseFloat(CFG.dur) || 0; if (dV > 0) w = { READY: true, DUR: dV, render: function () {} }; }
+    else { try { w = fr.contentWindow; } catch (_) {} }
     if (w && w.READY && typeof w.render === 'function') {
       P = w; DUR = +w.DUR || am.duration || 0;
       datPhuDe();
@@ -98,6 +118,7 @@
   var choNap = null;
   function choi() {
     if (!P) return; daChoi = true; tCuoi = -1; if (am.ended || am.currentTime >= DUR - 0.05) am.currentTime = 0;
+    if (VID) { am.play(); return; }   // video tự hiện khung đúng giây; vòng xoay theo 'waiting' / 'playing' (dưới)
     if (am.readyState < 3) {
       if (choNap) return;
       $('dang-tai').classList.remove('an'); $('nut-lon').classList.add('an');
@@ -112,6 +133,11 @@
   am.addEventListener('play', function () { $('nut-lon').classList.add('an'); khung.classList.remove('dung'); $('choi').querySelector('svg').innerHTML = PAUSE; MD.emit('play', { t: am.currentTime }); });
   am.addEventListener('pause', function () { khung.classList.add('dung'); $('choi').querySelector('svg').innerHTML = PLAY; if (!am.ended) MD.emit('pause', { t: am.currentTime }); });
   am.addEventListener('ended', function () { $('nut-lon').classList.remove('an'); MD.emit('ended'); });
+  if (VID) {   // chế độ MP4: vòng xoay khi video đang chờ tải thêm; độ dài thật khi có siêu dữ liệu
+    am.addEventListener('waiting', function () { if (daChoi) $('dang-tai').classList.remove('an'); });
+    am.addEventListener('playing', function () { $('dang-tai').classList.add('an'); });
+    am.addEventListener('loadedmetadata', function () { if (P && isFinite(am.duration) && am.duration > 0) { DUR = am.duration; if (!daChoi) $('gio').textContent = '0:00 / ' + fmt(DUR); } });
+  }
   // vẽ: rAF khi đang xem (chỉ là hình — việc bắt buộc không treo vào đây)
   (function vong() {
     if (daChoi && P) {

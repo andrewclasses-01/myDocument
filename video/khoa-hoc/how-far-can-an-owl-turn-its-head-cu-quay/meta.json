@@ -3,7 +3,7 @@
  "loai": "video",
  "ten": "How far can an owl turn its head? (Cú quay đầu được bao xa)",
  "ten_vi": "",
- "mo_ta": "Phim vẽ bằng code (Tranh chì màu khoa học), 31 giây. Phim dài 31 giây, dựng theo bản phác thầy đã duyệt: cô bé ngắm cú lúc chạng vạng, cú quay đầu thật ra tận sau lưng trong lúc vòng chì 270° khép lại, sơ đồ chì so sánh mắt cú (cố định) với mắt người (đảo được), rồi đếm 14 đốt cổ cú và 7 đốt cổ người. Nhạc là đàn hạc, marimba, chuông và một tiếng “hú hú” nhỏ của cú ở đầu và cuối phim. Phim dài hơn 20 giây thầy đặt vì riêng 5 câu đọc đã chiếm khoảng 25 giây.",
+ "mo_ta": "Phim hoạt hình (Tranh chì màu khoa học), 31 giây. Phim dài 31 giây, dựng theo bản phác thầy đã duyệt: cô bé ngắm cú lúc chạng vạng, cú quay đầu thật ra tận sau lưng trong lúc vòng chì 270° khép lại, sơ đồ chì so sánh mắt cú (cố định) với mắt người (đảo được), rồi đếm 14 đốt cổ cú và 7 đốt cổ người. Nhạc là đàn hạc, marimba, chuông và một tiếng “hú hú” nhỏ của cú ở đầu và cuối phim. Phim dài hơn 20 giây thầy đặt vì riêng 5 câu đọc đã chiếm khoảng 25 giây.",
  "mon": "",
  "chu_de": [],
  "ngon_ngu": "en",
@@ -11,15 +11,14 @@
  "co_giong_doc": true,
  "ngay_tao": "2026-10-29",
  "ngay_sua": "2026-10-29",
- "phien_ban": "1.0.0",
+ "phien_ban": "1.0.1",
  "tep_chinh": "index.html",
  "poster": "poster.jpg",
  "ti_le": "16:9",
  "tuy_chon_nhung": {
-  "t": "bắt đầu từ giây thứ N (vd ?t=20)",
-  "cc": "0 = tắt phụ đề lúc đầu"
+  "t": "bắt đầu từ giây thứ N (vd ?t=20)"
  },
  "sinh_boi": "myStudio · Phim vẽ",
  "phim_id": "how-far-can-an-owl-turn-its-head-cu-quay",
- "lam_bang": "Lemo-Opuscar (Colored-Pencil Science Book)"
+ "lam_bang": "Bộ vẽ ảnh + Lemo-Opuscar (Colored-Pencil Science Book) · video MP4"
 }
