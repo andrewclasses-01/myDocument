@@ -73,24 +73,25 @@
   const t0 = Math.min(DUR - 1, Math.max(0, +MD.q.get('t') || 0));
   if (t0) am.currentTime = t0;
 
-  // 28/10/2026 — tiếng chưa nạp đủ ⇒ vòng xoay, chờ `canplay` rồi vẽ đúng khung rồi mới phát (hình + tiếng cùng lúc)
-  let choNap = null;
   function choi() {
     daChoi = true; tCuoi = -1;
     if (am.ended || am.currentTime >= DUR - .05) am.currentTime = 0;
-    if (am.readyState < 3) {
-      if (choNap) return;
-      $('dang-tai').classList.remove('an'); $('nut-lon').classList.add('an');
-      choNap = () => { am.removeEventListener('canplay', choNap); choNap = null; $('dang-tai').classList.add('an'); ve(am.currentTime); am.play(); };
-      am.addEventListener('canplay', choNap); return;
-    }
-    ve(am.currentTime); am.play();
+    // v0.18.1 (31/10/2026) — PHÁT NGAY trong cú bấm: iPhone/iPad (và vài Android) CHỈ tải tiếng sau lệnh play() ⇒ chờ `canplay`
+    // trước khi play như v0.12.4 = vòng xoay quay mãi. Hình vẽ theo am.currentTime (đứng ở giây cũ khi tiếng chưa tới) ⇒ hình + tiếng
+    // vẫn ra cùng lúc; vòng xoay hiện khi tiếng chưa đủ, tắt ở 'playing' (dưới).
+    if (am.readyState < 3) { $('dang-tai').classList.remove('an'); $('nut-lon').classList.add('an'); }
+    tCuoi = -1; ve(am.currentTime);
+    var hua = am.play(); if (hua && hua.catch) hua.catch(function () { $('dang-tai').classList.add('an'); if (am.paused) $('nut-lon').classList.remove('an'); });
   }
   const dung = () => am.pause();
   const doi = () => am.paused ? choi() : dung();
   am.addEventListener('play', () => { $('nut-lon').classList.add('an'); khung.classList.remove('dung'); $('choi').querySelector('svg').innerHTML = ICON_PAUSE; MD.emit('play', { t: am.currentTime }); });
   am.addEventListener('pause', () => { khung.classList.add('dung'); $('choi').querySelector('svg').innerHTML = ICON_PLAY; if (!am.ended) MD.emit('pause', { t: am.currentTime }); });
   am.addEventListener('ended', () => { $('nut-lon').classList.remove('an'); MD.emit('ended'); });
+  // v0.18.1 — vòng xoay khi tiếng đang tải (lúc đầu hoặc mạng chậm giữa chừng); dừng/đang phát ⇒ tắt
+  am.addEventListener('waiting', function () { if (daChoi && !am.paused) $('dang-tai').classList.remove('an'); });
+  am.addEventListener('playing', function () { $('dang-tai').classList.add('an'); });
+  am.addEventListener('pause', function () { $('dang-tai').classList.add('an'); });
 
   (function vong() {
     if (daChoi) {

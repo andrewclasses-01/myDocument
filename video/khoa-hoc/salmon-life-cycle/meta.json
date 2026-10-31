@@ -15,7 +15,7 @@
   "thoi_luong_giay": 40,
   "co_giong_doc": true,
   "ngay_tao": "2026-10-25",
-  "phien_ban": "1.0.2",
+  "phien_ban": "1.0.3",
   "tep_chinh": "index.html",
   "poster": null,
   "ti_le": "16:9",
@@ -24,5 +24,5 @@
     "cc": "0 = tắt phụ đề lúc đầu"
   },
   "lam_bang": "Lemo-Opuscar (phong cách Whiteboard Explainer) — nguồn dựng ở D:\\OTHERS\\CLAUDE\\salmon-life-cycle",
-  "ngay_sua": "2026-10-28"
+  "ngay_sua": "2026-10-31"
 }
