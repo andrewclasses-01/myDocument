@@ -151,5 +151,21 @@ nút "ĐÃ HIỂU" (chờ), bấm chấm trang 6/2 không nhảy. Console sạch
   ⇒ bộ sinh từ nay tự có; bộ đã sinh trước đó (nếu có) có khi app chuyển lại.
 **Kiểm:** máy chủ 8765 — video bones-muscles `?nhung=1`: `__chanPhim` có, Ctrl+U bị chặn, `MyDocument` vẫn chạy; trang gốc có thẻ.
 
+## Chặng 9 — 31/10/2026 — Sửa nút Play 4 phim vẽ: iPhone/iPad bấm Play vòng xoay quay mãi (`28f0773`)
+
+**Bối cảnh:** HS lớp B2B báo video Mole Rat bấm chạy "load rất lâu, có khi nhiều tiếng vẫn chưa chạy".
+**Gốc lỗi:** bản `3299de3` (28/10, myStudio v0.12.4) cho `choi()` thấy tiếng chưa nạp đủ (`readyState < 3`) ⇒ hiện vòng xoay,
+  CHỜ `canplay` rồi mới `am.play()`. iPhone/iPad (và vài Android tiết kiệm dữ liệu) BỎ QUA `preload="auto"`, CHỈ tải tiếng sau
+  lệnh `play()` ⇒ trang chờ tiếng, máy chờ lệnh phát ⇒ `canplay` không bao giờ tới. File tiếng không có lỗi (3,4 MB, tải bình thường).
+  Máy tính tự tải trước nên KHÔNG lộ lỗi khi thử ở máy.
+**Đã làm:** 4 phim `video/doc-hieu/dw-s2-w2-mole-rat` · `video/khoa-hoc/salmon-life-cycle` · `…/how-big-is-the-sun-mat-troi-to-co-nao` ·
+  `…/how-far-can-an-owl-turn-its-head-cu-quay`: `play()` gọi NGAY trong cú bấm; vòng xoay hiện khi tiếng chưa đủ, tắt ở
+  `playing`/`pause`, hiện lại ở `waiting`. Hình vẫn vẽ theo `am.currentTime` ⇒ hình + tiếng vẫn ra cùng lúc. meta.json +1 bản vá,
+  `documents.json` dựng lại. Mẫu gốc `myStudio/src/main/phim-ve/xem.html` sửa cùng lúc (myStudio v0.18.1 `793a0c1`).
+**Kiểm (giả iPhone):** `am.preload="none"` + đổi `am.src` ⇒ `readyState 0`, rồi bấm Play THẬT. Trước sửa: 10 s vẫn quay, networkState 1.
+  Sau sửa: máy 8765 Mole Rat + Salmon phát sau ~1 s; trang thật (lên sau ~20 s) Mole Rat chạy tới giây 6. ⬜ chưa thử iPhone thật.
+**⛔ LUẬT:** trình phát trong kho này KHÔNG BAO GIỜ chờ `canplay`/`canplaythrough`/`loadeddata` TRƯỚC khi gọi `play()`.
+  Phim mới từ myStudio đã có bản sửa; phim chép tay / trình phát mới ⇒ thử bằng cách giả iPhone ở trên trước khi đẩy.
+
 **VIỆC ĐANG CHỜ**
 - (giữ các mục chặng 7)
